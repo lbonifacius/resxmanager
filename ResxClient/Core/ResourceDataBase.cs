@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class ResourceDataBase
     {

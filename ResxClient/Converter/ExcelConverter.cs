@@ -6,16 +6,17 @@ using System.IO;
 using System.Reflection;
 using System.Globalization;
 using System.Linq;
-using ResourcenManager.Converter.Exceptions;
+using ResourceManager.Converter.Exceptions;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class ExcelConverter
     {
-        string urnschemasmicrosoftcomofficespreadsheet = "urn:schemas-microsoft-com:office:spreadsheet";
+        private const string urnschemasmicrosoftcomofficespreadsheet = "urn:schemas-microsoft-com:office:spreadsheet";
+        private const string urnschemasmicrosoftcomofficeexcel = "urn:schemas-microsoft-com:office:excel";
 
-        int expandedColumnCount = 0;
-        int expandedRowCount = 0;
+        private int expandedColumnCount = 0;
+        private int expandedRowCount = 0;
 
         public ExcelConverter(VSSolution solution)
         {
@@ -40,7 +41,7 @@ namespace ResourcenManager.Core
 
         public XmlDocument Export()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourcenManager.Templates.EmptyExcelSheet.xml");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourceManager.Templates.EmptyExcelSheet.xml");
             XmlDocument xml = new XmlDocument();
             xml.Load(stream);
 
@@ -51,21 +52,18 @@ namespace ResourcenManager.Core
 
             //xml.AppendChild(xml.CreateElement("Workbook"));
 
-            //xml.DocumentElement.SetAttribute("xmlns", "urn:schemas-microsoft-com:office:spreadsheet");
+            //xml.DocumentElement.SetAttribute("xmlns", urnschemasmicrosoftcomofficespreadsheet);
             //xml.DocumentElement.SetAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
-            //xml.DocumentElement.SetAttribute("xmlns:x", "urn:schemas-microsoft-com:office:excel");
-            //xml.DocumentElement.SetAttribute("xmlns:ss", "urn:schemas-microsoft-com:office:spreadsheet");
+            //xml.DocumentElement.SetAttribute("xmlns:x", urnschemasmicrosoftcomofficeexcel);
+            //xml.DocumentElement.SetAttribute("xmlns:ss", urnschemasmicrosoftcomofficespreadsheet);
             //xml.DocumentElement.SetAttribute("xmlns:html", "http://www.w3.org/TR/REC-html40");
 
             //XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xml.NameTable);
-            //namespaceManager.AddNamespace("", "urn:schemas-microsoft-com:office:spreadsheet");
+            //namespaceManager.AddNamespace("", urnschemasmicrosoftcomofficespreadsheet);
             //namespaceManager.AddNamespace("o", "urn:schemas-microsoft-com:office:office");
-            //namespaceManager.AddNamespace("x", "urn:schemas-microsoft-com:office:excel");
-            //namespaceManager.AddNamespace("ss", "urn:schemas-microsoft-com:office:spreadsheet");
+            //namespaceManager.AddNamespace("x", urnschemasmicrosoftcomofficeexcel);
+            //namespaceManager.AddNamespace("ss", urnschemasmicrosoftcomofficespreadsheet);
             //namespaceManager.AddNamespace("html", "http://www.w3.org/TR/REC-html40");
-
-
-            //XmlElement worksheet = xml.DocumentElement.ChildNodes[3] as XmlElement; // TODO
 
             if (Project == null)
             {
@@ -94,11 +92,13 @@ namespace ResourcenManager.Core
             }
 
             XmlElement worksheet = docElement.OwnerDocument.CreateElement("Worksheet", urnschemasmicrosoftcomofficespreadsheet);
-            SetAttribute(worksheet, "ss", "Name", "urn:schemas-microsoft-com:office:spreadsheet", project.Name);
+            SetAttribute(worksheet, "ss", "Name", urnschemasmicrosoftcomofficespreadsheet, project.Name);
             docElement.AppendChild(worksheet);
 
             XmlElement table = worksheet.OwnerDocument.CreateElement("Table", urnschemasmicrosoftcomofficespreadsheet);
             worksheet.AppendChild(table);
+
+            HideFirst2Columns(table);
 
             XmlElement row = AddRow(table);
             AddCell(row, 1, "ID");
@@ -131,13 +131,19 @@ namespace ResourcenManager.Core
                 }
             }
 
-            SetAttribute(table, "ss", "ExpandedColumnCount", "urn:schemas-microsoft-com:office:spreadsheet", expandedColumnCount.ToString());
-            SetAttribute(table, "ss", "ExpandedRowCount", "urn:schemas-microsoft-com:office:spreadsheet", expandedRowCount.ToString());
-            SetAttribute(table, "x", "FullColumns", "urn:schemas-microsoft-com:office:excel", "1");
-            SetAttribute(table, "x", "FullRows", "urn:schemas-microsoft-com:office:excel", "1");
-            SetAttribute(table, "ss", "DefaultColumnWidth", "urn:schemas-microsoft-com:office:spreadsheet", "100");
+            SetAttribute(table, "ss", "ExpandedColumnCount", urnschemasmicrosoftcomofficespreadsheet, expandedColumnCount.ToString());
+            SetAttribute(table, "ss", "ExpandedRowCount", urnschemasmicrosoftcomofficespreadsheet, expandedRowCount.ToString());
+            SetAttribute(table, "x", "FullColumns", urnschemasmicrosoftcomofficeexcel, "1");
+            SetAttribute(table, "x", "FullRows", urnschemasmicrosoftcomofficeexcel, "1");
+            SetAttribute(table, "ss", "DefaultColumnWidth", urnschemasmicrosoftcomofficespreadsheet, "100");
         }
 
+        private void HideFirst2Columns(XmlElement table)
+        { 
+            XmlElement row = table.OwnerDocument.CreateElement("Column", urnschemasmicrosoftcomofficespreadsheet);
+            row.SetAttribute("Hidden", urnschemasmicrosoftcomofficespreadsheet, "1");
+            table.AppendChild(row);
+        }
         private XmlElement AddRow(XmlElement table)
         {
             XmlElement row = table.OwnerDocument.CreateElement("Row", urnschemasmicrosoftcomofficespreadsheet);
@@ -152,13 +158,13 @@ namespace ResourcenManager.Core
         private void AddCell(XmlElement row, int index, object value, string stylename)
         {
             XmlElement cell = row.OwnerDocument.CreateElement("Cell", urnschemasmicrosoftcomofficespreadsheet);
-            SetAttribute(cell, "ss", "Index", "urn:schemas-microsoft-com:office:spreadsheet", index.ToString());
+            SetAttribute(cell, "ss", "Index", urnschemasmicrosoftcomofficespreadsheet, index.ToString());
             if (stylename != null && stylename != "")
-                SetAttribute(cell, "ss", "StyleID", "urn:schemas-microsoft-com:office:spreadsheet", stylename);
+                SetAttribute(cell, "ss", "StyleID", urnschemasmicrosoftcomofficespreadsheet, stylename);
 
             row.AppendChild(cell);
             XmlElement data = row.OwnerDocument.CreateElement("Data", urnschemasmicrosoftcomofficespreadsheet);
-            SetAttribute(data, "ss", "Type", "urn:schemas-microsoft-com:office:spreadsheet", "String");
+            SetAttribute(data, "ss", "Type", urnschemasmicrosoftcomofficespreadsheet, "String");
             data.InnerText = value.ToString();
             cell.AppendChild(data);
 
@@ -182,10 +188,10 @@ namespace ResourcenManager.Core
             xml.Load(filename);
 
             XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xml.NameTable);
-            namespaceManager.AddNamespace("", "urn:schemas-microsoft-com:office:spreadsheet");
+            namespaceManager.AddNamespace("", urnschemasmicrosoftcomofficespreadsheet);
             namespaceManager.AddNamespace("o", "urn:schemas-microsoft-com:office:office");
-            namespaceManager.AddNamespace("x", "urn:schemas-microsoft-com:office:excel");
-            namespaceManager.AddNamespace("ss", "urn:schemas-microsoft-com:office:spreadsheet");
+            namespaceManager.AddNamespace("x", urnschemasmicrosoftcomofficeexcel);
+            namespaceManager.AddNamespace("ss", urnschemasmicrosoftcomofficespreadsheet);
             namespaceManager.AddNamespace("html", "http://www.w3.org/TR/REC-html40");
 
             List<VSCulture> cultures = new List<VSCulture>();
@@ -239,7 +245,6 @@ namespace ResourcenManager.Core
                                     if (project.ResxGroups[id].Files.ContainsKey(cultures[i].Culture))
                                     {
                                         file = project.ResxGroups[id].Files[cultures[i].Culture];
-                                        //dataGroup.ResxData.Add(cultures[i].Culture, new VSResxData(file));
                                     }
                                     else
                                     {

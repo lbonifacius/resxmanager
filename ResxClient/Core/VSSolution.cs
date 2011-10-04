@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Globalization;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class VSSolution
     {
@@ -21,12 +21,14 @@ namespace ResourcenManager.Core
         public VSSolution(string filepath)
         {
             solutionDirectory = new DirectoryInfo(filepath.Replace(Path.GetFileName(filepath), ""));
+            this.Name = Path.GetFileNameWithoutExtension(filepath);
 
             VSSolutionFileParser parser = new VSSolutionFileParser(filepath, this);
         }
         public string Name
         {
-            get { return "Solution";  }
+            get;
+            private set;
         }
         public DirectoryInfo SolutionDirectory
         {

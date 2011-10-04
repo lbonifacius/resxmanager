@@ -6,14 +6,14 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-using ResourcenManager.Core;
+using ResourceManager.Core;
 using System.Xml;
 using System.Reflection;
 using System.IO;
-using ResourcenManager.Properties;
+using ResourceManager.Properties;
 using System.Threading;
 
-namespace ResourcenManager.Client
+namespace ResourceManager.Client
 {
     public partial class MainForm : Form
     {

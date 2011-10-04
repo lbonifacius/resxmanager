@@ -7,7 +7,7 @@ using System.Xml.XPath;
 using System.Globalization;
 using System.Linq;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public abstract class ResourceFileBase : IProjectFileSettings, IResourceFile
     {

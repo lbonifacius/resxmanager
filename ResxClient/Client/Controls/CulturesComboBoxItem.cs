@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Globalization;
 
-namespace ResourcenManager.Client.Controls
+namespace ResourceManager.Client.Controls
 {
     public class CulturesComboBoxItem
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public interface IResourceFile : IProjectFileSettings
     {

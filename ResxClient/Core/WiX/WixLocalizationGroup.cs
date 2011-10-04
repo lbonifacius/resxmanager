@@ -4,7 +4,7 @@ using System.Text;
 using System.Globalization;
 using System.Linq;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class WixLocalizationDataGroup : ResourceDataGroupBase
     {
