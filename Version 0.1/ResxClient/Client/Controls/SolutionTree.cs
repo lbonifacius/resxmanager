@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using ResourcenManager.Core;
+using ResourceManager.Core;
 using System.Globalization;
 using System.Linq;
 
-namespace ResourcenManager.Client.Controls
+namespace ResourceManager.Client.Controls
 {
     public partial class SolutionTree : UserControl
     {

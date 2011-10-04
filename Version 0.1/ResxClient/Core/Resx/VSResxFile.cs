@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.XPath;
 using System.Globalization;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class VSResxFile : ResourceFileBase, IProjectFileSettings
     {

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using ResourcenManager.Core;
+using ResourceManager.Core;
 
-namespace ResourcenManager.Client.Controls
+namespace ResourceManager.Client.Controls
 {
     public class ResxFileTreeNode : TreeNode
     {

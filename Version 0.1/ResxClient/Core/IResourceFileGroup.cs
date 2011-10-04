@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public interface IResourceFileGroup
     {

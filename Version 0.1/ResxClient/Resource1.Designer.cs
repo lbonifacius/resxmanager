@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ResourceManager.Properties {
+namespace ResourceManager {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace ResourceManager.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class Resource1 {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal Resource1() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ResourceManager.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ResourceManager.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ResourceManager.Resource1", typeof(Resource1).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Languages ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sprachen ähnelt.
         /// </summary>
         internal static string Cultures {
             get {
@@ -70,7 +70,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Excel-Document|*.xls ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Excel-Dokument|*.xls ähnelt.
         /// </summary>
         internal static string ExcelFileFilter {
             get {
@@ -79,7 +79,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Close ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Beenden ähnelt.
         /// </summary>
         internal static string Exit {
             get {
@@ -88,7 +88,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Export to Excel ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Nach Excel exportieren ähnelt.
         /// </summary>
         internal static string ExportToExcel {
             get {
@@ -97,7 +97,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Export to Excel (missing entries only) ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Nach Excel exportieren (nur fehlende Einträge) ähnelt.
         /// </summary>
         internal static string ExportToExcelDiff {
             get {
@@ -106,7 +106,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Import from Excel ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Aus Excel importieren ähnelt.
         /// </summary>
         internal static string ImportFromExcel {
             get {
@@ -115,7 +115,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Loading solution ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Lade Solution ähnelt.
         /// </summary>
         internal static string LoadingSolution {
             get {
@@ -124,7 +124,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} entries which doesn`t exists in &apos;{1}&apos; ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die {0} Einträge, die nicht in &apos;{1}&apos; existieren. ähnelt.
         /// </summary>
         internal static string NotExistingInLanguage {
             get {
@@ -133,7 +133,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Open solution ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Solution öffnen ähnelt.
         /// </summary>
         internal static string OpenSolution {
             get {
@@ -142,7 +142,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Projects ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Projekte ähnelt.
         /// </summary>
         internal static string Projects {
             get {
@@ -151,7 +151,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The project &apos;{0}&apos; does not exist in this solution. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Das Projekt &apos;{0}&apos; ist nicht in der Solution vorhanden. ähnelt.
         /// </summary>
         internal static string ProjectUnknownException {
             get {
@@ -160,7 +160,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Refresh ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Aktualisieren ähnelt.
         /// </summary>
         internal static string Refresh {
             get {
@@ -169,7 +169,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Save resource files ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Ressourcen-Dateien speichern ähnelt.
         /// </summary>
         internal static string SaveResources {
             get {
@@ -178,7 +178,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Saving resource files ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Speichert Ressourcen ähnelt.
         /// </summary>
         internal static string SavingResourceFiles {
             get {
@@ -187,7 +187,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Resource files saved ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Ressourcen Dateien gespeichert ähnelt.
         /// </summary>
         internal static string SavingResourceFilesCompleted {
             get {
@@ -196,7 +196,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Choose language ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sprache festlegen ähnelt.
         /// </summary>
         internal static string SetCulture {
             get {

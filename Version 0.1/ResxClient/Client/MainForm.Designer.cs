@@ -1,4 +1,4 @@
-namespace ResourcenManager.Client
+namespace ResourceManager.Client
 {
     partial class MainForm
     {
@@ -42,7 +42,7 @@ namespace ResourcenManager.Client
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.openExcelDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveExcelDialog = new System.Windows.Forms.SaveFileDialog();
-            this.solutionTree1 = new ResourcenManager.Client.Controls.SolutionTree();
+            this.solutionTree1 = new ResourceManager.Client.Controls.SolutionTree();
             this.toolBarStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolBarProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -203,7 +203,7 @@ namespace ResourcenManager.Client
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripMenuItem itemOpenSolution;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private ResourcenManager.Client.Controls.SolutionTree solutionTree1;
+        private ResourceManager.Client.Controls.SolutionTree solutionTree1;
         private System.Windows.Forms.ToolStripMenuItem itemSaveResources;
         private System.Windows.Forms.ToolStripMenuItem itemExportAll;
         private System.Windows.Forms.ToolStripMenuItem itemImportAll;

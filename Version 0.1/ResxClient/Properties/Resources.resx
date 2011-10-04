@@ -118,52 +118,52 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Cultures" xml:space="preserve">
-    <value>Sprachen</value>
-  </data>
-  <data name="Exit" xml:space="preserve">
-    <value>Beenden</value>
-  </data>
-  <data name="ExportToExcel" xml:space="preserve">
-    <value>Nach Excel exportieren</value>
-  </data>
-  <data name="ExportToExcelDiff" xml:space="preserve">
-    <value>Nach Excel exportieren (nur fehlende Einträge)</value>
-  </data>
-  <data name="ImportFromExcel" xml:space="preserve">
-    <value>Aus Excel importieren</value>
-  </data>
-  <data name="NotExistingInLanguage" xml:space="preserve">
-    <value>{0} Einträge, die nicht in '{1}' existieren.</value>
-  </data>
-  <data name="OpenSolution" xml:space="preserve">
-    <value>Solution öffnen</value>
-  </data>
-  <data name="Projects" xml:space="preserve">
-    <value>Projekte</value>
-  </data>
-  <data name="ProjectUnknownException" xml:space="preserve">
-    <value>Das Projekt '{0}' ist nicht in der Solution vorhanden.</value>
-  </data>
-  <data name="Refresh" xml:space="preserve">
-    <value>Aktualisieren</value>
-  </data>
-  <data name="SaveResources" xml:space="preserve">
-    <value>Ressourcen-Dateien speichern</value>
-  </data>
-  <data name="SetCulture" xml:space="preserve">
-    <value>Sprache festlegen</value>
-  </data>
-  <data name="LoadingSolution" xml:space="preserve">
-    <value>Lade Solution</value>
-  </data>
-  <data name="SavingResourceFiles" xml:space="preserve">
-    <value>Speichert Ressourcen</value>
-  </data>
-  <data name="SavingResourceFilesCompleted" xml:space="preserve">
-    <value>Ressourcen Dateien gespeichert</value>
+    <value>Languages</value>
   </data>
   <data name="ExcelFileFilter" xml:space="preserve">
-    <value>Excel-Dokument|*.xls</value>
+    <value>Excel-Document|*.xls</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ExportToExcel" xml:space="preserve">
+    <value>Export to Excel</value>
+  </data>
+  <data name="ExportToExcelDiff" xml:space="preserve">
+    <value>Export to Excel (missing entries only)</value>
+  </data>
+  <data name="ImportFromExcel" xml:space="preserve">
+    <value>Import from Excel</value>
+  </data>
+  <data name="LoadingSolution" xml:space="preserve">
+    <value>Loading solution</value>
+  </data>
+  <data name="NotExistingInLanguage" xml:space="preserve">
+    <value>{0} entries which doesn`t exists in '{1}'</value>
+  </data>
+  <data name="OpenSolution" xml:space="preserve">
+    <value>Open solution</value>
+  </data>
+  <data name="Projects" xml:space="preserve">
+    <value>Projects</value>
+  </data>
+  <data name="ProjectUnknownException" xml:space="preserve">
+    <value>The project '{0}' does not exist in this solution.</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="SaveResources" xml:space="preserve">
+    <value>Save resource files</value>
+  </data>
+  <data name="SavingResourceFiles" xml:space="preserve">
+    <value>Saving resource files</value>
+  </data>
+  <data name="SavingResourceFilesCompleted" xml:space="preserve">
+    <value>Resource files saved</value>
+  </data>
+  <data name="SetCulture" xml:space="preserve">
+    <value>Choose language</value>
   </data>
   <data name="VSSolutionFileFilter" xml:space="preserve">
     <value>Visual-Studio Solution|*.sln</value>

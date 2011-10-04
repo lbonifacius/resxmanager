@@ -1,4 +1,4 @@
-namespace ResourcenManager.Client.Controls
+namespace ResourceManager.Client.Controls
 {
     partial class SolutionTree
     {

@@ -6,7 +6,7 @@ using System.Xml;
 using System.IO;
 using System.Reflection;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class VSResxFileGroup : ResourceFileGroupBase
     {
@@ -17,7 +17,7 @@ namespace ResourcenManager.Core
 
         public override IResourceFile CreateNewFile(CultureInfo culture)
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourcenManager.Templates.EmptyResxFile.xml");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourceManager.Templates.EmptyResxFile.xml");
             XmlDocument xml = new XmlDocument();
             xml.Load(stream);
 

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ResourcenManager.Properties;
+using ResourceManager.Properties;
 
-namespace ResourcenManager.Converter.Exceptions
+namespace ResourceManager.Converter.Exceptions
 {
     public class ProjectUnknownException : Exception
     {

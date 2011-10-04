@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class VSProjectFolder : VSFileContainer
     {

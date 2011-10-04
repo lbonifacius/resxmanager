@@ -7,9 +7,9 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
-    public abstract class ResourceFileGroupBase : ResourcenManager.Core.IResourceFileGroup
+    public abstract class ResourceFileGroupBase : ResourceManager.Core.IResourceFileGroup
     {
         private Dictionary<CultureInfo, IResourceFile> files = new Dictionary<CultureInfo, IResourceFile>();
         private Dictionary<string, ResourceDataGroupBase> data = new Dictionary<string, ResourceDataGroupBase>();

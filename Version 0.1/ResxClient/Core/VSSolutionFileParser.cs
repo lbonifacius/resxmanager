@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class VSSolutionFileParser
     {

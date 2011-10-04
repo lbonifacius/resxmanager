@@ -6,7 +6,7 @@ using System.Xml;
 using System.IO;
 using System.Reflection;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class WixLocalizationFileGroup : ResourceFileGroupBase
     {
@@ -17,7 +17,7 @@ namespace ResourcenManager.Core
 
         public override IResourceFile CreateNewFile(CultureInfo culture)
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourcenManager.Core.WiX.WixLocalizationTemplate.xml");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourceManager.Core.WiX.WixLocalizationTemplate.xml");
             XmlDocument xml = new XmlDocument();
             xml.Load(stream);
             xml.DocumentElement.Attributes["Culture"].Value = culture.Name;

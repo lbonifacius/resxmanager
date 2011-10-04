@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 
-namespace ResourcenManager.Core
+namespace ResourceManager.Core
 {
     public class VSProject : VSFileContainer
     {
