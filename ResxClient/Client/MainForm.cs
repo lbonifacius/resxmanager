@@ -34,6 +34,10 @@ namespace ResourcenManager.Client
             this.itemSaveResources.Enabled = false;
 
             this.openExcelDialog.FileOk += new CancelEventHandler(openExcelDialog_FileOk);
+
+            this.openExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
+            this.saveExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
+            this.openFileDialog.Filter = Properties.Resources.VSSolutionFileFilter;
         }
 
         private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -102,9 +106,9 @@ namespace ResourcenManager.Client
 
             foreach (VSProject project in vssolution.Projects.Values)
             {
-                foreach (VSResxFileGroup fileGroup in project.ResxGroups.Values)
+                foreach (IResourceFileGroup fileGroup in project.ResxGroups.Values)
                 {
-                    foreach (VSResxFile file in fileGroup.ResxFiles.Values)
+                    foreach (IResourceFile file in fileGroup.Files.Values)
                     {
                         file.Save();
                     }

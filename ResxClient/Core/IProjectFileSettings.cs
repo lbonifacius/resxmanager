@@ -6,7 +6,7 @@ using System.Xml.XPath;
 
 namespace ResourcenManager.Core
 {
-    interface IProjectFileSettings
+    public interface IProjectFileSettings
     {
         void LoadSettings(XPathNavigator nav);
         void SaveSettings(XmlElement node);

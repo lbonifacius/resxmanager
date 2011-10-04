@@ -6,17 +6,17 @@ using System.Linq;
 
 namespace ResourcenManager.Core
 {
-    public class VSResxDataGroup
+    public class ResourceDataGroupBase
     {
-        private Dictionary<CultureInfo, VSResxData> data = new Dictionary<CultureInfo,VSResxData>();
+        private Dictionary<CultureInfo, ResourceDataBase> data = new Dictionary<CultureInfo, ResourceDataBase>();
         private string name;
 
-        public VSResxDataGroup(string name)
+        public ResourceDataGroupBase(string name)
         {
             this.name = name;
         }       
 	
-        public Dictionary<CultureInfo, VSResxData> ResxData
+        public Dictionary<CultureInfo, ResourceDataBase> ResxData
         {
             get { return data; }
         }
@@ -24,7 +24,7 @@ namespace ResourcenManager.Core
         {
             get { return name; }
         }
-        public void Add(VSResxData resxdata)
+        public void Add(ResourceDataBase resxdata)
         {
             if(resxdata.ResxFile.Culture != null)
                 this.data.Add(resxdata.ResxFile.Culture, resxdata);

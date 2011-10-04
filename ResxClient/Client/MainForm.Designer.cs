@@ -141,10 +141,6 @@ namespace ResourcenManager.Client
             // 
             this.openFileDialog.Filter = "Visual-Studio Solution|*.sln";
             // 
-            // openExcelDialog
-            // 
-            this.openExcelDialog.FileName = "openFileDialog1";
-            // 
             // saveExcelDialog
             // 
             this.saveExcelDialog.Filter = "Excel-Document|*.xls";

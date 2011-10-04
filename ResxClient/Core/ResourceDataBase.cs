@@ -6,24 +6,17 @@ using System.Xml.XPath;
 
 namespace ResourcenManager.Core
 {
-    public class VSResxData
+    public class ResourceDataBase
     {
         private string name;
         private string xmlValue;
-        private VSResxFile file;
+        private IResourceFile file;
 
-        public VSResxData(VSResxFile file, XPathNavigator nav)
+        public ResourceDataBase(IResourceFile file)
         {
             this.file = file;
-            name = nav.GetAttribute("name", "");
-
-            XPathNodeIterator values = nav.Select("value");
-            if (values.MoveNext())
-            {
-                xmlValue = values.Current.Value;
-            }            
         }
-        public VSResxData(VSResxFile file, string name, string value)
+        public ResourceDataBase(IResourceFile file, string name, string value)
         {
             this.file = file;
             this.name = name;
@@ -31,14 +24,15 @@ namespace ResourcenManager.Core
         }
         public void Reference()
         {
-            file.ResxFileGroup.RegisterResxData(this);
+            file.FileGroup.RegisterResourceData(this);
         }
 
         public string Name
         {
             get { return name; }
+            protected set { name = value; }
         }
-        public VSResxFile ResxFile
+        public IResourceFile ResxFile
         {
             get { return file; }
         } 
@@ -48,11 +42,7 @@ namespace ResourcenManager.Core
             set 
             { 
                 xmlValue = value;
-
-                file.SetVsResxData(this);
             }
         }
-	
-	
     }
 }

@@ -103,7 +103,7 @@ namespace ResourcenManager.Client.Controls
             // 
             // openFileDialog
             // 
-            this.openFileDialog.FileName = "openFileDialog1";
+            this.openFileDialog.Filter = "Excel-Document|*.xls";
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
             // 
             // contextMenuAnalysis
