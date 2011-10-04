@@ -23,6 +23,11 @@ namespace ResourceManager.Client
         {
             InitializeComponent();
 
+            this.Text = Resources.ClientTitle;
+
+            this.dateiToolStripMenuItem.Text = Resources.File;
+            this.resourcenToolStripMenuItem.Text = Resources.ResourcesMenu;
+
             this.itemSaveResources.Text = Resources.SaveResources;
             this.itemClose.Text = Resources.Exit;
             this.itemOpenSolution.Text = Resources.OpenSolution;
