@@ -168,4 +168,13 @@
   <data name="VSSolutionFileFilter" xml:space="preserve">
     <value>Visual-Studio Solution|*.sln</value>
   </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="ResourcesMenu" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="ClientTitle" xml:space="preserve">
+    <value>RESX Manager</value>
+  </data>
 </root>

@@ -61,6 +61,15 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die RESX Manager ähnelt.
+        /// </summary>
+        internal static string ClientTitle {
+            get {
+                return ResourceManager.GetString("ClientTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Languages ähnelt.
         /// </summary>
         internal static string Cultures {
@@ -102,6 +111,15 @@ namespace ResourceManager.Properties {
         internal static string ExportToExcelDiff {
             get {
                 return ResourceManager.GetString("ExportToExcelDiff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die File ähnelt.
+        /// </summary>
+        internal static string File {
+            get {
+                return ResourceManager.GetString("File", resourceCulture);
             }
         }
         
@@ -165,6 +183,15 @@ namespace ResourceManager.Properties {
         internal static string Refresh {
             get {
                 return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Resources ähnelt.
+        /// </summary>
+        internal static string ResourcesMenu {
+            get {
+                return ResourceManager.GetString("ResourcesMenu", resourceCulture);
             }
         }
         
