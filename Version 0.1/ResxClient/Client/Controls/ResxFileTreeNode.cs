@@ -8,9 +8,9 @@ namespace ResourcenManager.Client.Controls
 {
     public class ResxFileTreeNode : TreeNode
     {
-        private VSResxFile file;
+        private IResourceFile file;
 
-        public VSResxFile ResxFile
+        public IResourceFile ResxFile
         {
             get { return file; }
             set 

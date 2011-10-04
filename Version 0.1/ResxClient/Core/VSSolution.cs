@@ -37,12 +37,23 @@ namespace ResourcenManager.Core
             get { return cultures; }
         }
 
-        public void AddCultureFile(VSResxFile file)
+        public void AddCultureFile(ResourceFileBase file)
         {
             if (!cultures.ContainsKey(file.Culture))
                 cultures.Add(file.Culture, new VSCulture(file.Culture));
 
             cultures[file.Culture].Files.Add(file);
+        }
+
+        internal void ChangeCulture(ResourceFileBase resourceFile, CultureInfo newCulture)
+        {
+            if (!cultures.ContainsKey(newCulture))
+                cultures.Add(newCulture, new VSCulture(newCulture));
+
+            if (cultures[resourceFile.Culture].Files.Contains(resourceFile))
+                cultures[resourceFile.Culture].Files.Remove(resourceFile);
+
+            cultures[newCulture].Files.Add(resourceFile);
         }
     }
 }

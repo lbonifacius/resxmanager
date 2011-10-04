@@ -9,6 +9,8 @@ namespace ResourcenManager.Core
 {
     public class ResxClientProjectFile
     {
+        public const string RESXCLIENTPROJECTFILE_EXTENSION = ".resxm";
+
         private XmlDocument xml;
         private XPathNavigator nav;
         private string url;
@@ -37,32 +39,32 @@ namespace ResourcenManager.Core
         {
             foreach (VSResxFileGroup group in project.ResxGroups.Values)
             {
-                foreach (VSResxFile file in group.ResxFiles.Values)
+                foreach (VSResxFile file in group.Files.Values)
                 {
                     LoadFile(file);
                 }
             }
         }
-        public void LoadFile(VSResxFile file)
+        public void LoadFile(IResourceFile file)
         {
-            XPathNodeIterator nodes = nav.Select("/resxClient/project/resxFile[@FileName = '" + file.File.FullName + "']");
+            XPathNodeIterator nodes = nav.Select("/resxClient/project/resourceFile[@FileName = '" + file.ID + "']");
             if (nodes.MoveNext())
             {
                 LoadFile(file, nodes.Current);
             }
         }
-        public void LoadFile(VSResxFile file, XPathNavigator nav)
+        public void LoadFile(IResourceFile file, XPathNavigator nav)
         {
             file.LoadSettings(nav);
         }
 
-        public void SaveFile(VSResxFile file)
+        public void SaveFile(IResourceFile file)
         {
-            XmlElement element = (XmlElement)xml.SelectSingleNode("/resxClient/project/resxFile[@FileName = '" + file.File.FullName + "']");
+            XmlElement element = (XmlElement)xml.SelectSingleNode("/resxClient/project/resourceFile[@FileName = '" + file.ID + "']");
             if (element == null)
             {
-                element = xml.CreateElement("resxFile");
-                element.SetAttribute("FileName", file.File.FullName);
+                element = xml.CreateElement("resourceFile");
+                element.SetAttribute("FileName", file.ID);
                 xml.DocumentElement.FirstChild.AppendChild(element);
             }
 

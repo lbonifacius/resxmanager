@@ -5,24 +5,25 @@ using System.Globalization;
 using System.Xml;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace ResourcenManager.Core
 {
-    public class VSResxFileGroup
+    public abstract class ResourceFileGroupBase : ResourcenManager.Core.IResourceFileGroup
     {
-        private Dictionary<CultureInfo, VSResxFile> files = new Dictionary<CultureInfo,VSResxFile>();
-        private Dictionary<string, VSResxDataGroup> data = new Dictionary<string, VSResxDataGroup>();
+        private Dictionary<CultureInfo, IResourceFile> files = new Dictionary<CultureInfo, IResourceFile>();
+        private Dictionary<string, ResourceDataGroupBase> data = new Dictionary<string, ResourceDataGroupBase>();
         private string prefix;
         private string path;
         private VSFileContainer container;
 
-        public VSResxFileGroup(VSFileContainer container, string prefix, string path)
+        public ResourceFileGroupBase(VSFileContainer container, string prefix, string path)
         {
             this.prefix = prefix;
             this.container = container;
             this.path = path;
         }
-        public void Add(VSResxFile file)
+        public void Add(IResourceFile file)
         {
             if (file.Culture != null)
             {
@@ -33,28 +34,32 @@ namespace ResourcenManager.Core
                 container.Project.UnassignedFiles.Add(file);
             }
 
-            file.setFileGroup(this);
+            file.SetFileGroup(this);
 
             if (file.Culture != null)
             {
-                foreach (VSResxData data in file.Data.Values)
+                foreach (ResourceDataBase data in file.Data.Values)
                 {
                     data.Reference();
                 }
             }
         }
 
-        public Dictionary<CultureInfo, VSResxFile> ResxFiles
+        public Dictionary<CultureInfo, IResourceFile> Files
         {
             get { return files; }
         }
-        public Dictionary<string, VSResxDataGroup> AllData
+        public Dictionary<string, ResourceDataGroupBase> AllData
         {
             get { return data; }
         }
         public string Prefix
         {
             get { return prefix; }
+        }
+        public string FileGroupPath
+        {
+            get { return path; }
         }
         public string ID
         {
@@ -65,27 +70,24 @@ namespace ResourcenManager.Core
             get { return container; }
         }
         
-        public void RegisterResxData(VSResxData data)
+        public void RegisterResourceData(ResourceDataBase data)
         {
             if (!this.data.ContainsKey(data.Name))
-                this.data.Add(data.Name, new VSResxDataGroup(data.Name));
+                this.data.Add(data.Name, CreateDataGroup(data.Name));
 
             this.data[data.Name].Add(data);
         }
 
-        public VSResxFile CreateNewFile(CultureInfo culture)
+        public abstract IResourceFile CreateNewFile(CultureInfo culture);
+
+        public abstract ResourceDataGroupBase CreateDataGroup(string name);
+
+        public void ChangeCulture(IResourceFile file, CultureInfo culture)
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResxClient.Templates.EmptyResxFile.xml");
-            XmlDocument xml = new XmlDocument();
-            xml.Load(stream);
+            if (this.Files.ContainsKey(file.Culture))
+                this.Files.Remove(file.Culture);
 
-            string filepath = Path.Combine(path, prefix + "." + culture.Name + ".resx");
-            xml.Save(filepath);
-
-            VSResxFile vsfile = new VSResxFile(this.Container, new FileInfo(filepath));
-            this.Add(vsfile);
-
-            return vsfile;
+            this.Files.Add(culture, file);
         }
     }
 }

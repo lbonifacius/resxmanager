@@ -12,7 +12,7 @@
       <FileName>Core\VSSolution.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ResourcenManager.Core.VSResxFileGroup">
+  <Class Name="ResourcenManager.Core.ResourceFileGroupBase">
     <Position X="7.25" Y="0.5" Width="2.25" />
     <Members>
       <Field Name="container" Hidden="true" />
@@ -22,29 +22,25 @@
       <Field Name="prefix" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>BAIgAAQAAAAAgAAAAAACAEACAAAAAgQAAAAQgAACAAA=</HashCode>
-      <FileName>Core\VSResxFileGroup.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ResourcenManager.Core.VSResxFile" BaseTypeListCollapsed="true">
-    <Position X="10.25" Y="0.5" Width="2.25" />
-    <Members>
-      <Field Name="culture" Hidden="true" />
-      <Field Name="cultureInfoFromFilename" Hidden="true" />
-      <Field Name="data" Hidden="true" />
-      <Field Name="file" Hidden="true" />
-      <Field Name="folder" Hidden="true" />
-      <Field Name="group" Hidden="true" />
-      <Field Name="prefix" Hidden="true" />
-      <Field Name="xml" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>QAAEAIAAAAgggIAgIAABAAICAQAEIhAADAAQAAAACAg=</HashCode>
-      <FileName>Core\VSResxFile.cs</FileName>
+      <HashCode>BAIgAAQAEAAAgAAgAAACAEACAAAAAgQAAAAQgAACAAA=</HashCode>
+      <FileName>Core\ResourceFileGroupBase.cs</FileName>
+      <NewMemberFileName>Core\VSResxFileGroup.cs</NewMemberFileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="ResourcenManager.Core.VSResxDataGroup">
+  <Class Name="ResourcenManager.Core.WixLocalizationFile" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="xml" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Core\WiX\VSResxFile.cs</FileName>
+      <NewMemberFileName>Core\VSResxFile.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ResourcenManager.Core.ResourceDataGroupBase">
     <Position X="7.25" Y="4.5" Width="2.25" />
     <Members>
       <Field Name="data" Hidden="true" />
@@ -52,10 +48,11 @@
     </Members>
     <TypeIdentifier>
       <HashCode>AQIAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAQAAAAAAA=</HashCode>
-      <FileName>Core\VSResxDataGroup.cs</FileName>
+      <FileName>Core\ResourceDataGroupBase.cs</FileName>
+      <NewMemberFileName>Core\VSResxDataGroup.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ResourcenManager.Core.VSResxData">
+  <Class Name="ResourcenManager.Core.ResourceDataBase">
     <Position X="10.25" Y="4.5" Width="2.25" />
     <Members>
       <Field Name="file" Hidden="true" />
@@ -64,20 +61,12 @@
     </Members>
     <TypeIdentifier>
       <HashCode>AAAAAECAAAAAAAAAAAAAAAQAAAAEAAQABAAgAAAAAAA=</HashCode>
-      <FileName>Core\VSResxData.cs</FileName>
+      <FileName>Core\ResourceDataBase.cs</FileName>
+      <NewMemberFileName>Core\VSResxData.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ResourcenManager.Core.VSProjectFolder">
     <Position X="3.25" Y="6" Width="2.25" />
-    <InheritanceLine Type="ResourcenManager.Core.VSFileContainer" FixedToPoint="true">
-      <Path>
-        <Point X="2.25" Y="5.677" />
-        <Point X="2.49" Y="5.677" />
-        <Point X="2.49" Y="5.76" />
-        <Point X="4.375" Y="5.76" />
-        <Point X="4.375" Y="6" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
       <FileName>Core\VSProjectFolder.cs</FileName>

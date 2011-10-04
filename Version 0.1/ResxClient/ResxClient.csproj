@@ -75,15 +75,21 @@
       <DependentUpon>SolutionTree.cs</DependentUpon>
     </Compile>
     <Compile Include="Converter\Exceptions\ProjectUnknownException.cs" />
+    <Compile Include="Core\IResourceFile.cs" />
+    <Compile Include="Core\IResourceFileGroup.cs" />
+    <Compile Include="Core\ResourceDataBase.cs" />
+    <Compile Include="Core\ResourceDataGroupBase.cs" />
+    <Compile Include="Core\ResourceFileGroupBase.cs" />
+    <Compile Include="Core\ResourceFileBase.cs" />
     <Compile Include="Core\VSFileContainer.cs" />
     <Compile Include="Core\IProjectFileSettings.cs" />
     <Compile Include="Converter\ExcelConverter.cs" />
     <Compile Include="Core\ResxClientProjectFile.cs" />
     <Compile Include="Core\VSProjectFolder.cs" />
-    <Compile Include="Core\VSResxDataGroup.cs" />
-    <Compile Include="Core\VSResxFileGroup.cs" />
-    <Compile Include="Core\VSResxData.cs" />
-    <Compile Include="Core\VSResxFile.cs" />
+    <Compile Include="Core\Resx\VSResxDataGroup.cs" />
+    <Compile Include="Core\Resx\VSResxFileGroup.cs" />
+    <Compile Include="Core\Resx\VSResxData.cs" />
+    <Compile Include="Core\Resx\VSResxFile.cs" />
     <Compile Include="Core\VSSolution.cs" />
     <Compile Include="Core\VSProject.cs" />
     <Compile Include="Core\VSSolutionFileParser.cs" />
@@ -93,6 +99,10 @@
     <Compile Include="Client\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\WiX\WixLocalizationData.cs" />
+    <Compile Include="Core\WiX\WixLocalizationGroup.cs" />
+    <Compile Include="Core\WiX\WixLocalizationFile.cs" />
+    <Compile Include="Core\WiX\WixLocalizationFileGroup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Client\Controls\SolutionTree.resx">
@@ -142,6 +152,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Core\WiX\WixLocalizationTemplate.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

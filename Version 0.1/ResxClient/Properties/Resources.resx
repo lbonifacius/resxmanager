@@ -162,4 +162,10 @@
   <data name="SavingResourceFilesCompleted" xml:space="preserve">
     <value>Ressourcen Dateien gespeichert</value>
   </data>
+  <data name="ExcelFileFilter" xml:space="preserve">
+    <value>Excel-Dokument|*.xls</value>
+  </data>
+  <data name="VSSolutionFileFilter" xml:space="preserve">
+    <value>Visual-Studio Solution|*.sln</value>
+  </data>
 </root>

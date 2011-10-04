@@ -70,6 +70,15 @@ namespace ResourcenManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Excel-Document|*.xls ähnelt.
+        /// </summary>
+        internal static string ExcelFileFilter {
+            get {
+                return ResourceManager.GetString("ExcelFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Beenden ähnelt.
         /// </summary>
         internal static string Exit {
@@ -192,6 +201,15 @@ namespace ResourcenManager.Properties {
         internal static string SetCulture {
             get {
                 return ResourceManager.GetString("SetCulture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Visual-Studio Solution|*.sln ähnelt.
+        /// </summary>
+        internal static string VSSolutionFileFilter {
+            get {
+                return ResourceManager.GetString("VSSolutionFileFilter", resourceCulture);
             }
         }
     }

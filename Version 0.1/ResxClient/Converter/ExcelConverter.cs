@@ -40,7 +40,7 @@ namespace ResourcenManager.Core
 
         public XmlDocument Export()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResxClient.Templates.EmptyExcelSheet.xml");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourcenManager.Templates.EmptyExcelSheet.xml");
             XmlDocument xml = new XmlDocument();
             xml.Load(stream);
 
@@ -83,7 +83,7 @@ namespace ResourcenManager.Core
 
         private void AddProject(XmlElement docElement, VSProject project)
         {
-            IList<VSResxDataGroup> uncompletedDataGroups = null;
+            IList<ResourceDataGroupBase> uncompletedDataGroups = null;
 
             if (ExportDiff)
             {
@@ -111,9 +111,9 @@ namespace ResourcenManager.Core
                 i++;
             }
 
-            foreach (VSResxFileGroup group in project.ResxGroups.Values)
+            foreach (IResourceFileGroup group in project.ResxGroups.Values)
             {
-                foreach (VSResxDataGroup dataGroup in group.AllData.Values
+                foreach (ResourceDataGroupBase dataGroup in group.AllData.Values
                     .Where(resxGroup => uncompletedDataGroups == null || uncompletedDataGroups.Contains(resxGroup)))
                 {
                     XmlElement datarow = AddRow(table);
@@ -216,10 +216,10 @@ namespace ResourcenManager.Core
                         string key = rowNode.ChildNodes[1].FirstChild.InnerText;
                         string id = rowNode.FirstChild.FirstChild.InnerText;
 
-                        VSResxDataGroup dataGroup = null;
+                        ResourceDataGroupBase dataGroup = null;
                         if (!project.ResxGroups[id].AllData.ContainsKey(key))
                         {
-                            dataGroup = new VSResxDataGroup(key);
+                            dataGroup = project.ResxGroups[id].CreateDataGroup(key);
                             project.ResxGroups[id].AllData.Add(key, dataGroup);
                         }
                         else
@@ -235,10 +235,10 @@ namespace ResourcenManager.Core
                             {
                                 if (!dataGroup.ResxData.ContainsKey(cultures[i].Culture))
                                 {
-                                    VSResxFile file = null;
-                                    if (project.ResxGroups[id].ResxFiles.ContainsKey(cultures[i].Culture))
+                                    IResourceFile file = null;
+                                    if (project.ResxGroups[id].Files.ContainsKey(cultures[i].Culture))
                                     {
-                                        file = project.ResxGroups[id].ResxFiles[cultures[i].Culture];
+                                        file = project.ResxGroups[id].Files[cultures[i].Culture];
                                         //dataGroup.ResxData.Add(cultures[i].Culture, new VSResxData(file));
                                     }
                                     else
@@ -247,7 +247,7 @@ namespace ResourcenManager.Core
                                     }
 
 
-                                    file.CreateVSResxData(key, valueNode.InnerText);
+                                    file.CreateResourceData(key, valueNode.InnerText);
                                 }
                                 else
                                 {

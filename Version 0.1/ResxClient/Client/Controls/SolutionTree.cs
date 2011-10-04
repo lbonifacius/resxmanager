@@ -44,6 +44,9 @@ namespace ResourcenManager.Client.Controls
 
             this.itemRefreshAnalysis.Text = Properties.Resources.Refresh;
             this.itemRefreshAnalysis.Click += new EventHandler(itemRefreshAnalysis_Click);
+
+            this.openFileDialog.Filter = Properties.Resources.ExcelFileFilter;
+            this.saveFileDialog.Filter = Properties.Resources.ExcelFileFilter;
         }       
 
         void itemRefreshAnalysis_Click(object sender, EventArgs e)
@@ -54,10 +57,11 @@ namespace ResourcenManager.Client.Controls
 
         void cbCultureInfos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            VSResxFile file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
+            IResourceFile file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
             file.Culture = CultureInfo.GetCultureInfo(((CulturesComboBoxItem)this.cbCultureInfos.SelectedItem).Name);
-            file.ResxFileGroup.Container.Project.ResxProjectFile.SaveFile(file);
-            file.ResxFileGroup.Container.Project.ResxProjectFile.Save();
+
+            file.FileGroup.Container.Project.ResxProjectFile.SaveFile(file);
+            file.FileGroup.Container.Project.ResxProjectFile.Save();
         }
 
         void contextMenuResxFile_Opening(object sender, CancelEventArgs e)
@@ -83,7 +87,7 @@ namespace ResourcenManager.Client.Controls
         {
             if (solution != null)
             {
-                this.treeView.Nodes.Clear();
+                this.treeView.Invoke((MethodInvoker)(() => this.treeView.Nodes.Clear()));
 
                 TreeNode slnNode = new TreeNode();
                 slnNode.Text = solution.Name;
@@ -115,9 +119,9 @@ namespace ResourcenManager.Client.Controls
         }
         private void loadFiles(TreeNode parent, VSProject project)
         {
-            foreach (VSResxFileGroup group in project.ResxGroups.Values)
+            foreach (IResourceFileGroup group in project.ResxGroups.Values)
             {
-                foreach (VSResxFile file in group.ResxFiles.Values)
+                foreach (IResourceFile file in group.Files.Values)
                 {
                     ResxFileTreeNode fileNode = new ResxFileTreeNode();
                     fileNode.ContextMenuStrip = this.contextMenuResxFile;
@@ -126,7 +130,7 @@ namespace ResourcenManager.Client.Controls
                 }
             }
 
-            foreach (VSResxFile file in project.UnassignedFiles)
+            foreach (IResourceFile file in project.UnassignedFiles)
             {
                 ResxFileTreeNode fileNode = new ResxFileTreeNode();
                 fileNode.ContextMenuStrip = this.contextMenuResxFile;
@@ -154,7 +158,7 @@ namespace ResourcenManager.Client.Controls
         }
         private void loadNotExistings(TreeNode parent, VSCulture culture)
         {
-            List<VSResxData> notexisting = null;
+            List<ResourceDataBase> notexisting = null;
             foreach (VSCulture targetCulture in solution.Cultures.Values)
             {
                 if (targetCulture != culture)
@@ -169,9 +173,9 @@ namespace ResourcenManager.Client.Controls
                 }
             }
         }
-        private void loadDataItems(TreeNode parent, List<VSResxData> items)
+        private void loadDataItems(TreeNode parent, List<ResourceDataBase> items)
         {
-            foreach (VSResxData item in items)
+            foreach (ResourceDataBase item in items)
             {
                 TreeNode itemNode = new TreeNode();
                 itemNode.Text = item.Name + ": " + item.Value;

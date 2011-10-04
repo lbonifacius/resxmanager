@@ -18,17 +18,33 @@ namespace ResourcenManager.Core
         {
             directory = new DirectoryInfo(Path.Combine(Project.Solution.SolutionDirectory.FullName, filepath));
 
-            VSResxFile resxfile = null;
+            IResourceFile resxfile = null;
             FileInfo[] files = directory.GetFiles("*.resx", SearchOption.TopDirectoryOnly);
-            Files = new List<VSResxFile>();
+            Files = new List<IResourceFile>();
             foreach (FileInfo file in files)
             {
                 resxfile = new VSResxFile(this, file);
 
-                if (!Project.ResxGroups.ContainsKey(resxfile.ID))
-                    Project.ResxGroups.Add(resxfile.ID, new VSResxFileGroup(this, resxfile.Prefix, file.DirectoryName));
+                string fileGroupId = this.ID + "_" + resxfile.Prefix;
 
-                Project.ResxGroups[resxfile.ID].Add(resxfile);
+                if (!Project.ResxGroups.ContainsKey(fileGroupId))
+                    Project.ResxGroups.Add(fileGroupId, new VSResxFileGroup(this, resxfile.Prefix, file.DirectoryName));
+
+                Project.ResxGroups[fileGroupId].Add(resxfile);
+                Files.Add(resxfile);
+            }
+
+            // Localization file for Windows Installer XML toolkit (WiX)
+            files = directory.GetFiles("*.wxl", SearchOption.TopDirectoryOnly);
+            foreach (FileInfo file in files)
+            {
+                resxfile = new WixLocalizationFile(this, file);
+
+                string fileGroupId = this.ID + "_" + resxfile.Prefix;
+                if (!Project.ResxGroups.ContainsKey(fileGroupId))
+                    Project.ResxGroups.Add(fileGroupId, new VSResxFileGroup(this, resxfile.Prefix, file.DirectoryName));
+
+                Project.ResxGroups[fileGroupId].Add(resxfile);
                 Files.Add(resxfile);
             }
 
@@ -56,7 +72,7 @@ namespace ResourcenManager.Core
         {
             get { return directory; }
         }
-        public List<VSResxFile> Files
+        public List<IResourceFile> Files
         {
             get;
             private set;

@@ -8,7 +8,7 @@ namespace ResourcenManager.Core
     public class VSCulture
     {
         private CultureInfo culture;
-        private List<VSResxFile> files = new List<VSResxFile>();
+        private List<IResourceFile> files = new List<IResourceFile>();
 
         public VSCulture(CultureInfo culture)
         {
@@ -23,7 +23,7 @@ namespace ResourcenManager.Core
             }
         }
 
-        public List<VSResxFile> Files
+        public List<IResourceFile> Files
         {
             get
             {
@@ -31,17 +31,17 @@ namespace ResourcenManager.Core
             }
         }
 
-        public List<VSResxData> GetItemsNotExistingInCulture(VSCulture culture)
+        public List<ResourceDataBase> GetItemsNotExistingInCulture(VSCulture culture)
         {
-            List<VSResxData> notExisting = new List<VSResxData>();
+            List<ResourceDataBase> notExisting = new List<ResourceDataBase>();
 
-            foreach (VSResxFile file in files)
+            foreach (IResourceFile file in files)
             {
-                foreach (VSResxData data in file.Data.Values)
+                foreach (ResourceDataBase data in file.Data.Values)
                 {
-                    if (data.ResxFile.ResxFileGroup.ResxFiles.ContainsKey(culture.Culture))
+                    if (data.ResxFile.FileGroup.Files.ContainsKey(culture.Culture))
                     {
-                        VSResxFile culturedFile = data.ResxFile.ResxFileGroup.ResxFiles[culture.Culture];
+                        IResourceFile culturedFile = data.ResxFile.FileGroup.Files[culture.Culture];
 
                         if (!culturedFile.Data.ContainsKey(data.Name))
                         {

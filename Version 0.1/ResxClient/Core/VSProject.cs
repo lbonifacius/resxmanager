@@ -8,16 +8,16 @@ namespace ResourcenManager.Core
 {
     public class VSProject : VSFileContainer
     {
-        private Dictionary<string, VSResxFileGroup> cultures = new Dictionary<string, VSResxFileGroup>();
+        private Dictionary<string, IResourceFileGroup> cultures = new Dictionary<string, IResourceFileGroup>();
         private ResxClientProjectFile resxProjectFile;
-        private List<VSResxFile> unassignedFiles = new List<VSResxFile>();
+        private List<IResourceFile> unassignedFiles = new List<IResourceFile>();
 
         
         public VSProject(VSSolution solution, string filepath, string name) : base(null, null, filepath)
         {
             this.Solution = solution;
 
-            string configPath = Path.Combine(Path.Combine(Solution.SolutionDirectory.FullName, CleanDirectoryPath(filepath)), Path.GetFileNameWithoutExtension(filepath) + ".xml");
+            string configPath = Path.Combine(Path.Combine(Solution.SolutionDirectory.FullName, CleanDirectoryPath(filepath)), Path.GetFileNameWithoutExtension(filepath) + ResxClientProjectFile.RESXCLIENTPROJECTFILE_EXTENSION);
             resxProjectFile = new ResxClientProjectFile(configPath);
 
             this.name = name;
@@ -32,7 +32,7 @@ namespace ResourcenManager.Core
             get { return name; }
         }
 
-        public Dictionary<string, VSResxFileGroup> ResxGroups
+        public Dictionary<string, IResourceFileGroup> ResxGroups
         {
             get { return cultures; }
         }
@@ -46,14 +46,14 @@ namespace ResourcenManager.Core
             get { return resxProjectFile; }
             set { resxProjectFile = value; }
         }
-        public List<VSResxFile> UnassignedFiles
+        public List<IResourceFile> UnassignedFiles
         {
             get { return unassignedFiles; }
         }
-        public IList<VSResxDataGroup> GetUncompleteDataGroups()
+        public IList<ResourceDataGroupBase> GetUncompleteDataGroups()
         {
-            List<VSResxDataGroup> list = new List<VSResxDataGroup>();
-            foreach (VSResxFileGroup fileGroup in cultures.Values)
+            List<ResourceDataGroupBase> list = new List<ResourceDataGroupBase>();
+            foreach (IResourceFileGroup fileGroup in cultures.Values)
             {
                 list.AddRange(from resxDataGroup in fileGroup.AllData.Values where !resxDataGroup.IsComplete(Solution.Cultures.Keys) select resxDataGroup);
             }
