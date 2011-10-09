@@ -14,6 +14,7 @@ namespace ResourceManager.Client.Controls
     public partial class SolutionTree : UserControl
     {
         private Core.VSSolution solution;
+        private IList<CultureInfo> allCultures;
 
         public Core.VSSolution Solution
         {
@@ -29,11 +30,7 @@ namespace ResourceManager.Client.Controls
         {
             InitializeComponent();
 
-            CultureInfo[] cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-            foreach (CultureInfo culture in cultures.OrderBy(c => c.DisplayName))
-            {
-                this.cbCultureInfos.Items.Add(new CulturesComboBoxItem(culture));
-            }
+            allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList<CultureInfo>();
 
             this.contextMenuResxFile.Opening += new CancelEventHandler(contextMenuResxFile_Opening);
             this.contextMenuResxFile.Closed += new ToolStripDropDownClosedEventHandler(contextMenuResxFile_Closed);
@@ -66,14 +63,21 @@ namespace ResourceManager.Client.Controls
 
         void contextMenuResxFile_Opening(object sender, CancelEventArgs e)
         {
-            // TODO: faster implementation
-            foreach (CulturesComboBoxItem item in this.cbCultureInfos.Items)
+            this.cbCultureInfos.Items.Clear();
+
+            var file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
+            var otherUsedCultures = file.FileGroup.Files.Keys
+                .Except(new CultureInfo[] { file.Culture });
+
+            var list = allCultures.Except(otherUsedCultures);
+
+            foreach (CultureInfo culture in list.OrderBy(c => c.DisplayName))
             {
-                if (item.Name == ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile.Culture.Name)
-                {
+                var item = new CulturesComboBoxItem(culture);
+                this.cbCultureInfos.Items.Add(item);
+
+                if (culture.Name == file.Culture.Name)
                     this.cbCultureInfos.SelectedItem = item;
-                    break;
-                }
             }
 
             this.cbCultureInfos.SelectedIndexChanged += new EventHandler(cbCultureInfos_SelectedIndexChanged);
