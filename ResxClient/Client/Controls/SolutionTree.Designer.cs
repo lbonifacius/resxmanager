@@ -29,6 +29,7 @@ namespace ResourceManager.Client.Controls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SolutionTree));
             this.treeView = new System.Windows.Forms.TreeView();
             this.contextMenuResxFile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.itemSetCulture = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,9 +41,13 @@ namespace ResourceManager.Client.Controls
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.contextMenuAnalysis = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.itemRefreshAnalysis = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuAnalysisLang = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.itemFill100PercMatches = new System.Windows.Forms.ToolStripMenuItem();
+            this.iconImageList = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuResxFile.SuspendLayout();
             this.contextMenuProject.SuspendLayout();
             this.contextMenuAnalysis.SuspendLayout();
+            this.contextMenuAnalysisLang.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView
@@ -58,7 +63,7 @@ namespace ResourceManager.Client.Controls
             this.contextMenuResxFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemSetCulture});
             this.contextMenuResxFile.Name = "contextMenuStrip1";
-            this.contextMenuResxFile.Size = new System.Drawing.Size(180, 48);
+            this.contextMenuResxFile.Size = new System.Drawing.Size(180, 26);
             // 
             // itemSetCulture
             // 
@@ -81,19 +86,19 @@ namespace ResourceManager.Client.Controls
             this.itemExportToExcel,
             this.itemImportFromExcel});
             this.contextMenuProject.Name = "contextMenuProject";
-            this.contextMenuProject.Size = new System.Drawing.Size(176, 48);
+            this.contextMenuProject.Size = new System.Drawing.Size(187, 48);
             // 
             // itemExportToExcel
             // 
             this.itemExportToExcel.Name = "itemExportToExcel";
-            this.itemExportToExcel.Size = new System.Drawing.Size(175, 22);
+            this.itemExportToExcel.Size = new System.Drawing.Size(186, 22);
             this.itemExportToExcel.Text = "itemExportToExcel";
             this.itemExportToExcel.Click += new System.EventHandler(this.itemExportToExcel_Click);
             // 
             // itemImportFromExcel
             // 
             this.itemImportFromExcel.Name = "itemImportFromExcel";
-            this.itemImportFromExcel.Size = new System.Drawing.Size(175, 22);
+            this.itemImportFromExcel.Size = new System.Drawing.Size(186, 22);
             this.itemImportFromExcel.Text = "itemImportFromExcel";
             this.itemImportFromExcel.Click += new System.EventHandler(this.itemImportFromExcel_Click);
             // 
@@ -111,13 +116,38 @@ namespace ResourceManager.Client.Controls
             this.contextMenuAnalysis.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemRefreshAnalysis});
             this.contextMenuAnalysis.Name = "contextMenuAnalysis";
-            this.contextMenuAnalysis.Size = new System.Drawing.Size(180, 48);
+            this.contextMenuAnalysis.Size = new System.Drawing.Size(180, 26);
             // 
             // itemRefreshAnalysis
             // 
             this.itemRefreshAnalysis.Name = "itemRefreshAnalysis";
             this.itemRefreshAnalysis.Size = new System.Drawing.Size(179, 22);
             this.itemRefreshAnalysis.Text = "toolStripMenuItem1";
+            // 
+            // contextMenuAnalysisLang
+            // 
+            this.contextMenuAnalysisLang.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.itemFill100PercMatches});
+            this.contextMenuAnalysisLang.Name = "contextMenuAnalysisLang";
+            this.contextMenuAnalysisLang.Size = new System.Drawing.Size(173, 26);
+            // 
+            // itemFill100PercMatches
+            // 
+            this.itemFill100PercMatches.Name = "itemFill100PercMatches";
+            this.itemFill100PercMatches.Size = new System.Drawing.Size(172, 22);
+            this.itemFill100PercMatches.Text = "Fill 100% Matches";
+            this.itemFill100PercMatches.Click += new System.EventHandler(this.itemFill100PercMatches_Click);
+            // 
+            // iconImageList
+            // 
+            this.iconImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iconImageList.ImageStream")));
+            this.iconImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.iconImageList.Images.SetKeyName(0, "Solution.ico");
+            this.iconImageList.Images.SetKeyName(1, "Project.ico");
+            this.iconImageList.Images.SetKeyName(2, "ResxFileGroup.ico");
+            this.iconImageList.Images.SetKeyName(3, "ResxFile.ico");
+            this.iconImageList.Images.SetKeyName(4, "Book_StackOfReportsHS.ico");
+            this.iconImageList.Images.SetKeyName(5, "book_reportHS.ico");
             // 
             // SolutionTree
             // 
@@ -128,6 +158,7 @@ namespace ResourceManager.Client.Controls
             this.contextMenuResxFile.ResumeLayout(false);
             this.contextMenuProject.ResumeLayout(false);
             this.contextMenuAnalysis.ResumeLayout(false);
+            this.contextMenuAnalysisLang.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -145,5 +176,8 @@ namespace ResourceManager.Client.Controls
         private System.Windows.Forms.ContextMenuStrip contextMenuAnalysis;
         private System.Windows.Forms.ToolStripMenuItem itemRefreshAnalysis;
         private System.Windows.Forms.ToolStripComboBox cbCultureInfos;
+        private System.Windows.Forms.ContextMenuStrip contextMenuAnalysisLang;
+        private System.Windows.Forms.ToolStripMenuItem itemFill100PercMatches;
+        private System.Windows.Forms.ImageList iconImageList;
     }
 }

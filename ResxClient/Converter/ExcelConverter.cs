@@ -241,18 +241,7 @@ namespace ResourceManager.Core
                             {
                                 if (!dataGroup.ResxData.ContainsKey(cultures[i].Culture))
                                 {
-                                    IResourceFile file = null;
-                                    if (project.ResxGroups[id].Files.ContainsKey(cultures[i].Culture))
-                                    {
-                                        file = project.ResxGroups[id].Files[cultures[i].Culture];
-                                    }
-                                    else
-                                    {
-                                        file = project.ResxGroups[id].CreateNewFile(cultures[i].Culture);
-                                    }
-
-
-                                    file.CreateResourceData(key, valueNode.InnerText);
+                                    project.ResxGroups[id].SetResourceData(key, valueNode.InnerText, cultures[i].Culture);                                   
                                 }
                                 else
                                 {

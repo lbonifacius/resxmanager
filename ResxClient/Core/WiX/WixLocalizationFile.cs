@@ -5,7 +5,6 @@ using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace ResourceManager.Core
 {
@@ -16,13 +15,12 @@ namespace ResourceManager.Core
         public WixLocalizationFile(VSFileContainer folder, FileInfo file) 
             : base(folder, file)
         {
-            var r = new Regex(".([a-zA-Z]{2,2}([-][a-zA-Z]{2,2})*).wxl");
-            var m = r.Match(file.Name);
+            string filename = Path.GetFileNameWithoutExtension(file.Name);
 
-            if (m.Success)
-                Prefix = file.Name.Substring(0, file.Name.Length - m.Value.Length);
+            if (filename.LastIndexOf(Culture.Name) > 0)
+                Prefix = filename.Substring(0, filename.LastIndexOf(Culture.Name) - 1);
             else
-                Prefix = Path.GetFileNameWithoutExtension(file.Name);
+                Prefix = filename;
 
             using (XmlReader reader = new XmlTextReader(file.FullName))
             {

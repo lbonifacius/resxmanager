@@ -116,6 +116,18 @@ namespace ResourceManager.Core
 
         public abstract void CreateResourceData(string name, string value);
 
+        public void SetResourceData(string name, string value)
+        {
+            if (Data.ContainsKey(name))
+            {
+                Data[name].Value = value;
+            }
+            else
+            {
+                CreateResourceData(name, value);
+            }
+        }
+
         public abstract void Save();
 
         /// <summary>

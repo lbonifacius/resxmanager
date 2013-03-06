@@ -29,7 +29,7 @@ namespace ResourceManager.Core
             if(resxdata.ResxFile.Culture != null)
                 this.data.Add(resxdata.ResxFile.Culture, resxdata);
         }
-
+       
         public bool IsComplete(IEnumerable<CultureInfo> requiredCultures)
         {
             return ResxData.Keys.Intersect(requiredCultures).Count() == requiredCultures.Count();

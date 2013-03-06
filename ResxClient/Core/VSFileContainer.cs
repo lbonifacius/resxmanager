@@ -115,6 +115,7 @@ namespace ResourceManager.Core
             get;
             private set;
         }
+        
         //public List<VSResxFile> GetResourceFiles()
         //{
         //    List<VSResxFile> resxFiles = new List<VSResxFile>();

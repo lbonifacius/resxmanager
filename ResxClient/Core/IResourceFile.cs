@@ -11,6 +11,7 @@ namespace ResourceManager.Core
         string Prefix { get; }
         IResourceFileGroup FileGroup { get; }
         void CreateResourceData(string name, string value);
+        void SetResourceData(string name, string value);
         void Save();
         void SetFileGroup(IResourceFileGroup group);
     }

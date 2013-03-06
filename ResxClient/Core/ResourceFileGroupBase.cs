@@ -44,6 +44,19 @@ namespace ResourceManager.Core
                 }
             }
         }
+        public void SetResourceData(string key, string value, CultureInfo culture)
+        {
+            if (!Files.ContainsKey(culture))
+            {
+                IResourceFile file = CreateNewFile(culture);
+
+                file.CreateResourceData(key, value);
+            }
+            else
+            {
+                Files[culture].SetResourceData(key, value);
+            }
+        }
 
         public Dictionary<CultureInfo, IResourceFile> Files
         {

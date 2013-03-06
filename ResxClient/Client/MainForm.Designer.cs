@@ -34,6 +34,8 @@ namespace ResourceManager.Client
             this.itemSaveResources = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.itemClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.translationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.storeAllTranslationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resourcenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemExportAll = new System.Windows.Forms.ToolStripMenuItem();
             this.itemExportDiff = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +56,7 @@ namespace ResourceManager.Client
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dateiToolStripMenuItem,
+            this.translationsToolStripMenuItem,
             this.resourcenToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -97,6 +100,21 @@ namespace ResourceManager.Client
             this.itemClose.Size = new System.Drawing.Size(179, 22);
             this.itemClose.Text = "Beenden";
             this.itemClose.Click += new System.EventHandler(this.beendenToolStripMenuItem_Click);
+            // 
+            // translationsToolStripMenuItem
+            // 
+            this.translationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.storeAllTranslationsToolStripMenuItem});
+            this.translationsToolStripMenuItem.Name = "translationsToolStripMenuItem";
+            this.translationsToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.translationsToolStripMenuItem.Text = "Translations";
+            // 
+            // storeAllTranslationsToolStripMenuItem
+            // 
+            this.storeAllTranslationsToolStripMenuItem.Name = "storeAllTranslationsToolStripMenuItem";
+            this.storeAllTranslationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.storeAllTranslationsToolStripMenuItem.Text = "StoreAllTranslations";
+            this.storeAllTranslationsToolStripMenuItem.Click += new System.EventHandler(this.storeAllTranslationsToolStripMenuItem_Click);
             // 
             // resourcenToolStripMenuItem
             // 
@@ -214,6 +232,8 @@ namespace ResourceManager.Client
         private System.Windows.Forms.ToolStripStatusLabel toolBarStatus;
         private System.Windows.Forms.ToolStripProgressBar toolBarProgress;
         private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripMenuItem translationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem storeAllTranslationsToolStripMenuItem;
     }
 }
 

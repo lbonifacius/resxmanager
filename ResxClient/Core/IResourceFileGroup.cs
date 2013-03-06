@@ -9,6 +9,7 @@ namespace ResourceManager.Core
         VSFileContainer Container { get; }
         IResourceFile CreateNewFile(System.Globalization.CultureInfo culture);
         ResourceDataGroupBase CreateDataGroup(string name);
+        void SetResourceData(string key, string value, CultureInfo culture);
 
         string FileGroupPath { get; }
         string ID { get; }

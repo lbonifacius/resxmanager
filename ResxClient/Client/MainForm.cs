@@ -12,6 +12,9 @@ using System.Reflection;
 using System.IO;
 using ResourceManager.Properties;
 using System.Threading;
+using ResourceManager.Storage;
+using System.Globalization;
+using System.Linq;
 
 namespace ResourceManager.Client
 {
@@ -37,12 +40,22 @@ namespace ResourceManager.Client
 
             this.itemExportAll.Enabled = false;
             this.itemSaveResources.Enabled = false;
+            this.storeAllTranslationsToolStripMenuItem.Enabled = false;
 
             this.openExcelDialog.FileOk += new CancelEventHandler(openExcelDialog_FileOk);
 
             this.openExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
             this.saveExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
             this.openFileDialog.Filter = Properties.Resources.VSSolutionFileFilter;
+
+            this.storeAllTranslationsToolStripMenuItem.Text = Properties.Resources.StoreAllTranslations;
+
+            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+        }
+
+        void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
         }
 
         private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -102,6 +115,7 @@ namespace ResourceManager.Client
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportDiff.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = true));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = true));
 
             resetToolbarStatusText();
         }
@@ -164,5 +178,20 @@ namespace ResourceManager.Client
                 excel.Export().Save(saveExcelDialog.FileName);
             }
         }
+
+        private void storeAllTranslationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Threading.Tasks.Task.Factory.StartNew(() => storeAllTranslations()); 
+        }
+
+        private void storeAllTranslations()
+        {
+            setToolbarStatusText(Resources.StoringTranslations);
+
+            TranslationStorageManager manager = new TranslationStorageManager();
+            manager.Store(this.solutionTree1.Solution);
+
+            setToolbarStatusText(Resources.StoringTranslationsCompleted, 4000);
+        }        
     }
 }

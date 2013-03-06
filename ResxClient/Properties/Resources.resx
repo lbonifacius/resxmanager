@@ -177,4 +177,16 @@
   <data name="ClientTitle" xml:space="preserve">
     <value>RESX Manager</value>
   </data>
+  <data name="StoringTranslations" xml:space="preserve">
+    <value>Storing translations</value>
+  </data>
+  <data name="StoringTranslationsCompleted" xml:space="preserve">
+    <value>Storing translations completed</value>
+  </data>
+  <data name="StoreAllTranslations" xml:space="preserve">
+    <value>Store all translations to database</value>
+  </data>
+  <data name="Fill100PercMatches" xml:space="preserve">
+    <value>Fill with 100%-matches from database</value>
+  </data>
 </root>
