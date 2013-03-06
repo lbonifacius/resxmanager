@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ResourceManager.Core.VSSolution">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <Members>
+      <Field Name="cultures" Hidden="true" />
+      <Field Name="projects" Hidden="true" />
+      <Field Name="solutionDirectory" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAgAAAAQAAAAgAACAIAABAAAAAQA=</HashCode>
+      <FileName>Core\VSSolution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager.Core.ResourceFileGroupBase">
+    <Position X="7.25" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="container" Hidden="true" />
+      <Field Name="data" Hidden="true" />
+      <Field Name="files" Hidden="true" />
+      <Field Name="path" Hidden="true" />
+      <Field Name="prefix" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BAIgAAQAEAAAgAAgAAACAEACAAAAAgQAAAAQgAACAAA=</HashCode>
+      <FileName>Core\ResourceFileGroupBase.cs</FileName>
+      <NewMemberFileName>Core\VSResxFileGroup.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ResourceManager.Core.WixLocalizationFile" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="xml" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAggAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Core\WiX\VSResxFile.cs</FileName>
+      <NewMemberFileName>Core\VSResxFile.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ResourceManager.Core.ResourceDataGroupBase">
+    <Position X="7.25" Y="4.5" Width="2.25" />
+    <Members>
+      <Field Name="data" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AQIAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Core\ResourceDataGroupBase.cs</FileName>
+      <NewMemberFileName>Core\VSResxDataGroup.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager.Core.ResourceDataBase">
+    <Position X="10.25" Y="4.5" Width="2.25" />
+    <Members>
+      <Field Name="file" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+      <Field Name="xmlValue" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAECAAAAAAAAAAAAAAAQAAAAEAAQABAAgAAAAAAA=</HashCode>
+      <FileName>Core\ResourceDataBase.cs</FileName>
+      <NewMemberFileName>Core\VSResxData.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager.Core.VSProjectFolder">
+    <Position X="3.25" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Core\VSProjectFolder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager.Core.VSFileContainer">
+    <Position X="0.75" Y="4" Width="1.5" />
+    <Members>
+      <Field Name="directory" Hidden="true" />
+      <Field Name="project" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAFAAAAAQgAAAAAAASAAAAAgAAAAAAAACAAAAEIA=</HashCode>
+      <FileName>Core\VSFileContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager.Core.VSCulture">
+    <Position X="3.25" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="culture" Hidden="true" />
+      <Field Name="files" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAABAAQAAAAAAAAAAgAAAAIA=</HashCode>
+      <FileName>Core\VSCulture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceManager.Core.VSProject">
+    <Position X="3.25" Y="3.25" Width="2.25" />
+    <Members>
+      <Field Name="cultures" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+      <Field Name="resxProjectFile" Hidden="true" />
+      <Field Name="unassignedFiles" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAwABAAEAAAAAAAAAAAAAQAAAAkIAAAAAAAQAAAIAA=</HashCode>
+      <FileName>Core\VSProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
