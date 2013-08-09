@@ -42,7 +42,7 @@ namespace ResourceManager.Core
                 {
                     Culture = CultureInfo.GetCultureInfo(parts[posCultureInfo]);
                     IsCultureAutoDetected = true;
-                    Prefix = file.Name.Substring(0, file.Name.LastIndexOf(parts[posCultureInfo]));
+                    Prefix = buildPrefix(parts, posCultureInfo);
 
                     if (Prefix.LastIndexOf('.') == Prefix.Length - 1)
                         Prefix = Prefix.Substring(0, Prefix.Length - 1);
@@ -59,11 +59,19 @@ namespace ResourceManager.Core
             }
 
             folder.Project.ResxProjectFile.LoadFile(this);
-        }        
-
-        public override void CreateResourceData(string name, string value)
+        }
+        private string buildPrefix(string[] parts, int posCulutureInfo)
         {
-            VSResxData resxData = new VSResxData(this, name, value);
+            string s = parts[0];
+            for (int i = 1; i < posCulutureInfo; i++)
+            { 
+                s += "." + parts[i];
+            }
+            return s;
+        }
+        public override void CreateResourceData(string name, string value, string comment)
+        {
+            VSResxData resxData = new VSResxData(this, name, value, comment);
             Data.Add(name, resxData);
             this.FileGroup.AllData[name].Add(resxData);
         }

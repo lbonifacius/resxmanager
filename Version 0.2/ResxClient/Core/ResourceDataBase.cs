@@ -10,11 +10,19 @@ namespace ResourceManager.Core
     {
         private string name;
         private string xmlValue;
+        private string comment;
         private IResourceFile file;
 
         public ResourceDataBase(IResourceFile file)
         {
             this.file = file;
+        }
+        public ResourceDataBase(IResourceFile file, string name, string value, string comment)
+        {
+            this.file = file;
+            this.name = name;
+            this.xmlValue = value;
+            this.comment = comment;
         }
         public ResourceDataBase(IResourceFile file, string name, string value)
         {
@@ -42,6 +50,14 @@ namespace ResourceManager.Core
             set 
             { 
                 xmlValue = value;
+            }
+        }
+        public string Comment
+        {
+            get { return comment; }
+            set
+            {
+                comment = value;
             }
         }
     }

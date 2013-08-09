@@ -15,6 +15,7 @@ using System.Threading;
 using ResourceManager.Storage;
 using System.Globalization;
 using System.Linq;
+using ResourceManager.Converter;
 
 namespace ResourceManager.Client
 {
@@ -34,9 +35,11 @@ namespace ResourceManager.Client
             this.itemSaveResources.Text = Resources.SaveResources;
             this.itemClose.Text = Resources.Exit;
             this.itemOpenSolution.Text = Resources.OpenSolution;
+            this.itemCloseSolution.Text = Resources.CloseSolution;
             this.itemExportAll.Text = Resources.ExportToExcel;
             this.itemImportAll.Text = Resources.ImportFromExcel;
             this.itemExportDiff.Text = Resources.ExportToExcelDiff;
+            this.toolStripMenuItemSetupDb.Text = Resources.SetupDatabase;
 
             this.itemExportAll.Enabled = false;
             this.itemSaveResources.Enabled = false;
@@ -44,11 +47,13 @@ namespace ResourceManager.Client
 
             this.openExcelDialog.FileOk += new CancelEventHandler(openExcelDialog_FileOk);
 
-            this.openExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
+            this.openExcelDialog.Filter = Properties.Resources.ExcelImportFileFilter;
             this.saveExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
             this.openFileDialog.Filter = Properties.Resources.VSSolutionFileFilter;
 
             this.storeAllTranslationsToolStripMenuItem.Text = Properties.Resources.StoreAllTranslations;
+
+            this.solutionTree1.Main = this;
 
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
         }
@@ -74,11 +79,11 @@ namespace ResourceManager.Client
 
         #region Status text
         private System.Threading.Timer toolbarStatusTimer;
-        private void setToolbarStatusText(string text)
+        public void setToolbarStatusText(string text)
         {
             this.statusStrip1.Invoke((MethodInvoker)(() => this.toolBarStatus.Text = text));
         }
-        private void setToolbarStatusText(string text, int milliseconds)
+        public void setToolbarStatusText(string text, int milliseconds)
         {
             this.statusStrip1.Invoke((MethodInvoker)(() => this.toolBarStatus.Text = text));
 
@@ -115,9 +120,22 @@ namespace ResourceManager.Client
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportDiff.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = true));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemOpenSolution.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = true));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = true));
 
             resetToolbarStatusText();
+        }
+        private void closeSolution()
+        {
+            this.solutionTree1.Solution = null;
+
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportAll.Enabled = false));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = false));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportDiff.Enabled = false));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = false));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = false));
+            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = false));
         }
         private void saveResourceFiles()
         {
@@ -146,13 +164,13 @@ namespace ResourceManager.Client
 
         private void itemExportAll_Click(object sender, EventArgs e)
         {
-            saveExcelDialog.FileName = this.solutionTree1.Solution.Name + ".xls";
+            saveExcelDialog.FileName = this.solutionTree1.Solution.Name + ".xlsx";
             DialogResult result = saveExcelDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                ExcelConverter excel = new ExcelConverter(this.solutionTree1.Solution);
-                excel.Export().Save(saveExcelDialog.FileName);
+                var excel = new XlsxConverter(this.solutionTree1.Solution);
+                excel.Export(saveExcelDialog.FileName);
             }
         }
 
@@ -162,20 +180,20 @@ namespace ResourceManager.Client
         }
         private void openExcelDialog_FileOk(object sender, CancelEventArgs e)
         {
-            ExcelConverter excel = new ExcelConverter(this.solutionTree1.Solution);
+            IConverter excel = ConverterFactory.OpenConverter(openExcelDialog, this.solutionTree1.Solution);
             excel.Import(openExcelDialog.FileName);
         }
 
         private void itemExportDiff_Click(object sender, EventArgs e)
         {
-            saveExcelDialog.FileName = this.solutionTree1.Solution.Name + ".xls";
+            saveExcelDialog.FileName = this.solutionTree1.Solution.Name + ".xlsx";
             DialogResult result = saveExcelDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                ExcelConverter excel = new ExcelConverter(this.solutionTree1.Solution);
+                var excel = new XlsxConverter(this.solutionTree1.Solution);
                 excel.ExportDiff = true;
-                excel.Export().Save(saveExcelDialog.FileName);
+                excel.Export(saveExcelDialog.FileName);
             }
         }
 
@@ -189,9 +207,24 @@ namespace ResourceManager.Client
             setToolbarStatusText(Resources.StoringTranslations);
 
             TranslationStorageManager manager = new TranslationStorageManager();
+            if (!manager.DatabaseExists())
+            {
+                manager.CreateDatabase();
+            }
             manager.Store(this.solutionTree1.Solution);
 
             setToolbarStatusText(Resources.StoringTranslationsCompleted, 4000);
+        }
+
+        private void itemCloseSolution_Click(object sender, EventArgs e)
+        {
+            closeSolution();
+        }
+
+        private void toolStripMenuItemSetupDb_Click(object sender, EventArgs e)
+        {
+            var dialog = new SetupDatabase();
+            dialog.Show();
         }        
     }
 }

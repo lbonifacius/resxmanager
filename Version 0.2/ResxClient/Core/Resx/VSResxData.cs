@@ -18,9 +18,14 @@ namespace ResourceManager.Core
             {
                 Value = values.Current.Value;
             }
+            values = nav.Select("comment");
+            if (values.MoveNext())
+            {
+                Comment = values.Current.Value;
+            }
         }
-        public VSResxData(VSResxFile file, string name, string value)
-            : base(file, name, value)
+        public VSResxData(VSResxFile file, string name, string value, string comment)
+            : base(file, name, value, comment)
         {
         }
     }

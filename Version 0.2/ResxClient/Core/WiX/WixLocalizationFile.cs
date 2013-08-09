@@ -67,7 +67,7 @@ namespace ResourceManager.Core
             }
         }        
 
-        public override void CreateResourceData(string name, string value)
+        public override void CreateResourceData(string name, string value, string comment)
         {
             WixLocalizationData resxData = new WixLocalizationData(this, name, value);
             Data.Add(name, resxData);

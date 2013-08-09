@@ -56,7 +56,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
@@ -79,7 +81,17 @@
     <Compile Include="Client\Controls\SolutionTree.Designer.cs">
       <DependentUpon>SolutionTree.cs</DependentUpon>
     </Compile>
+    <Compile Include="Client\SetupDatabase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Client\SetupDatabase.Designer.cs">
+      <DependentUpon>SetupDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\ConverterBase.cs" />
+    <Compile Include="Converter\ConverterFactory.cs" />
     <Compile Include="Converter\Exceptions\ProjectUnknownException.cs" />
+    <Compile Include="Converter\IConverter.cs" />
+    <Compile Include="Converter\XlsxConverter.cs" />
     <Compile Include="Core\IResourceFile.cs" />
     <Compile Include="Core\IResourceFileGroup.cs" />
     <Compile Include="Core\ResourceDataBase.cs" />
@@ -123,6 +135,9 @@
     <EmbeddedResource Include="Client\MainForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Client\SetupDatabase.resx">
+      <DependentUpon>SetupDatabase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -189,10 +204,7 @@
     <Content Include="Client\Controls\Icons\ResxFileGroup.ico" />
     <Content Include="Client\Controls\Icons\Solution.ico" />
     <Content Include="Client\Controls\Icons\Project.ico" />
-    <Content Include="TranslationStorage.mdf" />
-    <Content Include="TranslationStorage_log.ldf">
-      <DependentUpon>TranslationStorage.mdf</DependentUpon>
-    </Content>
+    <EmbeddedResource Include="Storage\Sql\StoredProcedures1.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

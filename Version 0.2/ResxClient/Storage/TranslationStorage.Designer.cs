@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM-Beziehungsmetadaten
@@ -120,6 +121,7 @@ namespace ResourceManager.Storage
         private ObjectSet<TranslationText> _TranslationTexts;
 
         #endregion
+
         #region AddTo-Methoden
     
         /// <summary>
@@ -147,6 +149,7 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
         #region Funktionsimporte
     
         /// <summary>
@@ -330,11 +333,11 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entitäten
     
     /// <summary>
@@ -359,6 +362,7 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
         #region Primitive Eigenschaften
     
         /// <summary>
@@ -413,6 +417,7 @@ namespace ResourceManager.Storage
         partial void OnCultureNameChanged();
 
         #endregion
+
     
     }
     
@@ -438,6 +443,7 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
         #region Primitive Eigenschaften
     
         /// <summary>
@@ -468,6 +474,7 @@ namespace ResourceManager.Storage
         partial void OnTranslationIDChanged();
 
         #endregion
+
     
         #region Navigationseigenschaften
     
@@ -494,6 +501,7 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -524,6 +532,7 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
         #region Primitive Eigenschaften
     
         /// <summary>
@@ -674,6 +683,7 @@ namespace ResourceManager.Storage
         partial void OnModifiedDateChanged();
 
         #endregion
+
     
         #region Navigationseigenschaften
     
@@ -754,8 +764,10 @@ namespace ResourceManager.Storage
         }
 
         #endregion
+
     }
 
     #endregion
+
     
 }
