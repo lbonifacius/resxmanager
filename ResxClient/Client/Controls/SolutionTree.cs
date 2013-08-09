@@ -9,6 +9,7 @@ using ResourceManager.Core;
 using System.Globalization;
 using System.Linq;
 using ResourceManager.Storage;
+using ResourceManager.Converter;
 
 namespace ResourceManager.Client.Controls
 {
@@ -26,7 +27,12 @@ namespace ResourceManager.Client.Controls
                 loadTree();            
             }
         }
-	
+        public MainForm Main
+        {
+            get;
+            set;
+        }
+
         public SolutionTree()
         {
             InitializeComponent();
@@ -43,7 +49,7 @@ namespace ResourceManager.Client.Controls
             this.itemRefreshAnalysis.Text = Properties.Resources.Refresh;
             this.itemRefreshAnalysis.Click += new EventHandler(itemRefreshAnalysis_Click);
 
-            this.openFileDialog.Filter = Properties.Resources.ExcelFileFilter;
+            this.openFileDialog.Filter = Properties.Resources.ExcelImportFileFilter;
             this.saveFileDialog.Filter = Properties.Resources.ExcelFileFilter;
 
             this.itemFill100PercMatches.Text = Properties.Resources.Fill100PercMatches;
@@ -108,6 +114,11 @@ namespace ResourceManager.Client.Controls
                 loadCultures(slnNode);
 
                 this.treeView.Invoke((MethodInvoker)(() => slnNode.Expand()));
+            }
+            else
+            {
+                if (this.treeView.Nodes.Count > 0)
+                    this.treeView.Nodes.Clear();
             }
         }
         private void loadProjects(TreeNode parent)
@@ -239,7 +250,7 @@ namespace ResourceManager.Client.Controls
 
         private void itemExportToExcel_Click(object sender, EventArgs e)
         {
-            saveFileDialog.FileName = ((ProjectTreeNode)treeView.SelectedNode).Project.Name + ".xls";
+            saveFileDialog.FileName = ((ProjectTreeNode)treeView.SelectedNode).Project.Name + ".xlsx";
             DialogResult result = saveFileDialog.ShowDialog();           
 
             if (result == DialogResult.OK)
@@ -256,28 +267,36 @@ namespace ResourceManager.Client.Controls
 
         private void openFileDialog_FileOk(object sender, CancelEventArgs e)
         {
-            ExcelConverter excel = new ExcelConverter(((ProjectTreeNode)treeView.SelectedNode).Project);
+            IConverter excel = ConverterFactory.OpenConverter(openFileDialog, ((ProjectTreeNode)treeView.SelectedNode).Project);
             excel.Import(openFileDialog.FileName);
         }
 
         private void itemFill100PercMatches_Click(object sender, EventArgs e)
         {
+            Main.setToolbarStatusText(Properties.Resources.SearchingTranslations);
+
             CultureAnalysisResultTreeNode node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
 
             List<ResourceDataBase> notexisting = node.SourceCulture.GetItemsNotExistingInCulture(node.TargetCulture);
 
             var trans = new TranslationStorageManager();
-            
+            int process = 1;
+            int found = 0;
             foreach(var data in notexisting)
             {
+                Main.setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, notexisting.Count()));
+
                 var result = trans.Search(data, node.TargetCulture.Culture);
 
                 if (result.Count() > 0)
                 {
-                    data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, node.TargetCulture.Culture);
+                    found++;
+                    data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, "", node.TargetCulture.Culture);
                 }
+                process++;
             }
 
+            Main.setToolbarStatusText(String.Format(Properties.Resources.SearchingTranslationsResult, found), 4000);
             loadNotExistings(node);
         }
 

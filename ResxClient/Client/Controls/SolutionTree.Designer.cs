@@ -104,11 +104,11 @@ namespace ResourceManager.Client.Controls
             // 
             // saveFileDialog
             // 
-            this.saveFileDialog.Filter = "Excel-Document|*.xls";
+            this.saveFileDialog.Filter = "Excel-Document|*.xlsx";
             // 
             // openFileDialog
             // 
-            this.openFileDialog.Filter = "Excel-Document|*.xls";
+            this.openFileDialog.Filter = "Excel-Document|*.xlsx";
             this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
             // 
             // contextMenuAnalysis

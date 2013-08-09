@@ -62,10 +62,7 @@ namespace ResourceManager.Core
         }
         protected string CleanDirectoryPath(string filepath)
         {
-            string subdir = filepath.Replace(Path.GetFileName(filepath), "");
-            if (subdir == "")
-                subdir = filepath;
-            return subdir;
+            return filepath.Replace(Path.GetFileName(filepath), "");
         }
 
         public DirectoryInfo Directory

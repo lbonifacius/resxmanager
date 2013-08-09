@@ -4,14 +4,79 @@ using System.Linq;
 using System.Text;
 using ResourceManager.Core;
 using System.Globalization;
+using System.Configuration;
+using System.Data.EntityClient;
+using System.Data.Common;
+using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Data.SqlClient;
 
 namespace ResourceManager.Storage
 {
     public class TranslationStorageManager
     {
+        public static string getConnectionString()
+        {
+            return ConfigurationManager.ConnectionStrings["TranslationStorage"].ConnectionString;
+        }
+        public static EntityConnectionStringBuilder GetConnectionSetting()
+        {
+            return new EntityConnectionStringBuilder(getConnectionString());
+        }
+
+        public bool DatabaseExists()
+        {
+            using (TranslationStorage context = new TranslationStorage(getConnectionString()))
+            {
+                return context.DatabaseExists();
+            }
+        }
+        public void CreateDatabase()
+        {
+            using (TranslationStorage context = new TranslationStorage(getConnectionString()))
+            {
+                if (!context.DatabaseExists())
+                    context.CreateDatabase();                               
+            }
+            using (var connection = new SqlConnection(GetConnectionSetting().ProviderConnectionString))
+            {
+                connection.Open();
+                var transaction = connection.BeginTransaction();
+
+                ExecuteSQLFile(transaction, "ResourceManager.Storage.Sql.StoredProcedures1.sql");
+
+                transaction.Commit();
+            } 
+        }
+
+        private static void ExecuteSQLFile(SqlTransaction transaction, string manifestName)
+        {
+            string sql;
+
+            using (Stream strm = Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestName))
+            {
+                var reader = new StreamReader(strm);
+                sql = reader.ReadToEnd();
+            }
+
+            var regex = new Regex("^GO", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            string[] lines = regex.Split(sql);
+
+            foreach (string line in lines)
+            {
+                if (!String.IsNullOrEmpty(line))
+                {
+                    var command = transaction.Connection.CreateCommand();
+                    command.CommandText = line;
+                    command.Transaction = transaction;
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
         public IEnumerable<TranslationText> Search(ResourceDataBase source, CultureInfo targetCulture)
         {
-            using (TranslationStorage context = new TranslationStorage())
+            using (TranslationStorage context = new TranslationStorage(getConnectionString()))
             {
                 return context.SearchTranslation(source.Value, source.ResxFile.Culture.Name, targetCulture.Name)
                     .ToList();
@@ -20,7 +85,7 @@ namespace ResourceManager.Storage
 
         public void Store(VSSolution solution)
         {
-            using (TranslationStorage store = new TranslationStorage())
+            using (TranslationStorage store = new TranslationStorage(getConnectionString()))
             {
                 foreach (var project in solution.Projects.Values)
                 {

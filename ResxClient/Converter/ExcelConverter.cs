@@ -7,10 +7,11 @@ using System.Reflection;
 using System.Globalization;
 using System.Linq;
 using ResourceManager.Converter.Exceptions;
+using ResourceManager.Core;
 
-namespace ResourceManager.Core
+namespace ResourceManager.Converter
 {
-    public class ExcelConverter
+    public class ExcelConverter : ConverterBase, IConverter
     {
         private const string urnschemasmicrosoftcomofficespreadsheet = "urn:schemas-microsoft-com:office:spreadsheet";
         private const string urnschemasmicrosoftcomofficeexcel = "urn:schemas-microsoft-com:office:excel";
@@ -18,25 +19,11 @@ namespace ResourceManager.Core
         private int expandedColumnCount = 0;
         private int expandedRowCount = 0;
 
-        public ExcelConverter(VSSolution solution)
+        public ExcelConverter(VSSolution solution) : base(solution)
         {
-            this.Solution = solution;
         }
-        public ExcelConverter(VSProject project)
+        public ExcelConverter(VSProject project) : base(project)
         {
-            this.Project = project;
-            this.Solution = project.Solution;
-        }
-
-        public VSProject Project
-        {
-            get;
-            private set;
-        }
-        public VSSolution Solution
-        {
-            get;
-            private set;
         }
 
         public XmlDocument Export()
@@ -241,7 +228,7 @@ namespace ResourceManager.Core
                             {
                                 if (!dataGroup.ResxData.ContainsKey(cultures[i].Culture))
                                 {
-                                    project.ResxGroups[id].SetResourceData(key, valueNode.InnerText, cultures[i].Culture);                                   
+                                    project.ResxGroups[id].SetResourceData(key, valueNode.InnerText, "", cultures[i].Culture);                                   
                                 }
                                 else
                                 {
@@ -252,12 +239,6 @@ namespace ResourceManager.Core
                     }
                 }
             }
-        }
-
-        public bool ExportDiff 
-        { 
-            get; 
-            set; 
-        }
+        }       
     }
 }
