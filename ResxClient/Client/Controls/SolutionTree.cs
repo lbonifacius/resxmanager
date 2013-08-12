@@ -50,7 +50,6 @@ namespace ResourceManager.Client.Controls
             this.itemRefreshAnalysis.Click += new EventHandler(itemRefreshAnalysis_Click);
 
             this.openFileDialog.Filter = Properties.Resources.ExcelImportFileFilter;
-            this.saveFileDialog.Filter = Properties.Resources.ExcelFileFilter;
 
             this.itemFill100PercMatches.Text = Properties.Resources.Fill100PercMatches;
 
@@ -250,14 +249,9 @@ namespace ResourceManager.Client.Controls
 
         private void itemExportToExcel_Click(object sender, EventArgs e)
         {
-            saveFileDialog.FileName = ((ProjectTreeNode)treeView.SelectedNode).Project.Name + ".xlsx";
-            DialogResult result = saveFileDialog.ShowDialog();           
-
-            if (result == DialogResult.OK)
-            {
-                ExcelConverter excel = new ExcelConverter(((ProjectTreeNode)treeView.SelectedNode).Project);
-                excel.Export().Save(saveFileDialog.FileName);
-            }
+            var excel = new ExcelExport();
+            excel.Project = ((ProjectTreeNode)treeView.SelectedNode).Project;
+            excel.ShowDialog();
         }
 
         private void itemImportFromExcel_Click(object sender, EventArgs e)
@@ -291,7 +285,7 @@ namespace ResourceManager.Client.Controls
                 if (result.Count() > 0)
                 {
                     found++;
-                    data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, "", node.TargetCulture.Culture);
+                    data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, node.TargetCulture.Culture);
                 }
                 process++;
             }

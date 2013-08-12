@@ -24,11 +24,10 @@ namespace ResourceManager.Core
             this.xmlValue = value;
             this.comment = comment;
         }
-        public ResourceDataBase(IResourceFile file, string name, string value)
+        public ResourceDataBase(IResourceFile file, string name)
         {
             this.file = file;
             this.name = name;
-            this.xmlValue = value;
         }
         public void Reference()
         {

@@ -37,7 +37,6 @@ namespace ResourceManager.Client.Controls
             this.contextMenuProject = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.itemExportToExcel = new System.Windows.Forms.ToolStripMenuItem();
             this.itemImportFromExcel = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.contextMenuAnalysis = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.itemRefreshAnalysis = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,21 +62,21 @@ namespace ResourceManager.Client.Controls
             this.contextMenuResxFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemSetCulture});
             this.contextMenuResxFile.Name = "contextMenuStrip1";
-            this.contextMenuResxFile.Size = new System.Drawing.Size(180, 26);
+            this.contextMenuResxFile.Size = new System.Drawing.Size(181, 26);
             // 
             // itemSetCulture
             // 
             this.itemSetCulture.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cbCultureInfos});
             this.itemSetCulture.Name = "itemSetCulture";
-            this.itemSetCulture.Size = new System.Drawing.Size(179, 22);
+            this.itemSetCulture.Size = new System.Drawing.Size(180, 22);
             this.itemSetCulture.Text = "toolStripMenuItem1";
             this.itemSetCulture.Click += new System.EventHandler(this.itemSetCulture_Click);
             // 
             // cbCultureInfos
             // 
             this.cbCultureInfos.Name = "cbCultureInfos";
-            this.cbCultureInfos.Size = new System.Drawing.Size(250, 21);
+            this.cbCultureInfos.Size = new System.Drawing.Size(250, 23);
             this.cbCultureInfos.Click += new System.EventHandler(this.cbCultureInfos_Click);
             // 
             // contextMenuProject
@@ -86,25 +85,21 @@ namespace ResourceManager.Client.Controls
             this.itemExportToExcel,
             this.itemImportFromExcel});
             this.contextMenuProject.Name = "contextMenuProject";
-            this.contextMenuProject.Size = new System.Drawing.Size(187, 48);
+            this.contextMenuProject.Size = new System.Drawing.Size(189, 48);
             // 
             // itemExportToExcel
             // 
             this.itemExportToExcel.Name = "itemExportToExcel";
-            this.itemExportToExcel.Size = new System.Drawing.Size(186, 22);
+            this.itemExportToExcel.Size = new System.Drawing.Size(188, 22);
             this.itemExportToExcel.Text = "itemExportToExcel";
             this.itemExportToExcel.Click += new System.EventHandler(this.itemExportToExcel_Click);
             // 
             // itemImportFromExcel
             // 
             this.itemImportFromExcel.Name = "itemImportFromExcel";
-            this.itemImportFromExcel.Size = new System.Drawing.Size(186, 22);
+            this.itemImportFromExcel.Size = new System.Drawing.Size(188, 22);
             this.itemImportFromExcel.Text = "itemImportFromExcel";
             this.itemImportFromExcel.Click += new System.EventHandler(this.itemImportFromExcel_Click);
-            // 
-            // saveFileDialog
-            // 
-            this.saveFileDialog.Filter = "Excel-Document|*.xlsx";
             // 
             // openFileDialog
             // 
@@ -116,12 +111,12 @@ namespace ResourceManager.Client.Controls
             this.contextMenuAnalysis.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemRefreshAnalysis});
             this.contextMenuAnalysis.Name = "contextMenuAnalysis";
-            this.contextMenuAnalysis.Size = new System.Drawing.Size(180, 26);
+            this.contextMenuAnalysis.Size = new System.Drawing.Size(181, 26);
             // 
             // itemRefreshAnalysis
             // 
             this.itemRefreshAnalysis.Name = "itemRefreshAnalysis";
-            this.itemRefreshAnalysis.Size = new System.Drawing.Size(179, 22);
+            this.itemRefreshAnalysis.Size = new System.Drawing.Size(180, 22);
             this.itemRefreshAnalysis.Text = "toolStripMenuItem1";
             // 
             // contextMenuAnalysisLang
@@ -129,12 +124,12 @@ namespace ResourceManager.Client.Controls
             this.contextMenuAnalysisLang.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemFill100PercMatches});
             this.contextMenuAnalysisLang.Name = "contextMenuAnalysisLang";
-            this.contextMenuAnalysisLang.Size = new System.Drawing.Size(173, 26);
+            this.contextMenuAnalysisLang.Size = new System.Drawing.Size(169, 26);
             // 
             // itemFill100PercMatches
             // 
             this.itemFill100PercMatches.Name = "itemFill100PercMatches";
-            this.itemFill100PercMatches.Size = new System.Drawing.Size(172, 22);
+            this.itemFill100PercMatches.Size = new System.Drawing.Size(168, 22);
             this.itemFill100PercMatches.Text = "Fill 100% Matches";
             this.itemFill100PercMatches.Click += new System.EventHandler(this.itemFill100PercMatches_Click);
             // 
@@ -170,7 +165,6 @@ namespace ResourceManager.Client.Controls
         private System.Windows.Forms.ToolStripMenuItem itemSetCulture;
         private System.Windows.Forms.ContextMenuStrip contextMenuProject;
         private System.Windows.Forms.ToolStripMenuItem itemExportToExcel;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem itemImportFromExcel;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ContextMenuStrip contextMenuAnalysis;

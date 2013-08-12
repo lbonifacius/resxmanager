@@ -24,8 +24,8 @@ namespace ResourceManager.Core
                 Comment = values.Current.Value;
             }
         }
-        public VSResxData(VSResxFile file, string name, string value, string comment)
-            : base(file, name, value, comment)
+        public VSResxData(VSResxFile file, string name)
+            : base(file, name)
         {
         }
     }

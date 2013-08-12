@@ -61,6 +61,15 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die RESX Manager ähnelt.
         /// </summary>
         internal static string ClientTitle {
@@ -129,6 +138,33 @@ namespace ResourceManager.Properties {
         internal static string Exit {
             get {
                 return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export ähnelt.
+        /// </summary>
+        internal static string Export {
+            get {
+                return ResourceManager.GetString("Export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export comments ähnelt.
+        /// </summary>
+        internal static string ExportComments {
+            get {
+                return ResourceManager.GetString("ExportComments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export missing entries only ähnelt.
+        /// </summary>
+        internal static string ExportDiff {
+            get {
+                return ResourceManager.GetString("ExportDiff", resourceCulture);
             }
         }
         

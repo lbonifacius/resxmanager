@@ -67,12 +67,20 @@ namespace ResourceManager.Core
             }
         }        
 
-        public override void CreateResourceData(string name, string value, string comment)
+        public override void CreateResourceData(string name, string value)
         {
-            WixLocalizationData resxData = new WixLocalizationData(this, name, value);
+            WixLocalizationData resxData = new WixLocalizationData(this, name);
+            resxData.Value = value;
             Data.Add(name, resxData);
             this.FileGroup.AllData[name].Add(resxData);
-        }       
+        }
+        public override void CreateResourceDataComment(string name, string comment)
+        {
+            WixLocalizationData resxData = new WixLocalizationData(this, name);
+            resxData.Comment = comment;
+            Data.Add(name, resxData);
+            this.FileGroup.AllData[name].Add(resxData);
+        }   
 
         public override void Save()
         {

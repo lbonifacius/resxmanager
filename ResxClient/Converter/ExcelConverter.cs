@@ -228,7 +228,7 @@ namespace ResourceManager.Converter
                             {
                                 if (!dataGroup.ResxData.ContainsKey(cultures[i].Culture))
                                 {
-                                    project.ResxGroups[id].SetResourceData(key, valueNode.InnerText, "", cultures[i].Culture);                                   
+                                    project.ResxGroups[id].SetResourceData(key, valueNode.InnerText, cultures[i].Culture);                                   
                                 }
                                 else
                                 {

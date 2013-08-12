@@ -14,8 +14,8 @@ namespace ResourceManager.Core
             Name = nav.GetAttribute("Id", "");
             Value = nav.Value;
         }
-        public WixLocalizationData(WixLocalizationFile file, string name, string value)
-            : base(file, name, value)
+        public WixLocalizationData(WixLocalizationFile file, string name)
+            : base(file, name)
         {
         }
     }

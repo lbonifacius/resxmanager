@@ -37,20 +37,18 @@ namespace ResourceManager.Client
             this.itemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.translationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.storeAllTranslationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemSetupDb = new System.Windows.Forms.ToolStripMenuItem();
             this.resourcenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemExportAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.itemExportDiff = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.itemImportAll = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.openExcelDialog = new System.Windows.Forms.OpenFileDialog();
-            this.saveExcelDialog = new System.Windows.Forms.SaveFileDialog();
             this.toolBarStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolBarProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.solutionTree1 = new ResourceManager.Client.Controls.SolutionTree();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -130,6 +128,11 @@ namespace ResourceManager.Client
             this.storeAllTranslationsToolStripMenuItem.Text = "StoreAllTranslations";
             this.storeAllTranslationsToolStripMenuItem.Click += new System.EventHandler(this.storeAllTranslationsToolStripMenuItem_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
+            // 
             // toolStripMenuItemSetupDb
             // 
             this.toolStripMenuItemSetupDb.Name = "toolStripMenuItemSetupDb";
@@ -141,7 +144,6 @@ namespace ResourceManager.Client
             // 
             this.resourcenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemExportAll,
-            this.itemExportDiff,
             this.toolStripSeparator2,
             this.itemImportAll});
             this.resourcenToolStripMenuItem.Name = "resourcenToolStripMenuItem";
@@ -154,14 +156,6 @@ namespace ResourceManager.Client
             this.itemExportAll.Size = new System.Drawing.Size(180, 22);
             this.itemExportAll.Text = "toolStripMenuItem1";
             this.itemExportAll.Click += new System.EventHandler(this.itemExportAll_Click);
-            // 
-            // itemExportDiff
-            // 
-            this.itemExportDiff.Enabled = false;
-            this.itemExportDiff.Name = "itemExportDiff";
-            this.itemExportDiff.Size = new System.Drawing.Size(180, 22);
-            this.itemExportDiff.Text = "Export Diff";
-            this.itemExportDiff.Click += new System.EventHandler(this.itemExportDiff_Click);
             // 
             // toolStripSeparator2
             // 
@@ -179,10 +173,6 @@ namespace ResourceManager.Client
             // openFileDialog
             // 
             this.openFileDialog.Filter = "Visual-Studio Solution|*.sln";
-            // 
-            // saveExcelDialog
-            // 
-            this.saveExcelDialog.Filter = "Excel-Document|*.xlsx";
             // 
             // toolBarStatus
             // 
@@ -213,11 +203,6 @@ namespace ResourceManager.Client
             this.solutionTree1.Size = new System.Drawing.Size(363, 434);
             this.solutionTree1.Solution = null;
             this.solutionTree1.TabIndex = 1;
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
             // 
             // MainForm
             // 
@@ -253,8 +238,6 @@ namespace ResourceManager.Client
         private System.Windows.Forms.ToolStripMenuItem itemExportAll;
         private System.Windows.Forms.ToolStripMenuItem itemImportAll;
         private System.Windows.Forms.OpenFileDialog openExcelDialog;
-        private System.Windows.Forms.SaveFileDialog saveExcelDialog;
-        private System.Windows.Forms.ToolStripMenuItem itemExportDiff;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripStatusLabel toolBarStatus;
         private System.Windows.Forms.ToolStripProgressBar toolBarProgress;

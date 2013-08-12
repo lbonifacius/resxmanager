@@ -69,9 +69,17 @@ namespace ResourceManager.Core
             }
             return s;
         }
-        public override void CreateResourceData(string name, string value, string comment)
+        public override void CreateResourceData(string name, string value)
         {
-            VSResxData resxData = new VSResxData(this, name, value, comment);
+            VSResxData resxData = new VSResxData(this, name);
+            resxData.Value = value;
+            Data.Add(name, resxData);
+            this.FileGroup.AllData[name].Add(resxData);
+        }
+        public override void CreateResourceDataComment(string name, string comment)
+        {
+            VSResxData resxData = new VSResxData(this, name);
+            resxData.Comment = comment;
             Data.Add(name, resxData);
             this.FileGroup.AllData[name].Add(resxData);
         }
