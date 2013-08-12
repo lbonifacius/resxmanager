@@ -38,7 +38,6 @@ namespace ResourceManager.Client
             this.itemCloseSolution.Text = Resources.CloseSolution;
             this.itemExportAll.Text = Resources.ExportToExcel;
             this.itemImportAll.Text = Resources.ImportFromExcel;
-            this.itemExportDiff.Text = Resources.ExportToExcelDiff;
             this.toolStripMenuItemSetupDb.Text = Resources.SetupDatabase;
 
             this.itemExportAll.Enabled = false;
@@ -48,7 +47,6 @@ namespace ResourceManager.Client
             this.openExcelDialog.FileOk += new CancelEventHandler(openExcelDialog_FileOk);
 
             this.openExcelDialog.Filter = Properties.Resources.ExcelImportFileFilter;
-            this.saveExcelDialog.Filter = Properties.Resources.ExcelFileFilter;
             this.openFileDialog.Filter = Properties.Resources.VSSolutionFileFilter;
 
             this.storeAllTranslationsToolStripMenuItem.Text = Properties.Resources.StoreAllTranslations;
@@ -118,7 +116,6 @@ namespace ResourceManager.Client
 
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportAll.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = true));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportDiff.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemOpenSolution.Enabled = true));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = true));
@@ -132,7 +129,6 @@ namespace ResourceManager.Client
 
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportAll.Enabled = false));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = false));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportDiff.Enabled = false));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = false));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = false));
             this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = false));
@@ -164,14 +160,9 @@ namespace ResourceManager.Client
 
         private void itemExportAll_Click(object sender, EventArgs e)
         {
-            saveExcelDialog.FileName = this.solutionTree1.Solution.Name + ".xlsx";
-            DialogResult result = saveExcelDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                var excel = new XlsxConverter(this.solutionTree1.Solution);
-                excel.Export(saveExcelDialog.FileName);
-            }
+            var excel = new ExcelExport();
+            excel.Solution = this.solutionTree1.Solution;
+            excel.ShowDialog();
         }
 
         private void itemImportAll_Click(object sender, EventArgs e)
@@ -184,18 +175,6 @@ namespace ResourceManager.Client
             excel.Import(openExcelDialog.FileName);
         }
 
-        private void itemExportDiff_Click(object sender, EventArgs e)
-        {
-            saveExcelDialog.FileName = this.solutionTree1.Solution.Name + ".xlsx";
-            DialogResult result = saveExcelDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                var excel = new XlsxConverter(this.solutionTree1.Solution);
-                excel.ExportDiff = true;
-                excel.Export(saveExcelDialog.FileName);
-            }
-        }
 
         private void storeAllTranslationsToolStripMenuItem_Click(object sender, EventArgs e)
         {

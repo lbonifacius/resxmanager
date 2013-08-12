@@ -100,7 +100,7 @@ namespace ResourceManager.Converter
                 AddInlineStringCell(row1, culture.Name);
 
                 if (ExportComments)
-                    AddInlineStringCell(row1, culture.Name + "[Comments]");
+                    AddInlineStringCell(row1, culture.Name + " [Comments]");
             }
 
             sheetData1.Append(row1);
@@ -175,11 +175,22 @@ namespace ResourceManager.Converter
                         {
                             if (!dataGroup.ResxData.ContainsKey(te.Key))
                             {
-                                project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, "", te.Key);
+                                project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, te.Key);
                             }
                             else
                             {
                                 dataGroup.ResxData[te.Key].Value = te.Value;
+                            }
+                        }
+                        foreach (var te in t.Comments)
+                        {
+                            if (!dataGroup.ResxData.ContainsKey(te.Key))
+                            {
+                                project.ResxGroups[t.ID].SetResourceDataComment(t.Key, te.Value, te.Key);
+                            }
+                            else
+                            {
+                                dataGroup.ResxData[te.Key].Comment = te.Value;
                             }
                         }
                     }
@@ -195,6 +206,7 @@ namespace ResourceManager.Converter
             public string Key { get; set; }
 
             private Dictionary<CultureInfo, string> translations = new Dictionary<CultureInfo, string>();
+            private Dictionary<CultureInfo, string> comments = new Dictionary<CultureInfo, string>();
             public string this[CultureInfo culture]
             {
                 get
@@ -206,7 +218,15 @@ namespace ResourceManager.Converter
                     translations[culture] = value;
                 }
             }
+
             public Dictionary<CultureInfo, string> Translations
+            {
+                get
+                {
+                    return translations;
+                }
+            }
+            public Dictionary<CultureInfo, string> Comments
             {
                 get
                 {
@@ -256,10 +276,12 @@ namespace ResourceManager.Converter
                         customer.ID = textArray[0];
                         customer.Key = textArray[1];
 
-                        for (int i = 2; i < textArray.Length; i++)
+                        foreach(var culture in cultures) 
                         {
-                            if (!String.IsNullOrWhiteSpace(textArray[i]))
-                                customer[cultures[i - 2]] = textArray[i];
+                            if (culture.TextColumnIndex > 0 && !String.IsNullOrWhiteSpace(textArray[culture.TextColumnIndex]))
+                                customer.Translations.Add(culture.Culture, textArray[culture.TextColumnIndex]);
+                            if (culture.CommentColumnIndex > 0 && !String.IsNullOrWhiteSpace(textArray[culture.CommentColumnIndex]))
+                                customer.Comments.Add(culture.Culture, textArray[culture.CommentColumnIndex]);
                         }
                         result.Add(customer);
                     }
@@ -272,10 +294,10 @@ namespace ResourceManager.Converter
                 return result;
             }
 
-            public static List<CultureInfo> ReadCultures(Row row, SharedStringTable sharedString)
+            public static List<TranslationColumn> ReadCultures(Row row, SharedStringTable sharedString)
             {
-                IEnumerable<String> textValues =
-                    from cell in row.Descendants<Cell>()
+                var textValues =
+                    (from cell in row.Descendants<Cell>()
                     where cell.CellValue != null
                     select
                     (cell.DataType != null
@@ -283,13 +305,32 @@ namespace ResourceManager.Converter
                         && cell.DataType == CellValues.SharedString
                     ? sharedString.ChildElements[
                         int.Parse(cell.CellValue.InnerText)].InnerText
-                    : cell.CellValue.InnerText)
-                    ;
+                    : cell.CellValue.InnerText)).ToList();
 
                 if (textValues.Count() > 0)
                 {
-                    return textValues.Skip(2).Select(s => new CultureInfo(s))
-                        .ToList<CultureInfo>();
+                    var cols = textValues.Skip(2).Where(s => !s.Contains("[Comments]")).ToList<String>();
+
+                    var list = new List<TranslationColumn>();
+                    foreach (var s in cols)
+                    {
+                        var textColumn = new TranslationColumn(new CultureInfo(s));
+                        textColumn.TextColumnIndex = textValues.IndexOf(s);
+
+                        string commentsKey = s;
+                        if(s != "")
+                            commentsKey += " [Comments]";
+                        else
+                            commentsKey += "[Comments]";
+
+                        var commentColumn = textValues.Skip(2).Where(t => t.Equals(commentsKey)).FirstOrDefault();
+                        if (commentColumn != null)
+                            textColumn.CommentColumnIndex = textValues.IndexOf(commentColumn);
+
+                        list.Add(textColumn);
+                    }
+
+                    return list;
                 }
                 else
                 {
@@ -297,6 +338,30 @@ namespace ResourceManager.Converter
                 }
             }
 
+        }
+
+        public class TranslationColumn
+        {
+            public TranslationColumn(CultureInfo culture)
+            {
+                this.Culture = culture;
+            }
+
+            public CultureInfo Culture
+            {
+                get;
+                private set;
+            }
+            public int TextColumnIndex
+            {
+                get;
+                set;
+            }
+            public int CommentColumnIndex
+            {
+                get;
+                set;
+            }
         }
     }
 }

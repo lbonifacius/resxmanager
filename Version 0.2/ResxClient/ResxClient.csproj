@@ -81,6 +81,12 @@
     <Compile Include="Client\Controls\SolutionTree.Designer.cs">
       <DependentUpon>SolutionTree.cs</DependentUpon>
     </Compile>
+    <Compile Include="Client\ExcelExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Client\ExcelExport.Designer.cs">
+      <DependentUpon>ExcelExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Client\SetupDatabase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,6 +137,9 @@
     <EmbeddedResource Include="Client\Controls\SolutionTree.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SolutionTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Client\ExcelExport.resx">
+      <DependentUpon>ExcelExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Client\MainForm.resx">
       <SubType>Designer</SubType>

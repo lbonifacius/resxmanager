@@ -10,8 +10,10 @@ namespace ResourceManager.Core
         string ID { get; }
         string Prefix { get; }
         IResourceFileGroup FileGroup { get; }
-        void CreateResourceData(string name, string value, string comment);
-        void SetResourceData(string name, string value, string comment);
+        void CreateResourceData(string name, string value);
+        void SetResourceData(string name, string value);
+        void CreateResourceDataComment(string name, string comment);
+        void SetResourceDataComment(string name, string comment);
         void Save();
         void SetFileGroup(IResourceFileGroup group);
     }

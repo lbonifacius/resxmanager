@@ -44,17 +44,30 @@ namespace ResourceManager.Core
                 }
             }
         }
-        public void SetResourceData(string key, string value, string comment, CultureInfo culture)
+        public void SetResourceData(string key, string value, CultureInfo culture)
         {
             if (!Files.ContainsKey(culture))
             {
                 IResourceFile file = CreateNewFile(culture);
 
-                file.CreateResourceData(key, value, comment);
+                file.CreateResourceData(key, value);
             }
             else
             {
-                Files[culture].SetResourceData(key, value, comment);
+                Files[culture].SetResourceData(key, value);
+            }
+        }
+        public void SetResourceDataComment(string key, string comment, CultureInfo culture)
+        {
+            if (!Files.ContainsKey(culture))
+            {
+                IResourceFile file = CreateNewFile(culture);
+
+                file.CreateResourceDataComment(key, comment);
+            }
+            else
+            {
+                Files[culture].SetResourceDataComment(key, comment);
             }
         }
 
