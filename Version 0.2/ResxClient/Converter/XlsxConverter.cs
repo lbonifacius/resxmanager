@@ -77,12 +77,15 @@ namespace ResourceManager.Converter
             {
                 uncompletedDataGroups = project.GetUncompleteDataGroups();
             }
+
             foreach (IResourceFileGroup group in project.ResxGroups.Values)
             {
+                uint rowIndex = 2;
                 foreach (ResourceDataGroupBase dataGroup in group.AllData.Values
                     .Where(resxGroup => uncompletedDataGroups == null || uncompletedDataGroups.Contains(resxGroup)))
                 {
-                    AddData(group, dataGroup, sheetData1);
+                    AddData(group, dataGroup, sheetData1, rowIndex);
+                    rowIndex++;
                 }
             }
 
@@ -92,6 +95,7 @@ namespace ResourceManager.Converter
         private void AddHeader(VSProject project, SheetData sheetData1)
         {
             Row row1 = new Row();
+            row1.RowIndex = 1;
             AddInlineStringCell(row1, "ID");
             AddInlineStringCell(row1, "Keys");
 
@@ -106,9 +110,10 @@ namespace ResourceManager.Converter
             sheetData1.Append(row1);
         }
 
-        private void AddData(IResourceFileGroup group, ResourceDataGroupBase dataGroup, SheetData sheetData1)
+        private void AddData(IResourceFileGroup group, ResourceDataGroupBase dataGroup, SheetData sheetData1, uint rowIndex)
         {
             Row row1 = new Row();
+            row1.RowIndex = rowIndex;
             AddInlineStringCell(row1, group.ID);
             AddInlineStringCell(row1, dataGroup.Name);
 
@@ -147,7 +152,10 @@ namespace ResourceManager.Converter
             {
                 var workBook = package.WorkbookPart.Workbook;
                 var workSheets = workBook.Descendants<Sheet>();
-                var sharedStrings = package.WorkbookPart.SharedStringTablePart.SharedStringTable;
+
+                SharedStringTable sharedStrings = null;
+                if(package.WorkbookPart.SharedStringTablePart != null)
+                    sharedStrings = package.WorkbookPart.SharedStringTablePart.SharedStringTable;
 
                 foreach (var worksheet in workSheets)
                 {
@@ -296,16 +304,29 @@ namespace ResourceManager.Converter
 
             public static List<TranslationColumn> ReadCultures(Row row, SharedStringTable sharedString)
             {
-                var textValues =
-                    (from cell in row.Descendants<Cell>()
-                    where cell.CellValue != null
-                    select
-                    (cell.DataType != null
-                        && cell.DataType.HasValue
-                        && cell.DataType == CellValues.SharedString
-                    ? sharedString.ChildElements[
-                        int.Parse(cell.CellValue.InnerText)].InnerText
-                    : cell.CellValue.InnerText)).ToList();
+                List<String> textValues = null;
+                if (sharedString != null)
+                {
+                    textValues =
+                        (from cell in row.Descendants<Cell>()
+                         where cell.CellValue != null
+                         select
+                         (cell.DataType != null
+                             && cell.DataType.HasValue
+                             && cell.DataType == CellValues.SharedString
+                         ? sharedString.ChildElements[
+                             int.Parse(cell.CellValue.InnerText)].InnerText
+                         : cell.CellValue.InnerText)).ToList();
+                }
+                else
+                {
+                    textValues =
+                            (from cell in row.Descendants<Cell>()
+                             select
+                             (cell.CellValue != null
+                             ? cell.CellValue.InnerText
+                             : cell.InnerText)).ToList();
+                }
 
                 if (textValues.Count() > 0)
                 {
