@@ -15,18 +15,8 @@ namespace ResourceManager.Client.Controls
 {
     public partial class SolutionTree : UserControl
     {
-        private Core.VSSolution solution;
         private IList<CultureInfo> allCultures;
 
-        public Core.VSSolution Solution
-        {
-            get { return solution; }
-            set 
-            { 
-                solution = value;
-                loadTree();            
-            }
-        }
         public MainForm Main
         {
             get;
@@ -51,24 +41,45 @@ namespace ResourceManager.Client.Controls
 
             this.openFileDialog.Filter = Properties.Resources.ExcelImportFileFilter;
 
-            this.itemFill100PercMatches.Text = Properties.Resources.Fill100PercMatches;
+            this.itemFill100PercMatches.Text = Properties.Resources.TranslateAuto;
 
             this.treeView.ImageList = this.iconImageList;
         }       
 
         void itemRefreshAnalysis_Click(object sender, EventArgs e)
         {
+            refreshAnalysis();
+        }
+        private void refreshAnalysis()
+        {
             this.treeView.Nodes[0].LastNode.Remove();
             loadCultures(this.treeView.Nodes[0]);
+        }
+        public void RefreshAnalysis()
+        {
+            Invoke((MethodInvoker)(() => refreshAnalysis()));
+        }
+        public void RefreshAnalysis(CultureAnalysisResultTreeNode node)
+        {
+            Invoke((MethodInvoker)(() => loadNotExistings(node)));
         }
 
         void cbCultureInfos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            IResourceFile file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
+            Main.setToolbarStatusText(Properties.Resources.ChangingCulture);
+
+            var node = (ResxFileTreeNode)this.treeView.SelectedNode;
+            IResourceFile file = (node).ResxFile;
             file.Culture = CultureInfo.GetCultureInfo(((CulturesComboBoxItem)this.cbCultureInfos.SelectedItem).Name);
 
             file.FileGroup.Container.Project.ResxProjectFile.SaveFile(file);
             file.FileGroup.Container.Project.ResxProjectFile.Save();
+
+            node.Refresh();
+            Main.CurrentSolution.RemoveUnusedCultures();
+            refreshAnalysis();
+
+            Main.setToolbarStatusText(Properties.Resources.ChangingCultureCompleted, 4000);
         }
 
         void contextMenuResxFile_Opening(object sender, CancelEventArgs e)
@@ -97,14 +108,14 @@ namespace ResourceManager.Client.Controls
             this.cbCultureInfos.SelectedIndexChanged -= new EventHandler(cbCultureInfos_SelectedIndexChanged);   
         }
 
-        private void loadTree()
+        public void LoadTree()
         {
-            if (solution != null)
+            if (Main.CurrentSolution != null)
             {
                 this.treeView.Invoke((MethodInvoker)(() => this.treeView.Nodes.Clear()));
 
                 TreeNode slnNode = new TreeNode();
-                slnNode.Text = solution.Name;
+                slnNode.Text = Main.CurrentSolution.Name;
                 slnNode.ImageIndex = 0;
                 slnNode.SelectedImageIndex = 0;
                 this.treeView.Invoke((MethodInvoker)(() => treeView.Nodes.Add(slnNode)));
@@ -125,12 +136,13 @@ namespace ResourceManager.Client.Controls
             //TreeNode projectsNode = new TreeNode();
             //projectsNode.Text = Properties.Resources.Projects;            
 
-            foreach (VSProject project in solution.Projects.Values)
+            foreach (VSProject project in Main.CurrentSolution.Projects.Values)
             {
                 ProjectTreeNode projectNode = new ProjectTreeNode();
                 projectNode.Project = project;
-                projectNode.ImageIndex = 1;
-                projectNode.SelectedImageIndex = 1;
+                
+                projectNode.ImageIndex = getProjectImageIndex(project.Type);
+                projectNode.SelectedImageIndex = projectNode.ImageIndex;
                 projectNode.ContextMenuStrip = contextMenuProject;               
 
                 loadFileGroups(projectNode, project);
@@ -141,19 +153,31 @@ namespace ResourceManager.Client.Controls
             //treeView.Invoke((MethodInvoker)(() => parent.Nodes.Add(projectsNode)));
             //treeView.Invoke((MethodInvoker)(() => projectsNode.Expand()));
         }
+        private int getProjectImageIndex(VSProjectTypes type)
+        { 
+            switch (type)
+            { 
+                case VSProjectTypes.CSharp:
+                    return 6;
+                case VSProjectTypes.FSharp:
+                    return 7;
+                case VSProjectTypes.VB:
+                    return 8;
+            }
+            return 9;
+        }
         private void loadFileGroups(TreeNode parent, VSProject project)
         {
             foreach (IResourceFileGroup group in project.ResxGroups.Values)
             {
                 TreeNode fileGroupNode = new TreeNode();
                 fileGroupNode.Text = group.Prefix;
-                fileGroupNode.ImageIndex = 2;
-                fileGroupNode.SelectedImageIndex = 2;
+                fileGroupNode.ImageIndex = 1;
+                fileGroupNode.SelectedImageIndex = 1;
                 parent.Nodes.Add(fileGroupNode);
 
                 loadFiles(fileGroupNode, group);
             }
-
 
             foreach (IResourceFile file in project.UnassignedFiles)
             {
@@ -170,8 +194,8 @@ namespace ResourceManager.Client.Controls
                 ResxFileTreeNode fileNode = new ResxFileTreeNode();
                 fileNode.ContextMenuStrip = this.contextMenuResxFile;
                 fileNode.ResxFile = file;
-                fileNode.ImageIndex = 3;
-                fileNode.SelectedImageIndex = 3;
+                fileNode.ImageIndex = 2;
+                fileNode.SelectedImageIndex = 2;
                 parent.Nodes.Add(fileNode);
             }
         }
@@ -180,16 +204,16 @@ namespace ResourceManager.Client.Controls
             TreeNode culturesNode = new TreeNode();
             culturesNode.Text = Properties.Resources.Cultures;
             culturesNode.ContextMenuStrip = contextMenuAnalysis;
-            culturesNode.ImageIndex = 4;
-            culturesNode.SelectedImageIndex = 4;
+            culturesNode.ImageIndex = 3;
+            culturesNode.SelectedImageIndex = 3;
 
-            foreach (VSCulture culture in solution.Cultures.Values)
+            foreach (VSCulture culture in Main.CurrentSolution.Cultures.Values)
             {
                 TreeNode cultureNode = new TreeNode();
                 cultureNode.Text = culture.Culture.DisplayName;
                 culturesNode.Nodes.Add(cultureNode);
-                cultureNode.ImageIndex = 5;
-                cultureNode.SelectedImageIndex = 5;
+                cultureNode.ImageIndex = 4;
+                cultureNode.SelectedImageIndex = 4;
 
                 loadNotExistings(cultureNode, culture);
             }
@@ -199,7 +223,7 @@ namespace ResourceManager.Client.Controls
         }
         private void loadNotExistings(TreeNode parent, VSCulture culture)
         {
-            foreach (VSCulture targetCulture in solution.Cultures.Values)
+            foreach (VSCulture targetCulture in Main.CurrentSolution.Cultures.Values)
             {
                 if (targetCulture != culture)
                 {
@@ -213,7 +237,7 @@ namespace ResourceManager.Client.Controls
         private void loadNotExistings(CultureAnalysisResultTreeNode node)
         {
             List<ResourceDataBase> notexisting = node.SourceCulture.GetItemsNotExistingInCulture(node.TargetCulture);
-
+                        
             node.ContextMenuStrip = contextMenuAnalysisLang;
             node.Text = String.Format(Properties.Resources.NotExistingInLanguage, new object[] { notexisting.Count, node.TargetCulture.Culture.DisplayName });
 
@@ -232,7 +256,9 @@ namespace ResourceManager.Client.Controls
             foreach (ResourceDataBase item in items)
             {
                 TreeNode itemNode = new TreeNode();
-                itemNode.Text = item.Name + ": " + item.Value;
+                itemNode.Text = item.Name + ": " + (item.Value.Length <= 100 ? item.Value : item.Value.Substring(0, 100) + " (...)");
+                itemNode.ImageIndex = 5;
+                itemNode.SelectedImageIndex = 5;
                 parent.Nodes.Add(itemNode);
             }
         }
@@ -267,31 +293,9 @@ namespace ResourceManager.Client.Controls
 
         private void itemFill100PercMatches_Click(object sender, EventArgs e)
         {
-            Main.setToolbarStatusText(Properties.Resources.SearchingTranslations);
-
             CultureAnalysisResultTreeNode node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
 
-            List<ResourceDataBase> notexisting = node.SourceCulture.GetItemsNotExistingInCulture(node.TargetCulture);
-
-            var trans = new TranslationStorageManager();
-            int process = 1;
-            int found = 0;
-            foreach(var data in notexisting)
-            {
-                Main.setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, notexisting.Count()));
-
-                var result = trans.Search(data, node.TargetCulture.Culture);
-
-                if (result.Count() > 0)
-                {
-                    found++;
-                    data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, node.TargetCulture.Culture);
-                }
-                process++;
-            }
-
-            Main.setToolbarStatusText(String.Format(Properties.Resources.SearchingTranslationsResult, found), 4000);
-            loadNotExistings(node);
+            var task = Main.startNewTask(() => Main.fillTranslations(node));
         }
 
     }

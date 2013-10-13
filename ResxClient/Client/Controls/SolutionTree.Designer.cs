@@ -136,13 +136,17 @@ namespace ResourceManager.Client.Controls
             // iconImageList
             // 
             this.iconImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iconImageList.ImageStream")));
-            this.iconImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.iconImageList.Images.SetKeyName(0, "Solution.ico");
-            this.iconImageList.Images.SetKeyName(1, "Project.ico");
-            this.iconImageList.Images.SetKeyName(2, "ResxFileGroup.ico");
-            this.iconImageList.Images.SetKeyName(3, "ResxFile.ico");
-            this.iconImageList.Images.SetKeyName(4, "Book_StackOfReportsHS.ico");
-            this.iconImageList.Images.SetKeyName(5, "book_reportHS.ico");
+            this.iconImageList.TransparentColor = System.Drawing.Color.Fuchsia;
+            this.iconImageList.Images.SetKeyName(0, "Solution_8308_24.bmp");
+            this.iconImageList.Images.SetKeyName(1, "Files_7954_24.bmp");
+            this.iconImageList.Images.SetKeyName(2, "Nextrequest_10302_24.bmp");
+            this.iconImageList.Images.SetKeyName(3, "Reports-collapsed_12995_24.bmp");
+            this.iconImageList.Images.SetKeyName(4, "GenericVSEditor_9905_24.bmp");
+            this.iconImageList.Images.SetKeyName(5, "Generatedfile_430_24.bmp");
+            this.iconImageList.Images.SetKeyName(6, "CSharpProject_SolutionExplorerNode_24.bmp");
+            this.iconImageList.Images.SetKeyName(7, "VBProject_SolutionExplorerNode_24.bmp");
+            this.iconImageList.Images.SetKeyName(8, "FSharpProject_SolutionExplorerNode_24.bmp");
+            this.iconImageList.Images.SetKeyName(9, "GenericVSProject_9906_16x_24.bmp");
             // 
             // SolutionTree
             // 

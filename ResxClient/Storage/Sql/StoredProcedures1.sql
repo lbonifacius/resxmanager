@@ -18,7 +18,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Fi
 BEGIN
 EXEC dbo.sp_executesql @statement = N'
 CREATE PROCEDURE [dbo].[FindTranslations]
-	@text nvarchar,
+	@text nvarchar(MAX),
 	@culture nvarchar(50)
 AS
 BEGIN
@@ -62,7 +62,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Se
 BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[SearchTranslation] 
 	-- Add the parameters for the stored procedure here
-	@text nvarchar,
+	@text nvarchar(MAX),
 	@srcculture nvarchar(50),
 	@tgtculture nvarchar(50)
 AS

@@ -14,8 +14,8 @@ namespace ResourceManager.Core
         public ResourceDataGroupBase(string name)
         {
             this.name = name;
-        }       
-	
+        }
+
         public Dictionary<CultureInfo, ResourceDataBase> ResxData
         {
             get { return data; }
@@ -29,7 +29,14 @@ namespace ResourceManager.Core
             if(resxdata.ResxFile.Culture != null)
                 this.data.Add(resxdata.ResxFile.Culture, resxdata);
         }
-       
+
+        public bool HasChanged
+        { 
+            get 
+            {
+                return ResxData.Any(p => p.Value.HasChanged);
+            }
+        }       
         public bool IsComplete(IEnumerable<CultureInfo> requiredCultures)
         {
             return ResxData.Keys.Intersect(requiredCultures).Count() == requiredCultures.Count();

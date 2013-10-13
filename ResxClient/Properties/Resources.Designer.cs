@@ -70,6 +70,24 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Applying change ähnelt.
+        /// </summary>
+        internal static string ChangingCulture {
+            get {
+                return ResourceManager.GetString("ChangingCulture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Changing culture completed ähnelt.
+        /// </summary>
+        internal static string ChangingCultureCompleted {
+            get {
+                return ResourceManager.GetString("ChangingCultureCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die RESX Manager ähnelt.
         /// </summary>
         internal static string ClientTitle {
@@ -79,11 +97,29 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Close ähnelt.
+        /// </summary>
+        internal static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Close solution ähnelt.
         /// </summary>
         internal static string CloseSolution {
             get {
                 return ResourceManager.GetString("CloseSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Configure database ähnelt.
+        /// </summary>
+        internal static string CreateDatabase {
+            get {
+                return ResourceManager.GetString("CreateDatabase", resourceCulture);
             }
         }
         
@@ -106,11 +142,47 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Database ähnelt.
+        /// </summary>
+        internal static string Database {
+            get {
+                return ResourceManager.GetString("Database", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Database does not exist. ähnelt.
         /// </summary>
         internal static string DatabaseNotExists {
             get {
                 return ResourceManager.GetString("DatabaseNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Documentation ähnelt.
+        /// </summary>
+        internal static string Documentation {
+            get {
+                return ResourceManager.GetString("Documentation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error ähnelt.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die An error has been occurred. {0}. Please see error.txt for details. ähnelt.
+        /// </summary>
+        internal static string ErrorTextDefault {
+            get {
+                return ResourceManager.GetString("ErrorTextDefault", resourceCulture);
             }
         }
         
@@ -133,7 +205,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Close ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Exit ähnelt.
         /// </summary>
         internal static string Exit {
             get {
@@ -196,11 +268,20 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Fill with 100%-matches from database ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die For further information click here ähnelt.
         /// </summary>
-        internal static string Fill100PercMatches {
+        internal static string HelpSetupDatabase {
             get {
-                return ResourceManager.GetString("Fill100PercMatches", resourceCulture);
+                return ResourceManager.GetString("HelpSetupDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Import ähnelt.
+        /// </summary>
+        internal static string Import {
+            get {
+                return ResourceManager.GetString("Import", resourceCulture);
             }
         }
         
@@ -228,6 +309,15 @@ namespace ResourceManager.Properties {
         internal static string NotExistingInLanguage {
             get {
                 return ResourceManager.GetString("NotExistingInLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Open ähnelt.
+        /// </summary>
+        internal static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
             }
         }
         
@@ -268,11 +358,20 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Resources ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Resource files have been changed. Save changes to files? ähnelt.
         /// </summary>
-        internal static string ResourcesMenu {
+        internal static string SaveChangesQuestion {
             get {
-                return ResourceManager.GetString("ResourcesMenu", resourceCulture);
+                return ResourceManager.GetString("SaveChangesQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save changes ähnelt.
+        /// </summary>
+        internal static string SaveChangesTitle {
+            get {
+                return ResourceManager.GetString("SaveChangesTitle", resourceCulture);
             }
         }
         
@@ -331,6 +430,15 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Server ähnelt.
+        /// </summary>
+        internal static string Server {
+            get {
+                return ResourceManager.GetString("Server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Choose language ähnelt.
         /// </summary>
         internal static string SetCulture {
@@ -376,11 +484,56 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Test connection ähnelt.
+        /// </summary>
+        internal static string TestConnection {
+            get {
+                return ResourceManager.GetString("TestConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Successfully connected to database. ähnelt.
         /// </summary>
         internal static string TestConnectionSuccess {
             get {
                 return ResourceManager.GetString("TestConnectionSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Translate ähnelt.
+        /// </summary>
+        internal static string Translate {
+            get {
+                return ResourceManager.GetString("Translate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Auto translate ähnelt.
+        /// </summary>
+        internal static string TranslateAuto {
+            get {
+                return ResourceManager.GetString("TranslateAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Translates missing texts by using already translated texts in a database. For details see ? -&gt; Documentation. ähnelt.
+        /// </summary>
+        internal static string TranslateToolTip {
+            get {
+                return ResourceManager.GetString("TranslateToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Translations ähnelt.
+        /// </summary>
+        internal static string Translations {
+            get {
+                return ResourceManager.GetString("Translations", resourceCulture);
             }
         }
         

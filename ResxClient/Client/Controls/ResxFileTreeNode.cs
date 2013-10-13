@@ -9,6 +9,7 @@ namespace ResourceManager.Client.Controls
     public class ResxFileTreeNode : TreeNode
     {
         private IResourceFile file;
+        private const string displayText = "{0} [{1}]";
 
         public IResourceFile ResxFile
         {
@@ -16,8 +17,12 @@ namespace ResourceManager.Client.Controls
             set 
             {                 
                 file = value;
-                this.Text = file.File.Name;
+                this.Text = String.Format(displayText, file.File.Name, file.Culture.Name);
             }
-        }	
+        }
+        public void Refresh()
+        {
+            this.Text = String.Format(displayText, file.File.Name, file.Culture.Name);
+        }
     }
 }

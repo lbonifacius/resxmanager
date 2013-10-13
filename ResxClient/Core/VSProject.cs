@@ -21,8 +21,23 @@ namespace ResourceManager.Core
             resxProjectFile = new ResxClientProjectFile(configPath);
 
             this.name = name;
+            this.Type = resolveProjectType(filepath);
 
             base.Init(CleanDirectoryPath(filepath));
+        }
+        protected static VSProjectTypes resolveProjectType(string filepath)
+        {
+            switch (Path.GetExtension(filepath).ToLower())
+            { 
+                case ".csproj":
+                    return VSProjectTypes.CSharp;
+                case ".vbproj":
+                    return VSProjectTypes.VB;
+                case ".fsproj":
+                    return VSProjectTypes.FSharp;
+            }
+
+            return VSProjectTypes.Other;
         }
 
         private string name;
@@ -30,6 +45,18 @@ namespace ResourceManager.Core
         public string Name
         {
             get { return name; }
+        }
+        public VSProjectTypes Type
+        {
+            get;
+            private set;
+        }
+        public bool HasChanged
+        {
+            get
+            {
+                return cultures.Any(p => p.Value.HasChanged);
+            }
         }
 
         public Dictionary<string, IResourceFileGroup> ResxGroups

@@ -35,11 +35,12 @@
             this.btnTest = new System.Windows.Forms.Button();
             this.btnCreateDatabase = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.linkHelp = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // txtServer
             // 
-            this.txtServer.Location = new System.Drawing.Point(106, 13);
+            this.txtServer.Location = new System.Drawing.Point(105, 43);
             this.txtServer.Name = "txtServer";
             this.txtServer.ReadOnly = true;
             this.txtServer.Size = new System.Drawing.Size(166, 20);
@@ -47,7 +48,7 @@
             // 
             // txtDatabase
             // 
-            this.txtDatabase.Location = new System.Drawing.Point(106, 40);
+            this.txtDatabase.Location = new System.Drawing.Point(105, 70);
             this.txtDatabase.Name = "txtDatabase";
             this.txtDatabase.ReadOnly = true;
             this.txtDatabase.Size = new System.Drawing.Size(166, 20);
@@ -56,7 +57,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 19);
+            this.label1.Location = new System.Drawing.Point(12, 49);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 2;
@@ -65,7 +66,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 46);
+            this.label2.Location = new System.Drawing.Point(12, 76);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 3;
@@ -73,7 +74,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(106, 83);
+            this.btnTest.Location = new System.Drawing.Point(105, 113);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(166, 23);
             this.btnTest.TabIndex = 4;
@@ -83,7 +84,7 @@
             // 
             // btnCreateDatabase
             // 
-            this.btnCreateDatabase.Location = new System.Drawing.Point(106, 113);
+            this.btnCreateDatabase.Location = new System.Drawing.Point(105, 143);
             this.btnCreateDatabase.Name = "btnCreateDatabase";
             this.btnCreateDatabase.Size = new System.Drawing.Size(166, 23);
             this.btnCreateDatabase.TabIndex = 5;
@@ -102,12 +103,24 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // linkHelp
+            // 
+            this.linkHelp.AutoSize = true;
+            this.linkHelp.Location = new System.Drawing.Point(12, 9);
+            this.linkHelp.Name = "linkHelp";
+            this.linkHelp.Size = new System.Drawing.Size(45, 13);
+            this.linkHelp.TabIndex = 7;
+            this.linkHelp.TabStop = true;
+            this.linkHelp.Text = "linkHelp";
+            this.linkHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // SetupDatabase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.linkHelp);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnCreateDatabase);
             this.Controls.Add(this.btnTest);
@@ -134,5 +147,6 @@
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Button btnCreateDatabase;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.LinkLabel linkHelp;
     }
 }

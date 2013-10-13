@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Linq;
 
 namespace ResourceManager.Core
 {
@@ -29,6 +30,11 @@ namespace ResourceManager.Core
             {
                 return files;
             }
+        }
+
+        public int ResourceDataCount()
+        {
+            return files.Sum(file => file.Data.Count);
         }
 
         public List<ResourceDataBase> GetItemsNotExistingInCulture(VSCulture culture)

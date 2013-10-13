@@ -171,9 +171,6 @@
   <data name="File" xml:space="preserve">
     <value>Datei</value>
   </data>
-  <data name="ResourcesMenu" xml:space="preserve">
-    <value>Ressourcen</value>
-  </data>
   <data name="ClientTitle" xml:space="preserve">
     <value>RESX Manager</value>
     <comment>Name, der im Titel der Anwendung gezeigt wird.</comment>
@@ -181,31 +178,106 @@
   <data name="StoreAllTranslations" xml:space="preserve">
     <value>Alle Übersetzungen in Datenbank speichern</value>
   </data>
-  <data name="Fill100PercMatches" xml:space="preserve">
-    <value>100%-Treffer aus der Datenbank übernehmen</value>
-  </data>
   <data name="CloseSolution" xml:space="preserve">
     <value>Solution schließen</value>
   </data>
-  <data name="StoringTranslations">
+  <data name="StoringTranslations" xml:space="preserve">
     <value>Speichert Übersetzungen</value>
   </data>
-  <data name="StoringTranslationsCompleted">
+  <data name="StoringTranslationsCompleted" xml:space="preserve">
     <value>Alle Übersetzungen gespeichert</value>
   </data>
-  <data name="ExcelImportFileFilter">
+  <data name="ExcelImportFileFilter" xml:space="preserve">
     <value>Excel-Dokument (*.xls,*.xlsx)|*.xls;*.xlsx</value>
   </data>
-  <data name="SearchingTranslations">
+  <data name="SearchingTranslations" xml:space="preserve">
     <value>Suche nach Übersetzungen</value>
   </data>
-  <data name="SerachingTranslationsProcess">
+  <data name="SerachingTranslationsProcess" xml:space="preserve">
     <value>Suche nach Übersetzungen ({0}/{1})</value>
   </data>
-  <data name="SearchingTranslationsResult">
+  <data name="SearchingTranslationsResult" xml:space="preserve">
     <value>{0} Texte wurden übersetzt</value>
   </data>
-  <data name="SetupDatabase">
+  <data name="SetupDatabase" xml:space="preserve">
     <value>Datenbank einrichten</value>
+  </data>
+  <data name="TestConnectionSuccess" xml:space="preserve">
+    <value>Verbindung mit Datenbank erfolgreich.</value>
+  </data>
+  <data name="CreatedDatabaseSuccess" xml:space="preserve">
+    <value>Datenbank wurde erfolgreich eingerichtet.</value>
+  </data>
+  <data name="DatabaseNotExists" xml:space="preserve">
+    <value>Datenbank existiert nicht.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exportieren</value>
+  </data>
+  <data name="ExportComments" xml:space="preserve">
+    <value>Kommentare exportieren</value>
+  </data>
+  <data name="ExportDiff" xml:space="preserve">
+    <value>Nur fehlende Einträge exportieren</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="ErrorTextDefault" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten. {0}. Für Details siehe error.txt</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Translate" xml:space="preserve">
+    <value>Übersetzen</value>
+  </data>
+  <data name="Documentation" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="TranslateToolTip" xml:space="preserve">
+    <value>Übersetzt fehlende Texte, indem in der Datenbank nach bereits übersetzten Texten gesucht wird. Für Details siehe ? -&gt; Dokumentation</value>
+  </data>
+  <data name="ChangingCulture" xml:space="preserve">
+    <value>Übernehme neue Sprache</value>
+  </data>
+  <data name="ChangingCultureCompleted" xml:space="preserve">
+    <value>Sprache geändert</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Datenbank</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="HelpSetupDatabase" xml:space="preserve">
+    <value>Für weitere Informationen bitte klicken</value>
+  </data>
+  <data name="CreateDatabase" xml:space="preserve">
+    <value>Datenbank einrichten</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Verbindung testen</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="TranslateAuto" xml:space="preserve">
+    <value>Automatische Übersetzung</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Übersetzungen</value>
+  </data>
+  <data name="SaveChangesQuestion">
+    <value>Es wurden Änderungen vorgenommen. Sollen die Änderungen gespeichert werden?</value>
+  </data>
+  <data name="SaveChangesTitle">
+    <value>Änderungen speichern</value>
   </data>
 </root>

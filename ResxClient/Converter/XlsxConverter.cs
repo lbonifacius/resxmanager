@@ -78,9 +78,9 @@ namespace ResourceManager.Converter
                 uncompletedDataGroups = project.GetUncompleteDataGroups();
             }
 
+            uint rowIndex = 2;
             foreach (IResourceFileGroup group in project.ResxGroups.Values)
-            {
-                uint rowIndex = 2;
+            {                
                 foreach (ResourceDataGroupBase dataGroup in group.AllData.Values
                     .Where(resxGroup => uncompletedDataGroups == null || uncompletedDataGroups.Contains(resxGroup)))
                 {
@@ -238,7 +238,7 @@ namespace ResourceManager.Converter
             {
                 get
                 {
-                    return translations;
+                    return comments;
                 }
             }
 
@@ -286,9 +286,11 @@ namespace ResourceManager.Converter
 
                         foreach(var culture in cultures) 
                         {
-                            if (culture.TextColumnIndex > 0 && !String.IsNullOrWhiteSpace(textArray[culture.TextColumnIndex]))
+                            if (culture.TextColumnIndex > 0 && culture.TextColumnIndex < textArray.Length &&
+                                !String.IsNullOrWhiteSpace(textArray[culture.TextColumnIndex]))
                                 customer.Translations.Add(culture.Culture, textArray[culture.TextColumnIndex]);
-                            if (culture.CommentColumnIndex > 0 && !String.IsNullOrWhiteSpace(textArray[culture.CommentColumnIndex]))
+                            if (culture.CommentColumnIndex > 0 && culture.CommentColumnIndex < textArray.Length
+                                && !String.IsNullOrWhiteSpace(textArray[culture.CommentColumnIndex]))
                                 customer.Comments.Add(culture.Culture, textArray[culture.CommentColumnIndex]);
                         }
                         result.Add(customer);

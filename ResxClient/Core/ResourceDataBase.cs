@@ -9,8 +9,8 @@ namespace ResourceManager.Core
     public class ResourceDataBase
     {
         private string name;
-        private string xmlValue;
-        private string comment;
+        protected string xmlValue;
+        protected string comment;
         private IResourceFile file;
 
         public ResourceDataBase(IResourceFile file)
@@ -47,8 +47,12 @@ namespace ResourceManager.Core
         {
             get { return xmlValue; }
             set 
-            { 
-                xmlValue = value;
+            {
+                if (xmlValue != value)
+                {
+                    HasChanged = true;
+                    xmlValue = value;
+                }
             }
         }
         public string Comment
@@ -56,8 +60,17 @@ namespace ResourceManager.Core
             get { return comment; }
             set
             {
-                comment = value;
+                if (comment != value)
+                {
+                    HasChanged = true;
+                    comment = value;
+                }
             }
+        }
+        public bool HasChanged
+        {
+            get;
+            internal set;
         }
     }
 }

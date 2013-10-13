@@ -15,6 +15,7 @@ namespace ResourceManager.Core
         string FileGroupPath { get; }
         string ID { get; }
         string Prefix { get; }
+        bool HasChanged { get; }
         void RegisterResourceData(ResourceDataBase data);
         System.Collections.Generic.Dictionary<System.Globalization.CultureInfo, IResourceFile> Files { get; }
 
