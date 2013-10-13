@@ -16,12 +16,13 @@ using ResourceManager.Storage;
 using System.Globalization;
 using System.Linq;
 using ResourceManager.Converter;
+using System.Threading.Tasks;
 
 namespace ResourceManager.Client
 {
     public partial class MainForm : Form
-    {
-        private VSSolution vssolution;
+    {        
+        private log4net.ILog log = log4net.LogManager.GetLogger(typeof(MainForm));
 
         public MainForm()
         {
@@ -30,17 +31,29 @@ namespace ResourceManager.Client
             this.Text = Resources.ClientTitle;
 
             this.dateiToolStripMenuItem.Text = Resources.File;
-            this.resourcenToolStripMenuItem.Text = Resources.ResourcesMenu;
+            this.translationsToolStripMenuItem.Text = Resources.Translations;
+            this.toolStripMenuItemDocu.Text = Resources.Documentation;
 
             this.itemSaveResources.Text = Resources.SaveResources;
             this.itemClose.Text = Resources.Exit;
             this.itemOpenSolution.Text = Resources.OpenSolution;
             this.itemCloseSolution.Text = Resources.CloseSolution;
-            this.itemExportAll.Text = Resources.ExportToExcel;
-            this.itemImportAll.Text = Resources.ImportFromExcel;
+            this.toolStripMenuItemExport.Text = Resources.ExportToExcel;
+            this.toolStripMenuItemImport.Text = Resources.ImportFromExcel;
             this.toolStripMenuItemSetupDb.Text = Resources.SetupDatabase;
 
-            this.itemExportAll.Enabled = false;
+            this.toolStripMenuItemTranslateAll.Text = Resources.TranslateAuto;
+            this.toolStripMenuItemTranslateAll.ToolTipText = Resources.TranslateToolTip;
+            this.toolFillTranslations.Text = Resources.Translate;
+            this.toolFillTranslations.ToolTipText = Resources.TranslateToolTip;
+            this.toolExport.Text = Resources.Export;
+            this.toolExport.ToolTipText = Resources.ExportToExcel;
+            this.toolImport.Text = Resources.Import;
+            this.toolImport.ToolTipText = Resources.ImportFromExcel;
+            this.toolOpen.Text = Resources.Open;
+            this.toolOpen.ToolTipText = Resources.OpenSolution;
+            this.toolSaveAll.ToolTipText = Resources.SaveResources;
+
             this.itemSaveResources.Enabled = false;
             this.storeAllTranslationsToolStripMenuItem.Enabled = false;
 
@@ -53,26 +66,33 @@ namespace ResourceManager.Client
 
             this.solutionTree1.Main = this;
 
-            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            this.FormClosing += MainForm_FormClosing;
+        }
+        public VSSolution CurrentSolution
+        {
+            get;
+            private set;
         }
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            
+        {            
+            var result = testSolutionHasChanged();
+            e.Cancel = result == System.Windows.Forms.DialogResult.Cancel;
         }
-
-        private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
+       
+        internal Task startNewTask(Action action)
         {
-            this.Close();
-        }
-
-        private void solutionÖffnenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DialogResult result = openFileDialog.ShowDialog();
-            if (result == DialogResult.OK)
+            var task = System.Threading.Tasks.Task.Factory.StartNew(action)
+            .ContinueWith((t) =>
             {
-                System.Threading.Tasks.Task.Factory.StartNew(() => openSolution(openFileDialog.FileName));    
-            }
+                if (log.IsErrorEnabled)
+                    log.Error("Error while processing task.", t.Exception);
+
+                ExceptionHandling.ShowErrorDialog(t.Exception);
+            },
+            System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
+
+            return task;
         }
 
         #region Status text
@@ -106,104 +126,319 @@ namespace ResourceManager.Client
         #endregion
 
         #region Open, save, export, import
+        private void openSolution()
+        {
+            var scresult = testSolutionHasChanged();
+            if (scresult != System.Windows.Forms.DialogResult.Cancel)
+            {
+                var result = openFileDialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    startNewTask(() => openSolution(openFileDialog.FileName));
+                }
+            }
+        }
         private void openSolution(string filename)
         {
-            setToolbarStatusText(Resources.LoadingSolution);
+            try
+            {
+                setToolbarStatusText(Resources.LoadingSolution);
 
-            vssolution = new VSSolution(filename);
+                CurrentSolution = new VSSolution(filename);
 
-            this.solutionTree1.Solution = vssolution;
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.toolStripMenuItemExport.Enabled = true));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = true));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.toolStripMenuItemImport.Enabled = true));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.itemOpenSolution.Enabled = true));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = true));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = true));
 
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportAll.Enabled = true));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = true));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = true));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemOpenSolution.Enabled = true));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = true));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = true));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolSaveAll.Enabled = true));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolImport.Enabled = true));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolExport.Enabled = true));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolFillTranslations.Enabled = true));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.toolStripMenuItemTranslateAll.Enabled = true));
 
-            resetToolbarStatusText();
+                solutionTree1.LoadTree();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {                
+                resetToolbarStatusText();
+            }
         }
         private void closeSolution()
         {
-            this.solutionTree1.Solution = null;
+            var result = testSolutionHasChanged();
 
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemExportAll.Enabled = false));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = false));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemImportAll.Enabled = false));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = false));
-            this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = false));
+            if (result != System.Windows.Forms.DialogResult.Cancel)
+            {
+                this.CurrentSolution = null;
+
+                solutionTree1.LoadTree();
+
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.toolStripMenuItemExport.Enabled = false));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.itemSaveResources.Enabled = false));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.toolStripMenuItemImport.Enabled = false));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.storeAllTranslationsToolStripMenuItem.Enabled = false));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.itemCloseSolution.Enabled = false));
+
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolSaveAll.Enabled = false));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolImport.Enabled = false));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolExport.Enabled = false));
+                this.toolStrip1.Invoke((MethodInvoker)(() => this.toolFillTranslations.Enabled = false));
+                this.menuStrip1.Invoke((MethodInvoker)(() => this.toolStripMenuItemTranslateAll.Enabled = false));
+            }
         }
         private void saveResourceFiles()
         {
-            setToolbarStatusText(Resources.SavingResourceFiles);
-
-            foreach (VSProject project in vssolution.Projects.Values)
+            try
             {
-                foreach (IResourceFileGroup fileGroup in project.ResxGroups.Values)
-                {
-                    foreach (IResourceFile file in fileGroup.Files.Values)
-                    {
-                        file.Save();
-                    }
-                }
+                setToolbarStatusText(Resources.SavingResourceFiles);
+                CurrentSolution.Save();
             }
-
-            setToolbarStatusText(Resources.SavingResourceFilesCompleted, 4000);
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                setToolbarStatusText(Resources.SavingResourceFilesCompleted, 4000);
+            }
         }
-        #endregion
-
-        private void itemSaveResources_Click(object sender, EventArgs e)
-        {
-            System.Threading.Tasks.Task.Factory.StartNew(() => saveResourceFiles());           
-        }
-        
-
-        private void itemExportAll_Click(object sender, EventArgs e)
+        private void exportAll()
         {
             var excel = new ExcelExport();
-            excel.Solution = this.solutionTree1.Solution;
+            excel.Solution = CurrentSolution;
             excel.ShowDialog();
         }
-
-        private void itemImportAll_Click(object sender, EventArgs e)
+        private void importAll()
         {
             this.openExcelDialog.ShowDialog();
         }
         private void openExcelDialog_FileOk(object sender, CancelEventArgs e)
         {
-            IConverter excel = ConverterFactory.OpenConverter(openExcelDialog, this.solutionTree1.Solution);
+            IConverter excel = ConverterFactory.OpenConverter(openExcelDialog, CurrentSolution);
             excel.Import(openExcelDialog.FileName);
+
+            solutionTree1.RefreshAnalysis();
         }
+        protected DialogResult testSolutionHasChanged()
+        {
+            if (CurrentSolution != null && CurrentSolution.HasChanged)
+            {
+                var result = MessageBox.Show(Properties.Resources.SaveChangesQuestion, Properties.Resources.SaveChangesTitle, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    saveResourceFiles();
+                }
 
+                return result;
+            }
 
+            return System.Windows.Forms.DialogResult.Ignore;
+        }
+        #endregion
+
+        #region Menu & toolbar events
+        private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
+        {, 
+            this.Close();
+        }
+        private void solutionÖffnenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openSolution();
+        }
+        private void itemSaveResources_Click(object sender, EventArgs e)
+        {
+            startNewTask(() => saveResourceFiles());        
+        }
+        private void itemExportAll_Click(object sender, EventArgs e)
+        {
+            exportAll();
+        }
+        private void itemImportAll_Click(object sender, EventArgs e)
+        {
+            importAll();
+        }        
         private void storeAllTranslationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Threading.Tasks.Task.Factory.StartNew(() => storeAllTranslations()); 
+            startNewTask(() => storeAllTranslations()); 
         }
-
-        private void storeAllTranslations()
-        {
-            setToolbarStatusText(Resources.StoringTranslations);
-
-            TranslationStorageManager manager = new TranslationStorageManager();
-            if (!manager.DatabaseExists())
-            {
-                manager.CreateDatabase();
-            }
-            manager.Store(this.solutionTree1.Solution);
-
-            setToolbarStatusText(Resources.StoringTranslationsCompleted, 4000);
-        }
-
         private void itemCloseSolution_Click(object sender, EventArgs e)
         {
             closeSolution();
         }
-
         private void toolStripMenuItemSetupDb_Click(object sender, EventArgs e)
         {
             var dialog = new SetupDatabase();
             dialog.Show();
-        }        
+        }
+        private void toolOpen_Click(object sender, EventArgs e)
+        {
+            openSolution();
+        }
+        private void toolSaveAll_Click(object sender, EventArgs e)
+        {
+            startNewTask(() => saveResourceFiles());  
+        }
+        private void toolExport_Click(object sender, EventArgs e)
+        {
+            exportAll();
+        }
+        private void toolImport_Click(object sender, EventArgs e)
+        {
+            importAll();
+        }
+        private void toolFillTranslations_Click(object sender, EventArgs e)
+        {
+            startNewTask(() => fillTranslations());
+        }
+        private void toolStripMenuItemImport_Click(object sender, EventArgs e)
+        {
+            importAll();
+        }
+        private void toolStripMenuItemExport_Click(object sender, EventArgs e)
+        {
+            exportAll();
+        }
+        private void toolStripMenuItemDocu_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://resxmanager.codeplex.com/documentation");
+        }
+        private void toolStripMenuItemTranslateAll_Click(object sender, EventArgs e)
+        {
+            startNewTask(() => fillTranslations());
+
+            solutionTree1.RefreshAnalysis();
+        }
+
+        #endregion
+
+        #region Translation
+        private void storeAllTranslations()
+        {
+            try
+            {
+                setToolbarStatusText(Resources.StoringTranslations);
+
+                TranslationStorageManager manager = new TranslationStorageManager();
+                if (!manager.DatabaseExists())
+                {
+                    manager.CreateDatabase();
+                }
+                manager.Store(CurrentSolution);
+
+                setToolbarStatusText(Resources.StoringTranslationsCompleted, 4000);
+            }
+            catch
+            {
+                resetToolbarStatusText();
+
+                throw;
+            }
+            finally
+            {                
+            }
+        }
+        internal void fillTranslations(ResourceManager.Client.Controls.CultureAnalysisResultTreeNode node)
+        {
+            int found = fillTranslations(node.SourceCulture, node.TargetCulture);
+
+           // if (found > 0)
+            this.solutionTree1.RefreshAnalysis(node);
+        }
+        internal int fillTranslations(VSCulture sourceCulture, VSCulture targetCulture)
+        {
+            int found = 0;
+
+            try
+            {
+                setToolbarStatusText(Properties.Resources.SearchingTranslations);
+
+                List<ResourceDataBase> notexisting = sourceCulture.GetItemsNotExistingInCulture(targetCulture);
+
+                var trans = new TranslationStorageManager();
+                int process = 1;                
+                foreach (var data in notexisting)
+                {
+                    setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, notexisting.Count()));
+
+                    var result = trans.Search(data, targetCulture.Culture);
+
+                    if (result.Count() > 0)
+                    {
+                        found++;
+                        data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, targetCulture.Culture);
+                    }
+                    process++;
+                }
+
+                setToolbarStatusText(String.Format(Properties.Resources.SearchingTranslationsResult, found), 4000);
+            }
+            catch
+            {
+                resetToolbarStatusText();
+
+                throw;
+            }
+            finally
+            {                
+            }
+
+            return found;
+        }
+        internal void fillTranslations()
+        {
+            try
+            {
+                setToolbarStatusText(Properties.Resources.SearchingTranslations);
+
+                int process = 1;
+                int found = 0;
+                int max = CurrentSolution.Cultures.Count * (CurrentSolution.Cultures.Count - 1);
+                var trans = new TranslationStorageManager();
+
+                foreach (VSCulture sourceCulture in CurrentSolution.Cultures.Values)
+                {
+                    foreach (VSCulture targetCulture in CurrentSolution.Cultures.Values.Except(new VSCulture[] { sourceCulture }))
+                    {
+                        setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, max));
+
+                        List<ResourceDataBase> notexisting = sourceCulture.GetItemsNotExistingInCulture(targetCulture);
+                        foreach (var data in notexisting)
+                        {
+                            var result = trans.Search(data, targetCulture.Culture);
+
+                            if (result.Count() > 0)
+                            {
+                                found++;
+                                data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, targetCulture.Culture);
+                            }
+
+                        }
+                        process++;
+                    }
+                }
+
+                if (found > 0)
+                    this.solutionTree1.RefreshAnalysis();
+
+                setToolbarStatusText(String.Format(Properties.Resources.SearchingTranslationsResult, found), 4000);
+            }
+            catch
+            {
+                resetToolbarStatusText();
+
+                throw;
+            }
+            finally
+            {               
+            }
+        }
+        #endregion
     }
 }

@@ -13,6 +13,8 @@ namespace ResourceManager.Client
 {
     public partial class SetupDatabase : Form
     {
+        private log4net.ILog log = log4net.LogManager.GetLogger(typeof(SetupDatabase));
+
         public SetupDatabase()
         {
             InitializeComponent();
@@ -24,6 +26,15 @@ namespace ResourceManager.Client
             var sqlconnection = new SqlConnectionStringBuilder(connection.ProviderConnectionString);
             txtServer.Text = sqlconnection.DataSource;
             txtDatabase.Text = sqlconnection.InitialCatalog;
+
+            btnClose.Text = Properties.Resources.Close;
+            label1.Text = Properties.Resources.Server;
+            label2.Text = Properties.Resources.Database;
+            btnTest.Text = Properties.Resources.TestConnection;
+            btnCreateDatabase.Text = Properties.Resources.CreateDatabase;
+
+            this.Text = Properties.Resources.SetupDatabase;
+            linkHelp.Text = Properties.Resources.HelpSetupDatabase;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -46,6 +57,9 @@ namespace ResourceManager.Client
             }
             catch (Exception ex)
             {
+                if (log.IsErrorEnabled)
+                    log.Error("Testing of database connection failed. ", ex);
+
                 MessageBox.Show(ex.Message);
             }
 
@@ -65,10 +79,18 @@ namespace ResourceManager.Client
             }
             catch (Exception ex)
             {
+                if (log.IsErrorEnabled)
+                    log.Error("Creation of database failed. ", ex);
+
                 MessageBox.Show(ex.Message);
             }
 
             this.btnCreateDatabase.Enabled = true;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://resxmanager.codeplex.com/documentation");
         }
     }
 }

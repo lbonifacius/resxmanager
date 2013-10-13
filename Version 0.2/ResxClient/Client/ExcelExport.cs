@@ -51,6 +51,9 @@ namespace ResourceManager.Client
 
         private void btnExport_Click(object sender, EventArgs e)
         {
+            this.btnExport.Enabled = false;
+            this.btnCancel.Enabled = false;
+
             if(Project != null)
                 saveFileDialog.FileName = Project.Name + ".xlsx";
             else
@@ -60,15 +63,27 @@ namespace ResourceManager.Client
 
             if (result == DialogResult.OK)
             {
-                XlsxConverter excel = null;
-                if(Project != null)
-                    excel = new XlsxConverter(Project);
-                else
-                    excel = new XlsxConverter(Solution);
+                try
+                {
+                    XlsxConverter excel = null;
+                    if (Project != null)
+                        excel = new XlsxConverter(Project);
+                    else
+                        excel = new XlsxConverter(Solution);
 
-                excel.ExportComments = cbkExportComments.Checked;
-                excel.ExportDiff = cbkExportDiff.Checked;
-                excel.Export(saveFileDialog.FileName);
+                    excel.ExportComments = cbkExportComments.Checked;
+                    excel.ExportDiff = cbkExportDiff.Checked;
+                    excel.Export(saveFileDialog.FileName);
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    this.btnExport.Enabled = true;
+                    this.btnCancel.Enabled = true;
+                }
             }
 
             this.Close();

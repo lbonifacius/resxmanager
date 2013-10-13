@@ -95,7 +95,14 @@ namespace ResourceManager.Core
         {
             get { return container; }
         }
-        
+        public bool HasChanged
+        {
+            get
+            {
+                return data.Any(p => p.Value.HasChanged);
+            }
+        }
+
         public void RegisterResourceData(ResourceDataBase data)
         {
             if (!this.data.ContainsKey(data.Name))

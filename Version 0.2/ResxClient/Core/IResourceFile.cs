@@ -9,6 +9,7 @@ namespace ResourceManager.Core
         System.IO.FileInfo File { get; }
         string ID { get; }
         string Prefix { get; }
+        bool HasChanged { get; }
         IResourceFileGroup FileGroup { get; }
         void CreateResourceData(string name, string value);
         void SetResourceData(string name, string value);

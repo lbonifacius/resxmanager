@@ -10,6 +10,8 @@ namespace ResourceManager.Client.Controls
     {
         public CultureAnalysisResultTreeNode(VSCulture sourceCulture, VSCulture targetCulture) : base()
         {
+            this.ImageIndex = 5;
+            this.SelectedImageIndex = 5;
             this.TargetCulture = targetCulture;
             this.SourceCulture = sourceCulture;
         }

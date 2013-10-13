@@ -84,26 +84,31 @@ namespace ResourceManager.Core
 
         public override void Save()
         {
-            bool isReadOnly = File.IsReadOnly;
-
-            if (isReadOnly)
-                SetReadOnlyAttribute(File, false);
-
-            XmlDocument xml = new XmlDocument();
-            xml.Load(File.FullName);
-
-            XmlNamespaceManager manager = new XmlNamespaceManager(xml.NameTable);
-            manager.AddNamespace("wix", NS_WIX_2006);
-
-            foreach (ResourceDataBase data in Data.Values)
+            if (HasChanged)
             {
-                SetResourceData(xml, manager, data);
+                bool isReadOnly = File.IsReadOnly;
+
+                if (isReadOnly)
+                    SetReadOnlyAttribute(File, false);
+
+                XmlDocument xml = new XmlDocument();
+                xml.Load(File.FullName);
+
+                XmlNamespaceManager manager = new XmlNamespaceManager(xml.NameTable);
+                manager.AddNamespace("wix", NS_WIX_2006);
+
+                foreach (ResourceDataBase data in Data.Values)
+                {
+                    SetResourceData(xml, manager, data);
+                }
+
+                xml.Save(File.FullName);
+
+                if (isReadOnly)
+                    SetReadOnlyAttribute(File, true);
+
+                SetSaved();
             }
-
-            xml.Save(File.FullName);
-
-            if(isReadOnly)
-                SetReadOnlyAttribute(File, true);
         }
         private void SetResourceData(XmlDocument xml, XmlNamespaceManager manager, ResourceDataBase data)
         {

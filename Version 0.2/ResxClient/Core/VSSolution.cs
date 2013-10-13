@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Globalization;
+using System.Linq;
 
 namespace ResourceManager.Core
 {
@@ -38,6 +39,10 @@ namespace ResourceManager.Core
         {
             get { return cultures; }
         }
+        public bool HasChanged 
+        {
+            get { return projects.Any(p => p.Value.HasChanged); }
+        }
 
         public void AddCultureFile(ResourceFileBase file)
         {
@@ -56,6 +61,29 @@ namespace ResourceManager.Core
                 cultures[resourceFile.Culture].Files.Remove(resourceFile);
 
             cultures[newCulture].Files.Add(resourceFile);
+        }
+
+        public void RemoveUnusedCultures()
+        { 
+            var rm = cultures.Where(c => c.Value.Files.Count == 0)
+                .Select(c => c.Key).ToList();
+
+            foreach(var r in rm)
+                cultures.Remove(r);
+        }
+
+        public void Save()
+        {
+            foreach (VSProject project in Projects.Values)
+            {
+                foreach (IResourceFileGroup fileGroup in project.ResxGroups.Values)
+                {
+                    foreach (IResourceFile file in fileGroup.Files.Values)
+                    {
+                        file.Save();
+                    }
+                }
+            }
         }
     }
 }

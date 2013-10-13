@@ -40,6 +40,18 @@ namespace ResourceManager.Core
             get { return data; }
             set { data = value; }
         }
+        public bool HasChanged
+        {
+            get 
+            {
+                return data.Any(p => p.Value.HasChanged);
+            }
+        }
+        protected void SetSaved()
+        {
+            foreach (var p in data.Values)
+                p.HasChanged = false;
+        }
         public string Prefix
         {
             get

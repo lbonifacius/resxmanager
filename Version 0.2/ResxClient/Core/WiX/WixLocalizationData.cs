@@ -12,7 +12,7 @@ namespace ResourceManager.Core
             : base(file)
         {
             Name = nav.GetAttribute("Id", "");
-            Value = nav.Value;
+            xmlValue = nav.Value;
         }
         public WixLocalizationData(WixLocalizationFile file, string name)
             : base(file, name)

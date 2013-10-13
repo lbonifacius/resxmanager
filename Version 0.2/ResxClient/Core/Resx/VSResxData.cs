@@ -16,12 +16,12 @@ namespace ResourceManager.Core
             XPathNodeIterator values = nav.Select("value");
             if (values.MoveNext())
             {
-                Value = values.Current.Value;
+                xmlValue = values.Current.Value;
             }
             values = nav.Select("comment");
             if (values.MoveNext())
             {
-                Comment = values.Current.Value;
+                comment = values.Current.Value;
             }
         }
         public VSResxData(VSResxFile file, string name)
