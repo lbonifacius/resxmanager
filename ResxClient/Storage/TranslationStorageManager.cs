@@ -25,6 +25,28 @@ namespace ResourceManager.Storage
             return new EntityConnectionStringBuilder(getConnectionString());
         }
 
+        private static bool databaseChecked = false;
+        public static bool CheckDatabase()
+        {
+            if (databaseChecked == true)
+                return true;
+            else
+            {
+                try
+                {
+                    using (var connection = new SqlConnection(GetConnectionSetting().ProviderConnectionString))
+                    {
+                        connection.Open();
+                    }
+                    databaseChecked = true;
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
         public bool DatabaseExists()
         {
             using (TranslationStorage context = new TranslationStorage(getConnectionString()))

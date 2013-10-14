@@ -124,7 +124,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Successfully created the database. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Database successfully created. ähnelt.
         /// </summary>
         internal static string CreatedDatabaseSuccess {
             get {
@@ -147,6 +147,15 @@ namespace ResourceManager.Properties {
         internal static string Database {
             get {
                 return ResourceManager.GetString("Database", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Database does not seem to be configured. Please check configuration. ähnelt.
+        /// </summary>
+        internal static string DataBaseNotConfigured {
+            get {
+                return ResourceManager.GetString("DataBaseNotConfigured", resourceCulture);
             }
         }
         

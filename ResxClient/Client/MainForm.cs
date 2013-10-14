@@ -245,7 +245,7 @@ namespace ResourceManager.Client
 
         #region Menu & toolbar events
         private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
-        {, 
+        {
             this.Close();
         }
         private void solutionÖffnenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -274,8 +274,7 @@ namespace ResourceManager.Client
         }
         private void toolStripMenuItemSetupDb_Click(object sender, EventArgs e)
         {
-            var dialog = new SetupDatabase();
-            dialog.Show();
+            openSetupDatabase();
         }
         private void toolOpen_Click(object sender, EventArgs e)
         {
@@ -319,37 +318,48 @@ namespace ResourceManager.Client
         #endregion
 
         #region Translation
+        private void openSetupDatabase()
+        {
+            var dialog = new SetupDatabase();
+            dialog.Show();
+        }
         private void storeAllTranslations()
         {
-            try
+            if (CheckDatabase())
             {
-                setToolbarStatusText(Resources.StoringTranslations);
-
-                TranslationStorageManager manager = new TranslationStorageManager();
-                if (!manager.DatabaseExists())
+                try
                 {
-                    manager.CreateDatabase();
+                    setToolbarStatusText(Resources.StoringTranslations);
+
+                    TranslationStorageManager manager = new TranslationStorageManager();
+                    if (!manager.DatabaseExists())
+                    {
+                        manager.CreateDatabase();
+                    }
+                    manager.Store(CurrentSolution);
+
+                    setToolbarStatusText(Resources.StoringTranslationsCompleted, 4000);
                 }
-                manager.Store(CurrentSolution);
+                catch
+                {
+                    resetToolbarStatusText();
 
-                setToolbarStatusText(Resources.StoringTranslationsCompleted, 4000);
-            }
-            catch
-            {
-                resetToolbarStatusText();
-
-                throw;
-            }
-            finally
-            {                
+                    throw;
+                }
+                finally
+                {
+                }
             }
         }
         internal void fillTranslations(ResourceManager.Client.Controls.CultureAnalysisResultTreeNode node)
         {
-            int found = fillTranslations(node.SourceCulture, node.TargetCulture);
+            if (CheckDatabase())
+            {
+                int found = fillTranslations(node.SourceCulture, node.TargetCulture);
 
-           // if (found > 0)
-            this.solutionTree1.RefreshAnalysis(node);
+                if (found > 0)
+                    this.solutionTree1.RefreshAnalysis(node);
+            }
         }
         internal int fillTranslations(VSCulture sourceCulture, VSCulture targetCulture)
         {
@@ -362,7 +372,7 @@ namespace ResourceManager.Client
                 List<ResourceDataBase> notexisting = sourceCulture.GetItemsNotExistingInCulture(targetCulture);
 
                 var trans = new TranslationStorageManager();
-                int process = 1;                
+                int process = 1;
                 foreach (var data in notexisting)
                 {
                     setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, notexisting.Count()));
@@ -386,57 +396,73 @@ namespace ResourceManager.Client
                 throw;
             }
             finally
-            {                
+            {
             }
 
-            return found;
+            return found;            
         }
         internal void fillTranslations()
         {
-            try
+            if (CheckDatabase())
             {
-                setToolbarStatusText(Properties.Resources.SearchingTranslations);
-
-                int process = 1;
-                int found = 0;
-                int max = CurrentSolution.Cultures.Count * (CurrentSolution.Cultures.Count - 1);
-                var trans = new TranslationStorageManager();
-
-                foreach (VSCulture sourceCulture in CurrentSolution.Cultures.Values)
+                try
                 {
-                    foreach (VSCulture targetCulture in CurrentSolution.Cultures.Values.Except(new VSCulture[] { sourceCulture }))
+                    setToolbarStatusText(Properties.Resources.SearchingTranslations);
+
+                    int process = 1;
+                    int found = 0;
+                    int max = CurrentSolution.Cultures.Count * (CurrentSolution.Cultures.Count - 1);
+                    var trans = new TranslationStorageManager();
+
+                    foreach (VSCulture sourceCulture in CurrentSolution.Cultures.Values)
                     {
-                        setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, max));
-
-                        List<ResourceDataBase> notexisting = sourceCulture.GetItemsNotExistingInCulture(targetCulture);
-                        foreach (var data in notexisting)
+                        foreach (VSCulture targetCulture in CurrentSolution.Cultures.Values.Except(new VSCulture[] { sourceCulture }))
                         {
-                            var result = trans.Search(data, targetCulture.Culture);
+                            setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, max));
 
-                            if (result.Count() > 0)
+                            List<ResourceDataBase> notexisting = sourceCulture.GetItemsNotExistingInCulture(targetCulture);
+                            foreach (var data in notexisting)
                             {
-                                found++;
-                                data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, targetCulture.Culture);
+                                var result = trans.Search(data, targetCulture.Culture);
+
+                                if (result.Count() > 0)
+                                {
+                                    found++;
+                                    data.ResxFile.FileGroup.SetResourceData(data.Name, result.First().Text, targetCulture.Culture);
+                                }
+
                             }
-
+                            process++;
                         }
-                        process++;
                     }
+
+                    if (found > 0)
+                        this.solutionTree1.RefreshAnalysis();
+
+                    setToolbarStatusText(String.Format(Properties.Resources.SearchingTranslationsResult, found), 4000);
                 }
+                catch
+                {
+                    resetToolbarStatusText();
 
-                if (found > 0)
-                    this.solutionTree1.RefreshAnalysis();
-
-                setToolbarStatusText(String.Format(Properties.Resources.SearchingTranslationsResult, found), 4000);
+                    throw;
+                }
+                finally
+                {
+                }
             }
-            catch
+        }
+
+        internal bool CheckDatabase()
+        {
+            if (TranslationStorageManager.CheckDatabase())
+                return true;
+            else
             {
-                resetToolbarStatusText();
-
-                throw;
-            }
-            finally
-            {               
+                MessageBox.Show(Properties.Resources.DataBaseNotConfigured, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Invoke((MethodInvoker)(() => openSetupDatabase()));
+                
+                return false;            
             }
         }
         #endregion
