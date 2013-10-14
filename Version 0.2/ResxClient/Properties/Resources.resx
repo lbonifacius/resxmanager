@@ -139,7 +139,7 @@
     <value>Loading solution</value>
   </data>
   <data name="NotExistingInLanguage" xml:space="preserve">
-    <value>{0} entries which doesn`t exists in '{1}'</value>
+    <value>{0} entries which don`t exist in '{1}'</value>
   </data>
   <data name="OpenSolution" xml:space="preserve">
     <value>Open solution</value>
