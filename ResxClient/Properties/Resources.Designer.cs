@@ -313,7 +313,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} entries which doesn`t exists in &apos;{1}&apos; ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die {0} entries which don`t exist in &apos;{1}&apos; ähnelt.
         /// </summary>
         internal static string NotExistingInLanguage {
             get {
