@@ -280,4 +280,7 @@
   <data name="SaveChangesTitle" xml:space="preserve">
     <value>Save changes</value>
   </data>
+  <data name="DataBaseNotConfigured" xml:space="preserve">
+    <value>Database does not seem to be configured. Please check configuration.</value>
+  </data>
 </root>
