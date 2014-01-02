@@ -43,6 +43,7 @@ namespace ResourceManager.Client
         {
             cbkExportComments.Text = Properties.Resources.ExportComments;
             cbkExportDiff.Text = Properties.Resources.ExportDiff;
+	         cbkIncludeProjectsWithoutTranslations.Text = Properties.Resources.IncludeProjectsWithoutTranslations;
             btnCancel.Text = Properties.Resources.Cancel;
             btnExport.Text = Properties.Resources.Export;
 
@@ -73,6 +74,7 @@ namespace ResourceManager.Client
 
                     excel.ExportComments = cbkExportComments.Checked;
                     excel.ExportDiff = cbkExportDiff.Checked;
+	                 excel.IncludeProjectsWithoutTranslations = cbkIncludeProjectsWithoutTranslations.Checked;
                     excel.Export(saveFileDialog.FileName);
                 }
                 catch
