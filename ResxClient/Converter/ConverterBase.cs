@@ -38,5 +38,11 @@ namespace ResourceManager.Converter
             get;
             set;
         }
+
+	     public bool IncludeProjectsWithoutTranslations
+	     { 
+		      get; 
+			   set;
+	     }
     }
 }

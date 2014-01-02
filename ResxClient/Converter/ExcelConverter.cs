@@ -131,6 +131,7 @@ namespace ResourceManager.Converter
             row.SetAttribute("Hidden", urnschemasmicrosoftcomofficespreadsheet, "1");
             table.AppendChild(row);
         }
+
         private XmlElement AddRow(XmlElement table)
         {
             XmlElement row = table.OwnerDocument.CreateElement("Row", urnschemasmicrosoftcomofficespreadsheet);
@@ -138,10 +139,12 @@ namespace ResourceManager.Converter
 
             return row;
         }
+
         private void AddCell(XmlElement row, int index, object value)
         {
             AddCell(row, index, value, null);
         }
+
         private void AddCell(XmlElement row, int index, object value, string stylename)
         {
             XmlElement cell = row.OwnerDocument.CreateElement("Cell", urnschemasmicrosoftcomofficespreadsheet);
@@ -158,6 +161,7 @@ namespace ResourceManager.Converter
             if (index >= expandedColumnCount)
                 expandedColumnCount = index;
         }
+
         private void SetAttribute(XmlElement element, string namespacePrefix, string name, string namespaceName, string value)
         {
             XmlAttribute xattrs = element.OwnerDocument.CreateAttribute(namespacePrefix, name, namespaceName);

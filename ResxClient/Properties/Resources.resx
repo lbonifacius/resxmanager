@@ -283,4 +283,7 @@
   <data name="DataBaseNotConfigured" xml:space="preserve">
     <value>Database does not seem to be configured. Please check configuration.</value>
   </data>
+  <data name="IncludeProjectsWithoutTranslations" xml:space="preserve">
+    <value>Include projects without translations</value>
+  </data>
 </root>

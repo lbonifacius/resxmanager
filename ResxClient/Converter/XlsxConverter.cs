@@ -37,13 +37,17 @@ namespace ResourceManager.Converter
 
                 if (Project == null)
                 {
-                    uint i = 1;
-                    foreach (var project in Solution.Projects.Values)
+	                 var projects = (IEnumerable<VSProject>)Solution.Projects.Values;
+	                 if (!IncludeProjectsWithoutTranslations)
+		                  projects = projects.Where(p => p.ResxGroups.Values.Any(g => g.AllData.Count > 0));
+                   
+						  uint i = 1;
+                    foreach (var project in projects)
                     {
                         WorksheetPart worksheetPart = CreateSheet(i, project.Name, workbookPart1, sheets);
 
-                        AddProject(project, worksheetPart);
-                        i++;
+	                     AddProject(project, worksheetPart);
+	                     i++;
                     }
                 }
                 else
@@ -56,7 +60,7 @@ namespace ResourceManager.Converter
 
         private WorksheetPart CreateSheet(uint index, string name, WorkbookPart workbookPart, Sheets sheets)
         {
-            WorksheetPart worksheetPart1 = workbookPart.AddNewPart<WorksheetPart>("rId" + index);
+	         WorksheetPart worksheetPart1 = workbookPart.AddNewPart<WorksheetPart>("rId" + index);
 
             Sheet sheet1 = new Sheet() { Name = name, SheetId = UInt32Value.FromUInt32(index), Id = "rId" + index };
             sheets.Append(sheet1);
@@ -89,8 +93,8 @@ namespace ResourceManager.Converter
                 }
             }
 
-            worksheet1.Append(sheetData1);
-            worksheetPart.Worksheet = worksheet1;
+				worksheet1.Append(sheetData1);
+				worksheetPart.Worksheet = worksheet1;
         }
         private void AddHeader(VSProject project, SheetData sheetData1)
         {
