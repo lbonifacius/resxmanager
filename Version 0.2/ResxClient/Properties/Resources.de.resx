@@ -280,4 +280,10 @@
   <data name="SaveChangesTitle">
     <value>Änderungen speichern</value>
   </data>
+  <data name="DataBaseNotConfigured">
+    <value>Die Datenbank scheint nicht eingerichtet zu sein. Bitte überprüfen Sie die Konfiguration.</value>
+  </data>
+  <data name="IncludeProjectsWithoutTranslations">
+    <value>Projekte ohne Übersetzungen exportieren</value>
+  </data>
 </root>
