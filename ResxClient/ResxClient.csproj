@@ -57,7 +57,14 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="ClosedXML, Version=0.69.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\log4net.dll</HintPath>
@@ -78,8 +85,16 @@
   <ItemGroup>
     <Compile Include="Client\Controls\CulturesComboBoxItem.cs" />
     <Compile Include="Client\Controls\CultureAnalysisResultTreeNode.cs" />
+    <Compile Include="Client\Controls\CulturesListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Client\Controls\ResourceFileGroupTreeNode.cs" />
+    <Compile Include="Client\Controls\CultureTreeNode.cs" />
+    <Compile Include="Client\Controls\ProjectsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Client\Controls\ProjectTreeNode.cs" />
-    <Compile Include="Client\Controls\ResxFileTreeNode.cs" />
+    <Compile Include="Client\Controls\ResourceFileTreeNode.cs" />
     <Compile Include="Client\Controls\SolutionTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -114,6 +129,7 @@
     <Compile Include="Core\IProjectFileSettings.cs" />
     <Compile Include="Converter\ExcelConverter.cs" />
     <Compile Include="Core\ResxClientProjectFile.cs" />
+    <Compile Include="Core\VSProjectFileTypes.cs" />
     <Compile Include="Core\VSProjectFolder.cs" />
     <Compile Include="Core\Resx\VSResxDataGroup.cs" />
     <Compile Include="Core\Resx\VSResxFileGroup.cs" />
@@ -220,7 +236,13 @@
     <Content Include="Client\Controls\Icons\ResxFileGroup.ico" />
     <Content Include="Client\Controls\Icons\Solution.ico" />
     <Content Include="Client\Controls\Icons\Project.ico" />
-    <Content Include="lib\log4net.dll" />
+    <Content Include="lib\ClosedXML.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\DocumentFormat.OpenXml.dll" />
+    <Content Include="lib\log4net.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Storage\Sql\StoredProcedures1.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -286,4 +286,19 @@
   <data name="IncludeProjectsWithoutTranslations" xml:space="preserve">
     <value>Include projects without translations</value>
   </data>
+  <data name="AutoAdjustLayout" xml:space="preserve">
+    <value>Adjust layout</value>
+  </data>
+  <data name="ExportFileGroup" xml:space="preserve">
+    <value>Export file group to Excel</value>
+  </data>
+  <data name="ExportProjectToExcel" xml:space="preserve">
+    <value>Export project to Excel</value>
+  </data>
+  <data name="ExportCulturePair" xml:space="preserve">
+    <value>Export cultures to Excel</value>
+  </data>
+  <data name="ExportCulture" xml:space="preserve">
+    <value>Export culture to Excel</value>
+  </data>
 </root>

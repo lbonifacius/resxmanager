@@ -110,6 +110,10 @@ namespace ResourceManager.Core
                 SetSaved();
             }
         }
+        public override void IncludeInProjectFile()
+        {
+            this.FileGroup.Container.Project.AddResourceFileToProjectFile(this, VSProjectFileTypes.EmbeddedResource);
+        }
         private void SetResourceData(XmlDocument xml, XmlNamespaceManager manager, ResourceDataBase data)
         {
             XmlElement valNode = xml.DocumentElement.SelectSingleNode("wix:String[@Id = '" + data.Name + "']", manager) as XmlElement;

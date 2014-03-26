@@ -109,6 +109,10 @@ namespace ResourceManager.Core
                 SetSaved();
             }
         }
+        public override void IncludeInProjectFile()
+        {
+            this.FileGroup.Container.Project.AddResourceFileToProjectFile(this, VSProjectFileTypes.EmbeddedResource);
+        }
 
         private void SetResourceData(XmlDocument xml, ResourceDataBase data)
         {

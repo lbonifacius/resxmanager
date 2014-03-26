@@ -16,6 +16,7 @@ namespace ResourceManager.Core
         void CreateResourceDataComment(string name, string comment);
         void SetResourceDataComment(string name, string comment);
         void Save();
+        void IncludeInProjectFile();
         void SetFileGroup(IResourceFileGroup group);
     }
 }
