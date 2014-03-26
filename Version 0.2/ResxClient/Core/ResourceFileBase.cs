@@ -154,12 +154,15 @@ namespace ResourceManager.Core
 
         public abstract void Save();
 
+        public abstract void IncludeInProjectFile();
+
+
         /// <summary>
         /// Sets the read only attribute.
         /// </summary>
         /// <param name="fullName">The full name.</param>
         /// <param name="readOnly">if set to <c>true</c> [read only].</param>
-        protected static void SetReadOnlyAttribute(FileInfo fileInfo, bool readOnly)
+        public static void SetReadOnlyAttribute(FileInfo fileInfo, bool readOnly)
         {
             FileAttributes attribute;
             if (readOnly)

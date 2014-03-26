@@ -33,8 +33,11 @@ namespace ResourceManager.Client.Controls
             this.contextMenuResxFile.Closed += new ToolStripDropDownClosedEventHandler(contextMenuResxFile_Closed);
             this.itemSetCulture.Text = Properties.Resources.SetCulture;
 
-            this.itemExportToExcel.Text = Properties.Resources.ExportToExcel;
+            this.exportProject.Text = Properties.Resources.ExportProjectToExcel;
+            this.exportCulture.Text = Properties.Resources.ExportCulture;
+            this.exportCulturePair.Text = Properties.Resources.ExportCulturePair;
             this.itemImportFromExcel.Text = Properties.Resources.ImportFromExcel;
+            this.exportFileGroup.Text = Properties.Resources.ExportFileGroup;
 
             this.itemRefreshAnalysis.Text = Properties.Resources.Refresh;
             this.itemRefreshAnalysis.Click += new EventHandler(itemRefreshAnalysis_Click);
@@ -52,6 +55,14 @@ namespace ResourceManager.Client.Controls
         }
         private void refreshAnalysis()
         {
+            for (int i = 0; i < treeView.Nodes[0].Nodes.Count - 1; i++)
+            {
+                foreach (ResourceFileGroupTreeNode fgnode in treeView.Nodes[0].Nodes[i].Nodes)
+                {
+                    refreshFiles(fgnode);
+                }
+            }
+
             this.treeView.Nodes[0].LastNode.Remove();
             loadCultures(this.treeView.Nodes[0]);
         }
@@ -68,8 +79,8 @@ namespace ResourceManager.Client.Controls
         {
             Main.setToolbarStatusText(Properties.Resources.ChangingCulture);
 
-            var node = (ResxFileTreeNode)this.treeView.SelectedNode;
-            IResourceFile file = (node).ResxFile;
+            var node = (ResourceFileTreeNode)this.treeView.SelectedNode;
+            IResourceFile file = (node).File;
             file.Culture = CultureInfo.GetCultureInfo(((CulturesComboBoxItem)this.cbCultureInfos.SelectedItem).Name);
 
             file.FileGroup.Container.Project.ResxProjectFile.SaveFile(file);
@@ -86,7 +97,7 @@ namespace ResourceManager.Client.Controls
         {
             this.cbCultureInfos.Items.Clear();
 
-            var file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
+            var file = ((ResourceFileTreeNode)this.treeView.SelectedNode).File;
             var otherUsedCultures = file.FileGroup.Files.Keys
                 .Except(new CultureInfo[] {file.Culture});
 
@@ -170,10 +181,10 @@ namespace ResourceManager.Client.Controls
         {
             foreach (IResourceFileGroup group in project.ResxGroups.Values)
             {
-                TreeNode fileGroupNode = new TreeNode();
-                fileGroupNode.Text = group.Prefix;
+                var fileGroupNode = new ResourceFileGroupTreeNode(group);
                 fileGroupNode.ImageIndex = 1;
                 fileGroupNode.SelectedImageIndex = 1;
+                fileGroupNode.ContextMenuStrip = this.contextFileGroup;
                 parent.Nodes.Add(fileGroupNode);
 
                 loadFiles(fileGroupNode, group);
@@ -181,9 +192,9 @@ namespace ResourceManager.Client.Controls
 
             foreach (IResourceFile file in project.UnassignedFiles)
             {
-                ResxFileTreeNode fileNode = new ResxFileTreeNode();
+                var fileNode = new ResourceFileTreeNode(file);
                 fileNode.ContextMenuStrip = this.contextMenuResxFile;
-                fileNode.ResxFile = file;
+                
                 parent.Nodes.Add(fileNode);
             }
         }
@@ -191,9 +202,26 @@ namespace ResourceManager.Client.Controls
         {
             foreach (IResourceFile file in group.Files.Values)
             {
-                ResxFileTreeNode fileNode = new ResxFileTreeNode();
+                var fileNode = new ResourceFileTreeNode(file);
                 fileNode.ContextMenuStrip = this.contextMenuResxFile;
-                fileNode.ResxFile = file;
+                fileNode.ImageIndex = 2;
+                fileNode.SelectedImageIndex = 2;
+                parent.Nodes.Add(fileNode);
+            }
+        }
+        private void refreshFiles(ResourceFileGroupTreeNode parent)
+        {
+            var list = new List<IResourceFile>();
+
+            foreach (ResourceFileTreeNode file in parent.Nodes)
+            {
+                list.Add(file.File);
+            }
+
+            foreach (IResourceFile file in parent.FileGroup.Files.Values.Except(list))
+            {
+                var fileNode = new ResourceFileTreeNode(file);
+                fileNode.ContextMenuStrip = this.contextMenuResxFile;
                 fileNode.ImageIndex = 2;
                 fileNode.SelectedImageIndex = 2;
                 parent.Nodes.Add(fileNode);
@@ -209,10 +237,10 @@ namespace ResourceManager.Client.Controls
 
             foreach (VSCulture culture in Main.CurrentSolution.Cultures.Values)
             {
-                TreeNode cultureNode = new TreeNode();
-                cultureNode.Text = culture.Culture.DisplayName;
+                var cultureNode = new CultureTreeNode(culture);
                 culturesNode.Nodes.Add(cultureNode);
                 cultureNode.ImageIndex = 4;
+                cultureNode.ContextMenuStrip = contextCulture;
                 cultureNode.SelectedImageIndex = 4;
 
                 loadNotExistings(cultureNode, culture);
@@ -276,7 +304,7 @@ namespace ResourceManager.Client.Controls
         private void itemExportToExcel_Click(object sender, EventArgs e)
         {
             var excel = new ExcelExport();
-            excel.Project = ((ProjectTreeNode)treeView.SelectedNode).Project;
+            excel.SelectedProjects.Add(((ProjectTreeNode)treeView.SelectedNode).Project);
             excel.ShowDialog();
         }
 
@@ -293,9 +321,40 @@ namespace ResourceManager.Client.Controls
 
         private void itemFill100PercMatches_Click(object sender, EventArgs e)
         {
-            CultureAnalysisResultTreeNode node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
+            var node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
 
             var task = Main.startNewTask(() => Main.fillTranslations(node));
+        }
+
+        private void exportFileGroup_Click(object sender, EventArgs e)
+        {
+            var node = (ResourceFileGroupTreeNode)treeView.SelectedNode;
+
+            var excel = new ExcelExport();
+            excel.SelectedFileGroups.Add(node.FileGroup);
+            excel.Solution = Main.CurrentSolution;
+            excel.ShowDialog();
+        }
+
+        private void exportCulturePair_Click(object sender, EventArgs e)
+        {
+            var node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
+
+            var excel = new ExcelExport();
+            excel.SelectedCultures.Add(node.SourceCulture);
+            excel.SelectedCultures.Add(node.TargetCulture);
+            excel.Solution = Main.CurrentSolution;
+            excel.ShowDialog();
+        }
+
+        private void exportCulture_Click(object sender, EventArgs e)
+        {
+            var node = (CultureTreeNode)treeView.SelectedNode;
+
+            var excel = new ExcelExport();
+            excel.SelectedCultures.Add(node.Culture);
+            excel.Solution = Main.CurrentSolution;
+            excel.ShowDialog();
         }
 
     }

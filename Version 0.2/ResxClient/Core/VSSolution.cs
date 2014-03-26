@@ -80,9 +80,14 @@ namespace ResourceManager.Core
                 {
                     foreach (IResourceFile file in fileGroup.Files.Values)
                     {
+                        if (file.HasChanged)
+                            file.IncludeInProjectFile();
+
                         file.Save();
                     }
                 }
+
+                project.SaveProjectFile();
             }
         }
     }

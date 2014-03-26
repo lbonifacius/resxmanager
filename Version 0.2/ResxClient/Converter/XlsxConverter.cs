@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -13,8 +14,20 @@ namespace ResourceManager.Converter
 {
     public class XlsxConverter : ConverterBase, ResourceManager.Converter.IConverter
     {
+        private double ColumnValueWidth = 40;
+        private double ColumnCommentWidth = 40;
+
+
         public XlsxConverter(VSSolution solution)
             : base(solution)
+        {
+        }
+        public XlsxConverter(IEnumerable<VSProject> projects)
+            : base(projects)
+        {
+        }
+        public XlsxConverter(IEnumerable<IResourceFileGroup> fileGroups, VSSolution solution)
+            : base(fileGroups, solution)
         {
         }
         public XlsxConverter(VSProject project)
@@ -24,56 +37,41 @@ namespace ResourceManager.Converter
 
         public void Export(string filePath)
         {
-            using (SpreadsheetDocument package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
+            using (var workbook = new XLWorkbook(XLEventTracking.Disabled))
             {
-                WorkbookPart workbookPart1 = package.AddWorkbookPart();
 
-                Workbook workbook1 = new Workbook();
-                workbook1.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-                workbookPart1.Workbook = workbook1;
-
-                var sheets = new Sheets();
-                workbook1.Append(sheets);
-
-                if (Project == null)
-                {
-	                 var projects = (IEnumerable<VSProject>)Solution.Projects.Values;
-	                 if (!IncludeProjectsWithoutTranslations)
-		                  projects = projects.Where(p => p.ResxGroups.Values.Any(g => g.AllData.Count > 0));
-                   
-						  uint i = 1;
-                    foreach (var project in projects)
-                    {
-                        WorksheetPart worksheetPart = CreateSheet(i, project.Name, workbookPart1, sheets);
-
-	                     AddProject(project, worksheetPart);
-	                     i++;
-                    }
-                }
+                IEnumerable<CultureInfo> cultures = null;
+                if (Cultures != null)
+                    cultures = Cultures.Select(vc => vc.Culture);
                 else
+                    cultures = Solution.Cultures.Keys;
+
+                IEnumerable<VSProject> projects = Projects;
+                if (Projects == null)
+                    projects = (IEnumerable<VSProject>)Solution.Projects.Values;
+
+                if (!IncludeProjectsWithoutTranslations)
                 {
-                    WorksheetPart worksheetPart = CreateSheet(1, Project.Name, workbookPart1, sheets);
-                    AddProject(Project, worksheetPart);
+                    if (FileGroups != null && FileGroups.Count() > 0)
+                        projects = projects.Where(p => p.ResxGroups.Values.Intersect(FileGroups).Any(g => g.AllData.Count > 0));
+                    else
+                        projects = projects.Where(p => p.ResxGroups.Values.Any(g => g.AllData.Count > 0));
                 }
+
+                foreach (var project in projects)
+                {
+                    AddProject(project, workbook, cultures);
+                }
+
+                workbook.SaveAs(filePath);
             }
         }
 
-        private WorksheetPart CreateSheet(uint index, string name, WorkbookPart workbookPart, Sheets sheets)
+        private void AddProject(VSProject project, XLWorkbook workbook, IEnumerable<CultureInfo> cultures)
         {
-	         WorksheetPart worksheetPart1 = workbookPart.AddNewPart<WorksheetPart>("rId" + index);
+            var worksheet = workbook.Worksheets.Add(project.Name);
 
-            Sheet sheet1 = new Sheet() { Name = name, SheetId = UInt32Value.FromUInt32(index), Id = "rId" + index };
-            sheets.Append(sheet1);
-
-            return worksheetPart1;
-        }
-
-        private void AddProject(VSProject project, WorksheetPart worksheetPart)
-        {
-            Worksheet worksheet1 = new Worksheet();
-            SheetData sheetData1 = new SheetData();
-
-            AddHeader(project, sheetData1);
+            AddHeader(project, worksheet, cultures);
 
             IList<ResourceDataGroupBase> uncompletedDataGroups = null;
 
@@ -82,135 +80,134 @@ namespace ResourceManager.Converter
                 uncompletedDataGroups = project.GetUncompleteDataGroups();
             }
 
-            uint rowIndex = 2;
-            foreach (IResourceFileGroup group in project.ResxGroups.Values)
+            int rowIndex = 2;
+            IEnumerable<IResourceFileGroup> resxGroups = project.ResxGroups.Values;
+            if (FileGroups != null && FileGroups.Count() > 0)
+                resxGroups = project.ResxGroups.Values.Intersect(FileGroups);
+
+            foreach (IResourceFileGroup group in resxGroups)
             {                
                 foreach (ResourceDataGroupBase dataGroup in group.AllData.Values
                     .Where(resxGroup => uncompletedDataGroups == null || uncompletedDataGroups.Contains(resxGroup)))
                 {
-                    AddData(group, dataGroup, sheetData1, rowIndex);
+                    AddData(group, dataGroup, worksheet, rowIndex, cultures);
                     rowIndex++;
                 }
             }
 
-				worksheet1.Append(sheetData1);
-				worksheetPart.Worksheet = worksheet1;
-        }
-        private void AddHeader(VSProject project, SheetData sheetData1)
-        {
-            Row row1 = new Row();
-            row1.RowIndex = 1;
-            AddInlineStringCell(row1, "ID");
-            AddInlineStringCell(row1, "Keys");
-
-            foreach (var culture in Solution.Cultures.Keys)
+            if (AutoAdjustLayout)
             {
-                AddInlineStringCell(row1, culture.Name);
+                worksheet.Row(1).Style.Font.SetBold(true);
+                worksheet.Columns(1, 2).Style.Font.SetFontColor(XLColor.Gray);
+                worksheet.Columns(1, 2).Width = 12.0;
+
+                worksheet.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+            }
+        }
+        private void AddHeader(VSProject project, IXLWorksheet worksheet, IEnumerable<CultureInfo> cultures)
+        {
+            worksheet.Cell(1, 1).Value = "ID";
+            worksheet.Cell(1, 2).Value = "Keys";            
+
+            int c = 3;
+            foreach (var culture in cultures)
+            {
+                if (AutoAdjustLayout)
+                {
+                    worksheet.Column(c).Width = ColumnValueWidth;
+                    worksheet.Column(c).Style.Alignment.SetWrapText(true);
+                }
+                worksheet.Cell(1, c++).Value = culture.Name;
+
 
                 if (ExportComments)
-                    AddInlineStringCell(row1, culture.Name + " [Comments]");
+                {
+                    if (AutoAdjustLayout)
+                    {
+                        worksheet.Column(c).Width = ColumnCommentWidth;
+                        worksheet.Column(c).Style.Alignment.SetWrapText(true);
+                    }
+                    worksheet.Cell(1, c++).Value = culture.Name + " [Comments]";
+                }
             }
-
-            sheetData1.Append(row1);
         }
 
-        private void AddData(IResourceFileGroup group, ResourceDataGroupBase dataGroup, SheetData sheetData1, uint rowIndex)
+        private void AddData(IResourceFileGroup group, ResourceDataGroupBase dataGroup, IXLWorksheet worksheet, int rowIndex, IEnumerable<CultureInfo> cultures)
         {
-            Row row1 = new Row();
-            row1.RowIndex = rowIndex;
-            AddInlineStringCell(row1, group.ID);
-            AddInlineStringCell(row1, dataGroup.Name);
+            worksheet.Cell(rowIndex, 1).Value = group.ID;
+            worksheet.Cell(rowIndex, 2).Value = dataGroup.Name;
 
-            foreach (var culture in Solution.Cultures.Keys)
+            int c = 3;
+            foreach (var culture in cultures)
             {
                 if (dataGroup.ResxData.ContainsKey(culture))
                 {
-                    AddInlineStringCell(row1, dataGroup.ResxData[culture].Value);
+                    worksheet.Cell(rowIndex, c++).Value = dataGroup.ResxData[culture].Value;
+
                     if (ExportComments)
-                        AddInlineStringCell(row1, dataGroup.ResxData[culture].Comment);
+                    {
+                        worksheet.Cell(rowIndex, c++).Value = dataGroup.ResxData[culture].Comment;
+                    }
                 }
                 else
                 {
-                    AddInlineStringCell(row1, "");
+                    worksheet.Cell(rowIndex, c++).Value = "";
                     if (ExportComments)
-                        AddInlineStringCell(row1, "");
+                        worksheet.Cell(rowIndex, c++).Value = "";
                 }
             }
-
-            sheetData1.Append(row1);
         }
-
-        private void AddInlineStringCell(Row row1, string text)
-        {
-            var cell1 = new Cell() { DataType = CellValues.InlineString };
-            var inlineString1 = new InlineString();
-            inlineString1.Append(new Text(text));
-            cell1.Append(inlineString1);
-            row1.Append(cell1);
-        }
-
 
         public void Import(string filePath)
         {
-            using (SpreadsheetDocument package = SpreadsheetDocument.Open(filePath, false))
+            var workbook = new XLWorkbook(filePath, XLEventTracking.Disabled);
+            foreach (var worksheet in workbook.Worksheets)
             {
-                var workBook = package.WorkbookPart.Workbook;
-                var workSheets = workBook.Descendants<Sheet>();
+                string projectName = worksheet.Name;
+                if (!Solution.Projects.ContainsKey(projectName))
+                    throw new ProjectUnknownException(projectName);
 
-                SharedStringTable sharedStrings = null;
-                if(package.WorkbookPart.SharedStringTablePart != null)
-                    sharedStrings = package.WorkbookPart.SharedStringTablePart.SharedStringTable;
+                var project = Solution.Projects[projectName];
+                var translations = TranslationRow.LoadRows(worksheet);
 
-                foreach (var worksheet in workSheets)
+                foreach (var t in translations)
                 {
-                    string projectName = worksheet.Name;
-                    if (!Solution.Projects.ContainsKey(projectName))
-                        throw new ProjectUnknownException(projectName);
-
-                    VSProject project = Solution.Projects[projectName];
-
-                    var translations = TranslationRow.LoadRows(((WorksheetPart)package.WorkbookPart.GetPartById(worksheet.Id)).Worksheet,
-                        sharedStrings);
-
-                    foreach (var t in translations)
+                    ResourceDataGroupBase dataGroup = null;
+                    if (!project.ResxGroups[t.ID].AllData.ContainsKey(t.Key))
                     {
-                        ResourceDataGroupBase dataGroup = null;
-                        if (!project.ResxGroups[t.ID].AllData.ContainsKey(t.Key))
+                        dataGroup = project.ResxGroups[t.ID].CreateDataGroup(t.Key);
+                        project.ResxGroups[t.ID].AllData.Add(t.Key, dataGroup);
+                    }
+                    else
+                        dataGroup = project.ResxGroups[t.ID].AllData[t.Key];
+
+                    foreach (var te in t.Translations)
+                    {
+                        if (!dataGroup.ResxData.ContainsKey(te.Key))
                         {
-                            dataGroup = project.ResxGroups[t.ID].CreateDataGroup(t.Key);
-                            project.ResxGroups[t.ID].AllData.Add(t.Key, dataGroup);
+                            project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, te.Key);
                         }
                         else
-                            dataGroup = project.ResxGroups[t.ID].AllData[t.Key];
-
-                        foreach (var te in t.Translations)
                         {
-                            if (!dataGroup.ResxData.ContainsKey(te.Key))
-                            {
-                                project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, te.Key);
-                            }
-                            else
-                            {
-                                dataGroup.ResxData[te.Key].Value = te.Value;
-                            }
+                            dataGroup.ResxData[te.Key].Value = te.Value;
                         }
-                        foreach (var te in t.Comments)
+                    }
+                    foreach (var te in t.Comments)
+                    {
+                        if (!dataGroup.ResxData.ContainsKey(te.Key))
                         {
-                            if (!dataGroup.ResxData.ContainsKey(te.Key))
-                            {
-                                project.ResxGroups[t.ID].SetResourceDataComment(t.Key, te.Value, te.Key);
-                            }
-                            else
-                            {
-                                dataGroup.ResxData[te.Key].Comment = te.Value;
-                            }
+                            project.ResxGroups[t.ID].SetResourceDataComment(t.Key, te.Value, te.Key);
+                        }
+                        else
+                        {
+                            dataGroup.ResxData[te.Key].Comment = te.Value;
                         }
                     }
                 }
             }
         }
 
-
+        
 
         public class TranslationRow
         {
@@ -246,56 +243,30 @@ namespace ResourceManager.Converter
                 }
             }
 
-            public static List<TranslationRow> LoadRows(Worksheet worksheet,
-              SharedStringTable sharedString)
+            public static List<TranslationRow> LoadRows(IXLWorksheet worksheet)
             {
                 List<TranslationRow> result = new List<TranslationRow>();
 
-                var cultures = TranslationRow.ReadCultures(worksheet.Descendants<Row>().First(r => r.RowIndex == 1), sharedString);
-
-                IEnumerable<Row> dataRows =
-                  from row in worksheet.Descendants<Row>()
-                  where row.RowIndex > 1
-                  select row;
-
-                foreach (Row row in dataRows)
+                var cultures = ReadCultures(worksheet);
+                
+                foreach (var row in worksheet.RowsUsed().Skip(1))
                 {
-                    //LINQ query to return the row's cell values.
-                    //Where clause filters out any cells that do not contain a value.
-                    //Select returns the value of a cell unless the cell contains
-                    //  a Shared String.
-                    //If the cell contains a Shared String, its value will be a 
-                    //  reference id which will be used to look up the value in the 
-                    //  Shared String table.
-                    IEnumerable<String> textValues =
-                      from cell in row.Descendants<Cell>()
-                      where cell.CellValue != null
-                      select
-                        (cell.DataType != null
-                          && cell.DataType.HasValue
-                          && cell.DataType == CellValues.SharedString
-                        ? sharedString.ChildElements[
-                          int.Parse(cell.CellValue.InnerText)].InnerText
-                        : cell.CellValue.InnerText)
-                      ;
+                    var textValues = row.Cells(1, cultures.Count() + 2).Select(cell => (cell.Value != null ? cell.Value.ToString() : null)).ToList<String>();
 
-                    //Check to verify the row contained data.
                     if (textValues.Count() > 0)
                     {
-                        //Create a customer and add it to the list.
-                        var textArray = textValues.ToArray();
                         var customer = new TranslationRow();
-                        customer.ID = textArray[0];
-                        customer.Key = textArray[1];
+                        customer.ID = textValues[0];
+                        customer.Key = textValues[1];
 
                         foreach(var culture in cultures) 
                         {
-                            if (culture.TextColumnIndex > 0 && culture.TextColumnIndex < textArray.Length &&
-                                !String.IsNullOrWhiteSpace(textArray[culture.TextColumnIndex]))
-                                customer.Translations.Add(culture.Culture, textArray[culture.TextColumnIndex]);
-                            if (culture.CommentColumnIndex > 0 && culture.CommentColumnIndex < textArray.Length
-                                && !String.IsNullOrWhiteSpace(textArray[culture.CommentColumnIndex]))
-                                customer.Comments.Add(culture.Culture, textArray[culture.CommentColumnIndex]);
+                            if (culture.TextColumnIndex > 0 && culture.TextColumnIndex < textValues.Count &&
+                                !String.IsNullOrWhiteSpace(textValues[culture.TextColumnIndex]))
+                                customer.Translations.Add(culture.Culture, textValues[culture.TextColumnIndex]);
+                            if (culture.CommentColumnIndex > 0 && culture.CommentColumnIndex < textValues.Count
+                                && !String.IsNullOrWhiteSpace(textValues[culture.CommentColumnIndex]))
+                                customer.Comments.Add(culture.Culture, textValues[culture.CommentColumnIndex]);
                         }
                         result.Add(customer);
                     }
@@ -307,64 +278,32 @@ namespace ResourceManager.Converter
 
                 return result;
             }
-
-            public static List<TranslationColumn> ReadCultures(Row row, SharedStringTable sharedString)
+            public static IEnumerable<TranslationColumn> ReadCultures(IXLWorksheet worksheet)
             {
-                List<String> textValues = null;
-                if (sharedString != null)
+                var textValues = worksheet.Row(1).Cells().Where(cell => cell.Value != null).Select(cell => cell.Value.ToString()).ToList<String>();
+                var cols = textValues.Skip(2).Where(s => !s.Contains("[Comments]")).ToList<String>();
+
+                var list = new List<TranslationColumn>();
+                foreach (var s in cols)
                 {
-                    textValues =
-                        (from cell in row.Descendants<Cell>()
-                         where cell.CellValue != null
-                         select
-                         (cell.DataType != null
-                             && cell.DataType.HasValue
-                             && cell.DataType == CellValues.SharedString
-                         ? sharedString.ChildElements[
-                             int.Parse(cell.CellValue.InnerText)].InnerText
-                         : cell.CellValue.InnerText)).ToList();
-                }
-                else
-                {
-                    textValues =
-                            (from cell in row.Descendants<Cell>()
-                             select
-                             (cell.CellValue != null
-                             ? cell.CellValue.InnerText
-                             : cell.InnerText)).ToList();
+                    var textColumn = new TranslationColumn(new CultureInfo(s));
+                    textColumn.TextColumnIndex = textValues.IndexOf(s);
+
+                    string commentsKey = s;
+                    if (s != "")
+                        commentsKey += " [Comments]";
+                    else
+                        commentsKey += "[Comments]";
+
+                    var commentColumn = textValues.Skip(2).Where(t => t.Equals(commentsKey)).FirstOrDefault();
+                    if (commentColumn != null)
+                        textColumn.CommentColumnIndex = textValues.IndexOf(commentColumn);
+
+                    list.Add(textColumn);
                 }
 
-                if (textValues.Count() > 0)
-                {
-                    var cols = textValues.Skip(2).Where(s => !s.Contains("[Comments]")).ToList<String>();
-
-                    var list = new List<TranslationColumn>();
-                    foreach (var s in cols)
-                    {
-                        var textColumn = new TranslationColumn(new CultureInfo(s));
-                        textColumn.TextColumnIndex = textValues.IndexOf(s);
-
-                        string commentsKey = s;
-                        if(s != "")
-                            commentsKey += " [Comments]";
-                        else
-                            commentsKey += "[Comments]";
-
-                        var commentColumn = textValues.Skip(2).Where(t => t.Equals(commentsKey)).FirstOrDefault();
-                        if (commentColumn != null)
-                            textColumn.CommentColumnIndex = textValues.IndexOf(commentColumn);
-
-                        list.Add(textColumn);
-                    }
-
-                    return list;
-                }
-                else
-                {
-                    throw new Exception("No cultures found!");
-                }
-            }
-
+                return list;
+            }           
         }
 
         public class TranslationColumn

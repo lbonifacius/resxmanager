@@ -28,42 +28,7 @@ namespace ResourceManager.Converter
 
         public XmlDocument Export()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourceManager.Templates.EmptyExcelSheet.xml");
-            XmlDocument xml = new XmlDocument();
-            xml.Load(stream);
-
-
-            //XmlDocument xml = new XmlDocument();            
-            //XmlProcessingInstruction processing = xml.CreateProcessingInstruction("mso-application", "progid=\"Excel.Sheet\"");
-            //xml.AppendChild(processing);
-
-            //xml.AppendChild(xml.CreateElement("Workbook"));
-
-            //xml.DocumentElement.SetAttribute("xmlns", urnschemasmicrosoftcomofficespreadsheet);
-            //xml.DocumentElement.SetAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
-            //xml.DocumentElement.SetAttribute("xmlns:x", urnschemasmicrosoftcomofficeexcel);
-            //xml.DocumentElement.SetAttribute("xmlns:ss", urnschemasmicrosoftcomofficespreadsheet);
-            //xml.DocumentElement.SetAttribute("xmlns:html", "http://www.w3.org/TR/REC-html40");
-
-            //XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xml.NameTable);
-            //namespaceManager.AddNamespace("", urnschemasmicrosoftcomofficespreadsheet);
-            //namespaceManager.AddNamespace("o", "urn:schemas-microsoft-com:office:office");
-            //namespaceManager.AddNamespace("x", urnschemasmicrosoftcomofficeexcel);
-            //namespaceManager.AddNamespace("ss", urnschemasmicrosoftcomofficespreadsheet);
-            //namespaceManager.AddNamespace("html", "http://www.w3.org/TR/REC-html40");
-
-            if (Project == null)
-            {
-                foreach (VSProject project in Solution.Projects.Values)
-                {
-                    if(project.ResxGroups.Count > 0)
-                        AddProject(xml.DocumentElement, project);
-                }
-            }
-            else
-                AddProject(xml.DocumentElement, Project);
-
-            return xml;
+            throw new NotImplementedException();
         }
 
         private void AddProject(XmlElement docElement, VSProject project)
