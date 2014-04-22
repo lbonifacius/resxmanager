@@ -97,11 +97,15 @@ namespace ResourceManager.Client
                 saveFileDialog.FileName = Solution.Name;
 
             if (SelectedCultures.Count() == 1)
-                saveFileDialog.FileName += "-" + SelectedCultures.First().Culture.Name;
+            {
+                if (SelectedCultures.First().Culture.Name != "")
+                    saveFileDialog.FileName += "-" + SelectedCultures.First().Culture.Name;
+            }
             else if (SelectedCultures.Count() == 2)
+            {
                 saveFileDialog.FileName += "-" + SelectedCultures.First().Culture.Name
                     + "," + SelectedCultures.ElementAt(1).Culture.Name;
-
+            }
             saveFileDialog.FileName += ".xlsx";
 
             DialogResult result = saveFileDialog.ShowDialog();

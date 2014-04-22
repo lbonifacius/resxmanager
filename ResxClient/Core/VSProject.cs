@@ -42,6 +42,15 @@ namespace ResourceManager.Core
             return VSProjectTypes.Other;
         }
 
+        /// <summary>
+        /// Returns full file path to project file, e.g. C:\User\Solution\Project\Project.csproj
+        /// </summary>
+        /// <returns></returns>
+        public string GetProjectFilePath()
+        {
+            return Path.Combine(this.Directory.FullName, Path.GetFileName(this.FilePath));
+        }
+
         public string FilePath
         {
             get;
@@ -105,7 +114,7 @@ namespace ResourceManager.Core
                     if (projectXml == null)
                     {
                         projectXml = new XmlDocument();
-                        projectXml.Load(Path.Combine(this.Directory.FullName, this.FilePath));
+                        projectXml.Load(GetProjectFilePath());
 
                         namespaceManager = new XmlNamespaceManager(projectXml.NameTable);
                         namespaceManager.AddNamespace("n", defaultnamespace);
@@ -153,19 +162,27 @@ namespace ResourceManager.Core
         {
             if (projectXml != null)
             {
-                var file = new FileInfo(Path.Combine(this.Directory.FullName, this.FilePath));
-                bool isReadOnly = file.IsReadOnly;
+                try
+                {
+                    var file = new FileInfo(GetProjectFilePath());
+                    bool isReadOnly = file.IsReadOnly;
 
-                if (isReadOnly)
-                    ResourceFileBase.SetReadOnlyAttribute(file, false);
+                    if (isReadOnly)
+                        ResourceFileBase.SetReadOnlyAttribute(file, false);
 
-                projectXml.Save(file.FullName);
+                    projectXml.Save(file.FullName);
 
-                if (isReadOnly)
-                    ResourceFileBase.SetReadOnlyAttribute(file, true);
+                    if (isReadOnly)
+                        ResourceFileBase.SetReadOnlyAttribute(file, true);
 
-                projectXml = null;
-                namespaceManager = null;
+                    projectXml = null;
+                    namespaceManager = null;
+                }
+                catch (Exception e)
+                {
+                    log4net.ILog log = log4net.LogManager.GetLogger(typeof(VSProject));
+                    log.Error("Project file could not be saved.", e);
+                }
             }
         }
     }
