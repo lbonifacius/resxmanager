@@ -56,6 +56,7 @@ namespace ResourceManager.Client
             cbkExportDiff.Text = Properties.Resources.ExportDiff;
 	        cbkIncludeProjectsWithoutTranslations.Text = Properties.Resources.IncludeProjectsWithoutTranslations;
             cbkAutoAdjustLayout.Text = Properties.Resources.AutoAdjustLayout;
+            cbkIgnoreInternalResources.Text = Resources.IgnoreInternalResources;
             btnCancel.Text = Properties.Resources.Cancel;
             btnExport.Text = Properties.Resources.Export;
             lbCultures.Text = Properties.Resources.Cultures;
@@ -126,6 +127,7 @@ namespace ResourceManager.Client
                     excel.ExportDiff = cbkExportDiff.Checked;
 	                excel.IncludeProjectsWithoutTranslations = cbkIncludeProjectsWithoutTranslations.Checked;
                     excel.AutoAdjustLayout = cbkAutoAdjustLayout.Checked;
+                    excel.IgnoreInternalResources = cbkIgnoreInternalResources.Checked;
                     excel.Cultures = cultures.GetSelectedCultures();
 
                     excel.Export(saveFileDialog.FileName);

@@ -301,4 +301,7 @@
   <data name="ExportCulture" xml:space="preserve">
     <value>Export culture to Excel</value>
   </data>
+  <data name="IgnoreInternalResources" xml:space="preserve">
+    <value>Ignore WinForms internal resources (" &gt;&gt; ")</value>
+  </data>
 </root>

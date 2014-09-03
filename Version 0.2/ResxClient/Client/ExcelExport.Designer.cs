@@ -43,6 +43,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.projects = new ResourceManager.Client.Controls.ProjectsListView();
             this.cultures = new ResourceManager.Client.Controls.CulturesListBox();
+            this.cbkIgnoreInternalResources = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -172,6 +173,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.cbkIgnoreInternalResources);
             this.panel2.Controls.Add(this.cbkExportDiff);
             this.panel2.Controls.Add(this.cbkExportComments);
             this.panel2.Controls.Add(this.cbkIncludeProjectsWithoutTranslations);
@@ -202,6 +204,16 @@
             this.cultures.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.cultures.Size = new System.Drawing.Size(230, 312);
             this.cultures.TabIndex = 9;
+            // 
+            // cbkIgnoreInternalResources
+            // 
+            this.cbkIgnoreInternalResources.AutoSize = true;
+            this.cbkIgnoreInternalResources.Location = new System.Drawing.Point(242, 12);
+            this.cbkIgnoreInternalResources.Name = "cbkIgnoreInternalResources";
+            this.cbkIgnoreInternalResources.Size = new System.Drawing.Size(223, 17);
+            this.cbkIgnoreInternalResources.TabIndex = 6;
+            this.cbkIgnoreInternalResources.Text = "Ignore WinForms internal resources (\">>\")";
+            this.cbkIgnoreInternalResources.UseVisualStyleBackColor = true;
             // 
             // ExcelExport
             // 
@@ -243,5 +255,6 @@
           private System.Windows.Forms.Panel panel2;
           private System.Windows.Forms.Panel panel3;
           private Controls.CulturesListBox cultures;
+          private System.Windows.Forms.CheckBox cbkIgnoreInternalResources;
     }
 }

@@ -71,5 +71,10 @@ namespace ResourceManager.Converter
              get;
              set;
          }
+         public bool IgnoreInternalResources
+         {
+             get;
+             set;
+         }
     }
 }
