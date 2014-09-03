@@ -286,4 +286,31 @@
   <data name="IncludeProjectsWithoutTranslations">
     <value>Projekte ohne Übersetzungen exportieren</value>
   </data>
+  <data name="AutoAdjustLayout">
+    <value>Layout automatisch anpassen</value>
+  </data>
+  <data name="ExportFileGroup">
+    <value>Dateigruppe nach Excel exportieren</value>
+  </data>
+  <data name="ExportProjectToExcel">
+    <value>Projekt nach Excel exportieren</value>
+  </data>
+  <data name="ExportCulturePair">
+    <value>Sprachen nach Excel exportieren</value>
+  </data>
+  <data name="ExportCulture">
+    <value>Sprache nach Excel exportieren</value>
+  </data>
+  <data name="WarningNoCultures">
+    <value>Die Solution '{0}' enthält keine Sprachen. Haben Sie die richtige Datei geöffnet?</value>
+  </data>
+  <data name="WarningNoProjects">
+    <value>Die Solution '{0}' enthält keine Projekte. Haben Sie die richtige Datei geöffnet?</value>
+  </data>
+  <data name="WarningOpenSolutionTitle">
+    <value>Warnung</value>
+  </data>
+  <data name="IgnoreInternalResources">
+    <value>Ignoriere interne WinForms Ressourcen ("&gt;&gt;")</value>
+  </data>
 </root>

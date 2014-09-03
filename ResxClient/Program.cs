@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using ResourceManager.Converter;
+using ResourceManager.Core;
 
 namespace ResourceManager.Client
 {
@@ -24,7 +26,7 @@ namespace ResourceManager.Client
         {
             var log = log4net.LogManager.GetLogger(typeof(Program));
             if (log.IsErrorEnabled)
-                log.Error("Error while executing RESX manager.", e.Exception);
+                log.Error("Error while executing RESX manager. ", e.Exception);
 
             ExceptionHandling.ShowErrorDialog(e.Exception);
         }

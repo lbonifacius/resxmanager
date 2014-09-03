@@ -169,6 +169,15 @@ namespace ResourceManager.Client
             {                
                 resetToolbarStatusText();
             }
+
+            if (CurrentSolution.Projects.Count == 0)
+            {
+                MessageBox.Show(String.Format(Properties.Resources.WarningNoProjects, filename), Properties.Resources.WarningOpenSolutionTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (CurrentSolution.Cultures.Count == 0)
+            {
+                MessageBox.Show(String.Format(Properties.Resources.WarningNoCultures, filename), Properties.Resources.WarningOpenSolutionTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
         private void closeSolution()
         {
