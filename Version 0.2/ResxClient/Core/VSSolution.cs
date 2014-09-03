@@ -24,7 +24,7 @@ namespace ResourceManager.Core
             solutionDirectory = new DirectoryInfo(filepath.Replace(Path.GetFileName(filepath), ""));
             this.Name = Path.GetFileNameWithoutExtension(filepath);
 
-            VSSolutionFileParser parser = new VSSolutionFileParser(filepath, this);
+            var parser = new VSSolutionFileParser(filepath, this);
         }
         public string Name
         {

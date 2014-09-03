@@ -250,7 +250,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Export culture ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export culture to Excel ähnelt.
         /// </summary>
         internal static string ExportCulture {
             get {
@@ -615,6 +615,33 @@ namespace ResourceManager.Properties {
         internal static string VSSolutionFileFilter {
             get {
                 return ResourceManager.GetString("VSSolutionFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The solution &apos;{0}&apos; does not contain any culture. Have you loaded the correct solution? ähnelt.
+        /// </summary>
+        internal static string WarningNoCultures {
+            get {
+                return ResourceManager.GetString("WarningNoCultures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The solution &apos;{0}&apos; does not contain any project. Have you loaded the correct solution? ähnelt.
+        /// </summary>
+        internal static string WarningNoProjects {
+            get {
+                return ResourceManager.GetString("WarningNoProjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Warning ähnelt.
+        /// </summary>
+        internal static string WarningOpenSolutionTitle {
+            get {
+                return ResourceManager.GetString("WarningOpenSolutionTitle", resourceCulture);
             }
         }
     }

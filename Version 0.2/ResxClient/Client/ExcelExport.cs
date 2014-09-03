@@ -56,7 +56,7 @@ namespace ResourceManager.Client
             cbkExportDiff.Text = Properties.Resources.ExportDiff;
 	        cbkIncludeProjectsWithoutTranslations.Text = Properties.Resources.IncludeProjectsWithoutTranslations;
             cbkAutoAdjustLayout.Text = Properties.Resources.AutoAdjustLayout;
-            cbkIgnoreInternalResources.Text = Resources.IgnoreInternalResources;
+            cbkIgnoreInternalResources.Text = Properties.Resources.IgnoreInternalResources;
             btnCancel.Text = Properties.Resources.Cancel;
             btnExport.Text = Properties.Resources.Export;
             lbCultures.Text = Properties.Resources.Cultures;

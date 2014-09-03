@@ -167,7 +167,6 @@
   </data>
   <data name="VSSolutionFileFilter" xml:space="preserve">
     <value>Visual-Studio Solution|*.sln</value>
-    <comment>Qu</comment>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
@@ -301,7 +300,16 @@
   <data name="ExportCulture" xml:space="preserve">
     <value>Export culture to Excel</value>
   </data>
+  <data name="WarningNoCultures" xml:space="preserve">
+    <value>The solution '{0}' does not contain any culture. Have you loaded the correct file?</value>
+  </data>
+  <data name="WarningNoProjects" xml:space="preserve">
+    <value>The solution '{0}' does not contain any project. Have you loaded the correct file?</value>
+  </data>
+  <data name="WarningOpenSolutionTitle" xml:space="preserve">
+    <value>Warning</value>
+  </data>
   <data name="IgnoreInternalResources" xml:space="preserve">
-    <value>Ignore WinForms internal resources (" &gt;&gt; ")</value>
+    <value>Ignore WinForms internal resources ("&gt;&gt;")</value>
   </data>
 </root>
