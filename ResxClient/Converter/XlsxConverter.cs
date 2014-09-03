@@ -86,9 +86,16 @@ namespace ResourceManager.Converter
                 resxGroups = project.ResxGroups.Values.Intersect(FileGroups);
 
             foreach (IResourceFileGroup group in resxGroups)
-            {                
-                foreach (ResourceDataGroupBase dataGroup in group.AllData.Values
-                    .Where(resxGroup => uncompletedDataGroups == null || uncompletedDataGroups.Contains(resxGroup)))
+            {
+                IEnumerable<ResourceDataGroupBase> groupDataValues = group.AllData.Values
+                    .Where(resxGroup => uncompletedDataGroups == null || uncompletedDataGroups.Contains(resxGroup));
+
+                if (IgnoreInternalResources)
+                {
+                    groupDataValues = groupDataValues.Where(resxGroup => !resxGroup.Name.StartsWith(">>"));
+                }
+
+                foreach (ResourceDataGroupBase dataGroup in groupDataValues)
                 {
                     AddData(group, dataGroup, worksheet, rowIndex, cultures);
                     rowIndex++;

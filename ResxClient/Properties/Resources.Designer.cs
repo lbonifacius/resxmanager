@@ -331,6 +331,15 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignore WinForms internal resources (&quot; &gt;&gt; &quot;).
+        /// </summary>
+        internal static string IgnoreInternalResources {
+            get {
+                return ResourceManager.GetString("IgnoreInternalResources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Import ähnelt.
         /// </summary>
         internal static string Import {
