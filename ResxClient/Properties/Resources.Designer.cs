@@ -331,7 +331,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ignore WinForms internal resources (&quot; &gt;&gt; &quot;).
+        ///   Sucht eine lokalisierte Zeichenfolge, die Ignore WinForms internal resources (&quot;&gt;&gt;&quot;) ähnelt.
         /// </summary>
         internal static string IgnoreInternalResources {
             get {
@@ -457,6 +457,42 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The files have been saved. Would you like to check in the files you have previously checked out? ähnelt.
+        /// </summary>
+        internal static string SaveResources_TryCheckin_Message {
+            get {
+                return ResourceManager.GetString("SaveResources_TryCheckin_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Check in files? ähnelt.
+        /// </summary>
+        internal static string SaveResources_TryCheckin_Title {
+            get {
+                return ResourceManager.GetString("SaveResources_TryCheckin_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Some files are readonly and appear to are checked into TFS, would you like to try and checkout files? ähnelt.
+        /// </summary>
+        internal static string SaveResources_TryCheckout_Message {
+            get {
+                return ResourceManager.GetString("SaveResources_TryCheckout_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Checkout readonly files? ähnelt.
+        /// </summary>
+        internal static string SaveResources_TryCheckout_Title {
+            get {
+                return ResourceManager.GetString("SaveResources_TryCheckout_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Saving resource files ähnelt.
         /// </summary>
         internal static string SavingResourceFiles {
@@ -574,6 +610,15 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Error while calling Team Foundation server. {0} ähnelt.
+        /// </summary>
+        internal static string TFSException {
+            get {
+                return ResourceManager.GetString("TFSException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Translate ähnelt.
         /// </summary>
         internal static string Translate {
@@ -619,7 +664,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The solution &apos;{0}&apos; does not contain any culture. Have you loaded the correct solution? ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die The solution &apos;{0}&apos; does not contain any culture. Have you loaded the correct file? ähnelt.
         /// </summary>
         internal static string WarningNoCultures {
             get {
@@ -628,7 +673,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The solution &apos;{0}&apos; does not contain any project. Have you loaded the correct solution? ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die The solution &apos;{0}&apos; does not contain any project. Have you loaded the correct file? ähnelt.
         /// </summary>
         internal static string WarningNoProjects {
             get {

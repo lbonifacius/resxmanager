@@ -38,11 +38,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.projects = new ResourceManager.Client.Controls.ProjectsListView();
             this.lbCultures = new System.Windows.Forms.Label();
             this.lbProjects = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.projects = new ResourceManager.Client.Controls.ProjectsListView();
             this.cultures = new ResourceManager.Client.Controls.CulturesListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.cbkIgnoreInternalResources = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -93,6 +93,8 @@
             // cbkIncludeProjectsWithoutTranslations
             // 
             this.cbkIncludeProjectsWithoutTranslations.AutoSize = true;
+            this.cbkIncludeProjectsWithoutTranslations.Checked = true;
+            this.cbkIncludeProjectsWithoutTranslations.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbkIncludeProjectsWithoutTranslations.Location = new System.Drawing.Point(16, 60);
             this.cbkIncludeProjectsWithoutTranslations.Name = "cbkIncludeProjectsWithoutTranslations";
             this.cbkIncludeProjectsWithoutTranslations.Size = new System.Drawing.Size(194, 17);
@@ -151,6 +153,16 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(472, 345);
             this.tableLayoutPanel1.TabIndex = 11;
             // 
+            // projects
+            // 
+            this.projects.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.projects.Location = new System.Drawing.Point(3, 30);
+            this.projects.Name = "projects";
+            this.projects.ScrollAlwaysVisible = true;
+            this.projects.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.projects.Size = new System.Drawing.Size(230, 312);
+            this.projects.TabIndex = 6;
+            // 
             // lbCultures
             // 
             this.lbCultures.AutoSize = true;
@@ -171,6 +183,17 @@
             this.lbProjects.TabIndex = 7;
             this.lbProjects.Text = "label1";
             // 
+            // cultures
+            // 
+            this.cultures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cultures.FormattingEnabled = true;
+            this.cultures.Location = new System.Drawing.Point(239, 30);
+            this.cultures.Name = "cultures";
+            this.cultures.ScrollAlwaysVisible = true;
+            this.cultures.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.cultures.Size = new System.Drawing.Size(230, 312);
+            this.cultures.TabIndex = 9;
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.cbkIgnoreInternalResources);
@@ -183,27 +206,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(472, 105);
             this.panel2.TabIndex = 12;
-            // 
-            // projects
-            // 
-            this.projects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.projects.Location = new System.Drawing.Point(3, 30);
-            this.projects.Name = "projects";
-            this.projects.ScrollAlwaysVisible = true;
-            this.projects.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.projects.Size = new System.Drawing.Size(230, 312);
-            this.projects.TabIndex = 6;
-            // 
-            // cultures
-            // 
-            this.cultures.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cultures.FormattingEnabled = true;
-            this.cultures.Location = new System.Drawing.Point(239, 30);
-            this.cultures.Name = "cultures";
-            this.cultures.ScrollAlwaysVisible = true;
-            this.cultures.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.cultures.Size = new System.Drawing.Size(230, 312);
-            this.cultures.TabIndex = 9;
             // 
             // cbkIgnoreInternalResources
             // 
