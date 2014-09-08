@@ -167,6 +167,7 @@
   </data>
   <data name="VSSolutionFileFilter" xml:space="preserve">
     <value>Visual-Studio Solution|*.sln</value>
+    <comment>Qu</comment>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
@@ -226,7 +227,7 @@
     <value>Error</value>
   </data>
   <data name="ErrorTextDefault" xml:space="preserve">
-    <value>An error has been occurred. {0}. Please see error.txt for details.</value>
+    <value>An error has been occurred. {0} Please see error.txt for details.</value>
   </data>
   <data name="Documentation" xml:space="preserve">
     <value>Documentation</value>
@@ -311,5 +312,23 @@
   </data>
   <data name="IgnoreInternalResources" xml:space="preserve">
     <value>Ignore WinForms internal resources ("&gt;&gt;")</value>
+  </data>
+  <data name="IgnoreInternalResources" xml:space="preserve">
+    <value>Ignore WinForms internal resources ("&gt;&gt;")</value>
+  </data>
+  <data name="SaveResources_TryCheckout_Message" xml:space="preserve">
+    <value>Some files are readonly and appear to are checked into TFS, would you like to try and checkout files?</value>
+  </data>
+  <data name="SaveResources_TryCheckout_Title" xml:space="preserve">
+    <value>Checkout readonly files?</value>
+  </data>
+  <data name="SaveResources_TryCheckin_Message" xml:space="preserve">
+    <value>The files have been saved. Would you like to check in the files you have previously checked out?</value>
+  </data>
+  <data name="SaveResources_TryCheckin_Title" xml:space="preserve">
+    <value>Check in files?</value>
+  </data>
+  <data name="TFSException" xml:space="preserve">
+    <value>Error while calling Team Foundation server. {0}</value>
   </data>
 </root>

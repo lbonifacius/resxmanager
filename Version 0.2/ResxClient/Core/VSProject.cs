@@ -12,7 +12,7 @@ namespace ResourceManager.Core
         private Dictionary<string, IResourceFileGroup> cultures = new Dictionary<string, IResourceFileGroup>();
         private List<IResourceFile> unassignedFiles = new List<IResourceFile>();
 
-        
+        private const string VSS_PROJECT_METAFILE_EXTENSION = ".vspscc";
         
         public VSProject(VSSolution solution, string filepath, string name) : base(null, null, filepath)
         {
@@ -26,6 +26,9 @@ namespace ResourceManager.Core
             this.Type = resolveProjectType(filepath);
 
             base.Init(CleanDirectoryPath(filepath));
+
+            string tfsFile = Path.Combine(Solution.SolutionDirectory.FullName, filepath + VSS_PROJECT_METAFILE_EXTENSION);
+            UnderTfsControl = File.Exists(tfsFile);
         }
         protected static VSProjectTypes resolveProjectType(string filepath)
         {
@@ -73,7 +76,11 @@ namespace ResourceManager.Core
                 return cultures.Any(p => p.Value.HasChanged);
             }
         }
-
+        public bool UnderTfsControl
+        {
+            get;
+            private set;
+        }
         public Dictionary<string, IResourceFileGroup> ResxGroups
         {
             get { return cultures; }

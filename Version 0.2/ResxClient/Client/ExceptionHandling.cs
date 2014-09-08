@@ -10,7 +10,13 @@ namespace ResourceManager.Client
     {
         public static void ShowErrorDialog(Exception e)
         {
-            MessageBox.Show(String.Format(Properties.Resources.ErrorTextDefault, e.Message), Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            string msg = "";
+            if(!e.Message.TrimEnd(' ').EndsWith("."))
+                msg = String.Format(Properties.Resources.ErrorTextDefault, e.Message.TrimEnd(' ') + ". ");
+            else
+                msg = String.Format(Properties.Resources.ErrorTextDefault, e.Message);
+
+            MessageBox.Show(msg, Properties.Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

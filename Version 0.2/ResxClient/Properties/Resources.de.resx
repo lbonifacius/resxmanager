@@ -227,7 +227,7 @@
     <value>Fehler</value>
   </data>
   <data name="ErrorTextDefault" xml:space="preserve">
-    <value>Ein Fehler ist aufgetreten. {0}. Für Details siehe error.txt</value>
+    <value>Ein Fehler ist aufgetreten. {0} Für Details siehe error.txt</value>
   </data>
   <data name="Import" xml:space="preserve">
     <value>Importieren</value>
@@ -285,6 +285,21 @@
   </data>
   <data name="IncludeProjectsWithoutTranslations">
     <value>Projekte ohne Übersetzungen exportieren</value>
+  </data>
+  <data name="SaveResources_TryCheckout_Message">
+    <value>Einige Dateien scheinen unter Quellcode-Verwaltung zu stehen. Soll versucht werden, die Dateien auszuchecken?</value>
+  </data>
+  <data name="SaveResources_TryCheckout_Title">
+    <value>Schreibgeschützte Dateien auschecken</value>
+  </data>
+  <data name="SaveResources_TryCheckin_Message">
+    <value>Die Dateien wurden gespeichert. Sollen die zuvor ausgecheckten Dateien jetzt wieder eingecheckt werden?</value>
+  </data>
+  <data name="SaveResources_TryCheckin_Title">
+    <value>Dateien einchecken</value>
+  </data>
+  <data name="TFSException">
+    <value>Beim Aufruf des Team Foundation Servers ist ein Fehler aufgetreten. {0}</value>
   </data>
   <data name="AutoAdjustLayout">
     <value>Layout automatisch anpassen</value>

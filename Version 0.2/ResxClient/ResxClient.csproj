@@ -149,6 +149,7 @@
     <Compile Include="Core\WiX\WixLocalizationGroup.cs" />
     <Compile Include="Core\WiX\WixLocalizationFile.cs" />
     <Compile Include="Core\WiX\WixLocalizationFileGroup.cs" />
+    <Compile Include="Exceptions\TfsException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\TranslationStorage.Designer.cs">
