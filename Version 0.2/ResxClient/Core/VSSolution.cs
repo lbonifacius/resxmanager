@@ -78,53 +78,58 @@ namespace ResourceManager.Core
                 cultures.Remove(r);
         }
 
-        public void Save()
+        public bool Save()
         {
             // Get a list of files that require TFS checkouts
-            var filesToCheckout = GetTFSFiles();
-            bool checkedout = false;
+            var filesToCheckout = getTFSFiles();
+            var checkedout = DialogResult.None;
 
             // If we have files to checkout, perform checkout
             if (filesToCheckout != null && filesToCheckout.Count() > 0)
-                checkedout = this.TryTFSCheckout(filesToCheckout.ToArray());
+                checkedout = this.tryTFSCheckout(filesToCheckout.ToArray());
 
-            // Loop through the project resource files and save the changes to disk
-            foreach (VSProject project in Projects.Values)
+            if (checkedout == DialogResult.None || checkedout == DialogResult.OK || checkedout == DialogResult.Ignore)
             {
-                foreach (IResourceFileGroup fileGroup in project.ResxGroups.Values)
+                // Loop through the project resource files and save the changes to disk
+                foreach (VSProject project in Projects.Values)
                 {
-                    foreach (IResourceFile file in fileGroup.Files.Values)
+                    foreach (IResourceFileGroup fileGroup in project.ResxGroups.Values)
                     {
-                        if (file.HasChanged)
-                            file.IncludeInProjectFile();
+                        foreach (IResourceFile file in fileGroup.Files.Values)
+                        {
+                            if (file.HasChanged)
+                                file.IncludeInProjectFile();
 
-                        file.Save();
+                            file.Save();
+                        }
                     }
-                }
 
-                project.SaveProjectFile();
+                    project.SaveProjectFile();
+                }
             }
 
             // If we have files that we checked out, perform checkin
-            if (checkedout && filesToCheckout != null && filesToCheckout.Count() > 0)
+            if (checkedout == DialogResult.OK && filesToCheckout != null && filesToCheckout.Count() > 0)
             {
                 // Ask the user to confirm the checkin action, he/she might not want this 
                 if (MessageBox.Show(Properties.Resources.SaveResources_TryCheckin_Message,
                         Properties.Resources.SaveResources_TryCheckin_Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    this.TryTFSCheckin(filesToCheckout.ToArray());
+                    this.tryTFSCheckin(filesToCheckout.ToArray());
                 }
             }
+
+            return checkedout == DialogResult.None || checkedout == DialogResult.OK || checkedout == DialogResult.Ignore;
         }
 
         /// <summary>
         /// Returns a list of project files that require TFS checkouts
-        /// - These files are identified via the Readonly flag for changed files
+        /// - These files are identified via the Readonly flag for changed files and if the project seems to be under source control.
         /// </summary>
         /// <returns></returns>
-        private List<string> GetTFSFiles()
+        private List<string> getTFSFiles()
         {
-            if (String.IsNullOrEmpty(getPathToTfExe()))
+            if (!isTfAvailable())
                 return null;
 
             // Flag that indicates if the program has asked the user to checkout
@@ -169,7 +174,7 @@ namespace ResourceManager.Core
         /// Checks out a list of file in a single call to TF.exe
         /// </summary>
         /// <param name="filePaths"></param>
-        private bool TryTFSCheckout(string[] filePaths)
+        private DialogResult tryTFSCheckout(string[] filePaths)
         {
             // Arguments for the StartProcess
             var arguments = new List<string>(){
@@ -181,14 +186,14 @@ namespace ResourceManager.Core
                 arguments.Add(quote + item + quote);
 
             // Call ProcessStart
-            return RunProcessStart(getPathToTfExe(), arguments.ToArray());
+            return RunProcessStart(getPathToTfExe(), arguments.ToArray(), true);
         }
 
         /// <summary>
         /// Checks in a list of file in a single call to TF.exe
         /// </summary>
         /// <param name="filePaths"></param>
-        private void TryTFSCheckin(string[] filePaths)
+        private void tryTFSCheckin(string[] filePaths)
         {
             // Arguments for the StartProcess
             var arguments = new List<string>(){
@@ -203,14 +208,18 @@ namespace ResourceManager.Core
             arguments.Add("/comment:" + quote + "ResXManager: " + this.Name + quote);
 
             // Call ProcessStart
-            RunProcessStart(getPathToTfExe(), arguments.ToArray());
+            RunProcessStart(getPathToTfExe(), arguments.ToArray(), false);
+        }
+        private bool isTfAvailable()
+        {
+            return !String.IsNullOrEmpty(getPathToTfExe()) && File.Exists(getPathToTfExe());
         }
         private string getPathToTfExe()
         {
             return System.Configuration.ConfigurationManager.AppSettings["PathToTFExe"];
         }
 
-        private bool RunProcessStart(string fileName, string[] arguments)
+        private DialogResult RunProcessStart(string fileName, string[] arguments, bool showIgnoreButton)
         {
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
                 throw new FileNotFoundException(fileName);
@@ -226,27 +235,35 @@ namespace ResourceManager.Core
                 CreateNoWindow = true
             };
 
-            // Start the process
-            using (var process = Process.Start(startInfo))
+            DialogResult dialog = DialogResult.Retry;
+            while (dialog == DialogResult.Retry)
             {
-                // Wait for the process to finish in the background
-                process.WaitForExit();
-
-                // Check for errors and display
-                var errorOutput = process.StandardError.ReadToEnd();
-                if (!string.IsNullOrEmpty(errorOutput))
+                // Start the process
+                using (var process = Process.Start(startInfo))
                 {
-                    MessageBox.Show(Properties.Resources.Error, errorOutput, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Wait for the process to finish in the background
+                    process.WaitForExit();
 
-                    var log = log4net.LogManager.GetLogger(typeof(VSSolution));
-                    if (log.IsErrorEnabled)
-                        log.Error(new TfsException(errorOutput));
+                    // Check for errors and display
+                    var errorOutput = process.StandardError.ReadToEnd();
+                    if (!string.IsNullOrEmpty(errorOutput))
+                    {
+                        MessageBoxButtons buttons = MessageBoxButtons.RetryCancel;
+                        if (showIgnoreButton)
+                            buttons = MessageBoxButtons.AbortRetryIgnore;
 
-                    return false;
+                        dialog = MessageBox.Show(errorOutput, Properties.Resources.Error, buttons, MessageBoxIcon.Error);
+
+                        var log = log4net.LogManager.GetLogger(typeof(VSSolution));
+                        if (log.IsErrorEnabled)
+                            log.Error(new TfsException(errorOutput));
+                    }
+                    else
+                        dialog = DialogResult.OK;
                 }
             }
 
-            return true;
+            return dialog;
         }
     }
 }
