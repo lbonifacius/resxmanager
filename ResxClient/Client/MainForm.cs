@@ -204,10 +204,11 @@ namespace ResourceManager.Client
         }
         private void saveResourceFiles()
         {
+            bool saved = false;
             try
             {
                 setToolbarStatusText(Resources.SavingResourceFiles);
-                CurrentSolution.Save();
+                saved = CurrentSolution.Save();
             }
             catch
             {
@@ -215,7 +216,10 @@ namespace ResourceManager.Client
             }
             finally
             {
-                setToolbarStatusText(Resources.SavingResourceFilesCompleted, 4000);
+                if (saved)
+                    setToolbarStatusText(Resources.SavingResourceFilesCompleted, 4000);
+                else
+                    resetToolbarStatusText();
             }
         }
         private void exportAll()
