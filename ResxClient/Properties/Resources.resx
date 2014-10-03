@@ -313,9 +313,6 @@
   <data name="IgnoreInternalResources" xml:space="preserve">
     <value>Ignore WinForms internal resources ("&gt;&gt;")</value>
   </data>
-  <data name="IgnoreInternalResources" xml:space="preserve">
-    <value>Ignore WinForms internal resources ("&gt;&gt;")</value>
-  </data>
   <data name="SaveResources_TryCheckout_Message" xml:space="preserve">
     <value>Some files are readonly and appear to are checked into TFS, would you like to try and checkout files?</value>
   </data>
@@ -330,5 +327,11 @@
   </data>
   <data name="TFSException" xml:space="preserve">
     <value>Error while calling Team Foundation server. {0}</value>
+  </data>
+  <data name="ImportingResources" xml:space="preserve">
+    <value>Importing Resources</value>
+  </data>
+  <data name="ImportingResourcesCompleted" xml:space="preserve">
+    <value>{0} resource entries imported</value>
   </data>
 </root>

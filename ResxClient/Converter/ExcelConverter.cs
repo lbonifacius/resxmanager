@@ -37,7 +37,7 @@ namespace ResourceManager.Converter
 
             if (ExportDiff)
             {
-                uncompletedDataGroups = project.GetUncompleteDataGroups();
+                uncompletedDataGroups = project.GetUncompleteDataGroups(Solution.Cultures.Keys);
 
                 if (uncompletedDataGroups.Count == 0)
                     return;
@@ -138,8 +138,10 @@ namespace ResourceManager.Converter
             expandedRowCount++;
         }
 
-        public void Import(string filename)
+        public int Import(string filename)
         {
+            int count = 0;
+
             XmlDocument xml = new XmlDocument();
             xml.Load(filename);
 
@@ -203,11 +205,15 @@ namespace ResourceManager.Converter
                                 {
                                     dataGroup.ResxData[cultures[i].Culture].Value = valueNode.InnerText;
                                 }
+
+                                count++;
                             }
                         }
                     }
                 }
             }
+
+            return count;
         }       
     }
 }

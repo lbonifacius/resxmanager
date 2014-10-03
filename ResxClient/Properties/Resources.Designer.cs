@@ -196,7 +196,7 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die An error has been occurred. {0}. Please see error.txt for details. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die An error has been occurred. {0} Please see error.txt for details. ähnelt.
         /// </summary>
         internal static string ErrorTextDefault {
             get {
@@ -354,6 +354,24 @@ namespace ResourceManager.Properties {
         internal static string ImportFromExcel {
             get {
                 return ResourceManager.GetString("ImportFromExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Importing Resources ähnelt.
+        /// </summary>
+        internal static string ImportingResources {
+            get {
+                return ResourceManager.GetString("ImportingResources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die {0} resource entries imported ähnelt.
+        /// </summary>
+        internal static string ImportingResourcesCompleted {
+            get {
+                return ResourceManager.GetString("ImportingResourcesCompleted", resourceCulture);
             }
         }
         

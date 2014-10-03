@@ -11,9 +11,10 @@ namespace ResourceManager.Core
         private Dictionary<CultureInfo, ResourceDataBase> data = new Dictionary<CultureInfo, ResourceDataBase>();
         private string name;
 
-        public ResourceDataGroupBase(string name)
+        public ResourceDataGroupBase(string name, IResourceFileGroup fileGroup)
         {
             this.name = name;
+            this.FileGroup = fileGroup;
         }
 
         public Dictionary<CultureInfo, ResourceDataBase> ResxData
@@ -23,6 +24,11 @@ namespace ResourceManager.Core
         public string Name
         {
             get { return name; }
+        }
+        public IResourceFileGroup FileGroup
+        {
+            get;
+            private set;
         }
         public void Add(ResourceDataBase resxdata)
         {

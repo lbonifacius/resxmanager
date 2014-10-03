@@ -32,7 +32,7 @@ namespace ResourceManager.Core
         }
         public override ResourceDataGroupBase CreateDataGroup(string name)
         {
-            return new WixLocalizationDataGroup(name);
+            return new WixLocalizationDataGroup(name, this);
         }
     }
 }

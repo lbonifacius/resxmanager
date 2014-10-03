@@ -242,7 +242,7 @@
     <value>Dokumentation</value>
   </data>
   <data name="TranslateToolTip" xml:space="preserve">
-    <value>Übersetzt fehlende Texte, indem in der Datenbank nach bereits übersetzten Texten gesucht wird. Für Details siehe ? -&gt; Dokumentation</value>
+    <value>Übersetzt fehlende Texte, indem die Datenbank nach bereits übersetzten Texten durchsucht wird. Für Details siehe ? -&gt; Dokumentation</value>
   </data>
   <data name="ChangingCulture" xml:space="preserve">
     <value>Übernehme neue Sprache</value>
@@ -327,5 +327,11 @@
   </data>
   <data name="IgnoreInternalResources">
     <value>Ignoriere interne WinForms Ressourcen ("&gt;&gt;")</value>
+  </data>
+  <data name="ImportingResources">
+    <value>Importiere Ressourcen</value>
+  </data>
+  <data name="ImportingResourcesCompleted">
+    <value>{0} Einträge importiert.</value>
   </data>
 </root>

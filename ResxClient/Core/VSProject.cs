@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Globalization;
 
 namespace ResourceManager.Core
 {
@@ -99,12 +100,12 @@ namespace ResourceManager.Core
         {
             get { return unassignedFiles; }
         }
-        public IList<ResourceDataGroupBase> GetUncompleteDataGroups()
+        public IList<ResourceDataGroupBase> GetUncompleteDataGroups(IEnumerable<CultureInfo> cultures)
         {
             List<ResourceDataGroupBase> list = new List<ResourceDataGroupBase>();
-            foreach (IResourceFileGroup fileGroup in cultures.Values)
+            foreach (IResourceFileGroup fileGroup in ResxGroups.Values)
             {
-                list.AddRange(from resxDataGroup in fileGroup.AllData.Values where !resxDataGroup.IsComplete(Solution.Cultures.Keys) select resxDataGroup);
+                list.AddRange(from resxDataGroup in fileGroup.AllData.Values where !resxDataGroup.IsComplete(cultures) select resxDataGroup);
             }
             return list;
         }

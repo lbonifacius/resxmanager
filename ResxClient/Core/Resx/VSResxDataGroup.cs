@@ -8,8 +8,8 @@ namespace ResourceManager.Core
 {
     public class VSResxDataGroup : ResourceDataGroupBase
     {
-        public VSResxDataGroup(string name)
-            : base(name)
+        public VSResxDataGroup(string name, IResourceFileGroup fileGroup)
+            : base(name, fileGroup)
         {
         } 	
     }
