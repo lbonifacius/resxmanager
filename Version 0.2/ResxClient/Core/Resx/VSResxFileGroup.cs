@@ -31,7 +31,7 @@ namespace ResourceManager.Core
         }
         public override ResourceDataGroupBase CreateDataGroup(string name)
         {
-            return new VSResxDataGroup(name);
+            return new VSResxDataGroup(name, this);
         }
     }
 }

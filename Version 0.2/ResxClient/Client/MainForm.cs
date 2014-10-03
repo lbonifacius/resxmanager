@@ -234,10 +234,14 @@ namespace ResourceManager.Client
         }
         private void openExcelDialog_FileOk(object sender, CancelEventArgs e)
         {
+            setToolbarStatusText(Resources.ImportingResources);
+
             IConverter excel = ConverterFactory.OpenConverter(openExcelDialog, CurrentSolution);
-            excel.Import(openExcelDialog.FileName);
+            int count = excel.Import(openExcelDialog.FileName);
 
             solutionTree1.RefreshAnalysis();
+
+            setToolbarStatusText(String.Format(Resources.ImportingResourcesCompleted, count), 4000);
         }
         protected DialogResult testSolutionHasChanged()
         {

@@ -3,6 +3,6 @@ namespace ResourceManager.Converter
 {
     public interface IConverter
     {
-        void Import(string filePath);
+        int Import(string filePath);
     }
 }

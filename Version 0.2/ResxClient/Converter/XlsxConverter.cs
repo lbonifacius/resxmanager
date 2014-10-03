@@ -50,37 +50,27 @@ namespace ResourceManager.Converter
                 if (Projects == null)
                     projects = (IEnumerable<VSProject>)Solution.Projects.Values;
 
-                if (!IncludeProjectsWithoutTranslations)
-                {
-                    if (FileGroups != null && FileGroups.Count() > 0)
-                        projects = projects.Where(p => p.ResxGroups.Values.Intersect(FileGroups).Any(g => g.AllData.Count > 0));
-                    else
-                        projects = projects.Where(p => p.ResxGroups.Values.Any(g => g.AllData.Count > 0));
-                }
-
                 foreach (var project in projects)
                 {
-                    AddProject(project, workbook, cultures);
+                    var data = GetData(project, cultures);
+
+                    if (IncludeProjectsWithoutTranslations || data.Count() > 0)
+                        AddProject(project, workbook, cultures, data);
                 }
 
                 workbook.SaveAs(filePath);
             }
         }
-
-        private void AddProject(VSProject project, XLWorkbook workbook, IEnumerable<CultureInfo> cultures)
+        private IEnumerable<ResourceDataGroupBase> GetData(VSProject project, IEnumerable<CultureInfo> cultures)
         {
-            var worksheet = workbook.Worksheets.Add(project.Name);
-
-            AddHeader(project, worksheet, cultures);
-
+            var data = new List<ResourceDataGroupBase>();
             IList<ResourceDataGroupBase> uncompletedDataGroups = null;
 
             if (ExportDiff)
             {
-                uncompletedDataGroups = project.GetUncompleteDataGroups();
+                uncompletedDataGroups = project.GetUncompleteDataGroups(cultures);
             }
-
-            int rowIndex = 2;
+            
             IEnumerable<IResourceFileGroup> resxGroups = project.ResxGroups.Values;
             if (FileGroups != null && FileGroups.Count() > 0)
                 resxGroups = project.ResxGroups.Values.Intersect(FileGroups);
@@ -95,11 +85,22 @@ namespace ResourceManager.Converter
                     groupDataValues = groupDataValues.Where(resxGroup => !resxGroup.Name.StartsWith(">>"));
                 }
 
-                foreach (ResourceDataGroupBase dataGroup in groupDataValues)
-                {
-                    AddData(group, dataGroup, worksheet, rowIndex, cultures);
-                    rowIndex++;
-                }
+                data.AddRange(groupDataValues);                
+            }
+
+            return data;
+        }
+        private void AddProject(VSProject project, XLWorkbook workbook, IEnumerable<CultureInfo> cultures, IEnumerable<ResourceDataGroupBase> data)
+        {
+            var worksheet = workbook.Worksheets.Add(project.Name);
+
+            AddHeader(project, worksheet, cultures);
+
+            int rowIndex = 2;
+            foreach (ResourceDataGroupBase dataGroup in data)
+            {
+                AddData(dataGroup, worksheet, rowIndex, cultures);
+                rowIndex++;
             }
 
             if (AutoAdjustLayout)
@@ -139,9 +140,9 @@ namespace ResourceManager.Converter
             }
         }
 
-        private void AddData(IResourceFileGroup group, ResourceDataGroupBase dataGroup, IXLWorksheet worksheet, int rowIndex, IEnumerable<CultureInfo> cultures)
+        private void AddData(ResourceDataGroupBase dataGroup, IXLWorksheet worksheet, int rowIndex, IEnumerable<CultureInfo> cultures)
         {
-            worksheet.Cell(rowIndex, 1).Value = group.ID;
+            worksheet.Cell(rowIndex, 1).Value = dataGroup.FileGroup.ID;
             worksheet.Cell(rowIndex, 2).Value = dataGroup.Name;
 
             int c = 3;
@@ -165,8 +166,10 @@ namespace ResourceManager.Converter
             }
         }
 
-        public void Import(string filePath)
+        public int Import(string filePath)
         {
+            int count = 0;
+
             var workbook = new XLWorkbook(filePath, XLEventTracking.Disabled);
             foreach (var worksheet in workbook.Worksheets)
             {
@@ -193,25 +196,30 @@ namespace ResourceManager.Converter
                         if (!dataGroup.ResxData.ContainsKey(te.Key))
                         {
                             project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, te.Key);
+                            count++;
                         }
-                        else
+                        else if(dataGroup.ResxData[te.Key].Value != te.Value)
                         {
                             dataGroup.ResxData[te.Key].Value = te.Value;
-                        }
+                            count++;
+                        }                        
                     }
                     foreach (var te in t.Comments)
                     {
                         if (!dataGroup.ResxData.ContainsKey(te.Key))
                         {
                             project.ResxGroups[t.ID].SetResourceDataComment(t.Key, te.Value, te.Key);
+                            count++;
                         }
-                        else
+                        else if (dataGroup.ResxData[te.Key].Comment != te.Value)
                         {
                             dataGroup.ResxData[te.Key].Comment = te.Value;
-                        }
+                            count++;
+                        }                        
                     }
                 }
             }
+            return count;
         }
 
         
