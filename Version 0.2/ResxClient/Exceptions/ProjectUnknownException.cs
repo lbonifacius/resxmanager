@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ResourceManager.Properties;
 
-namespace ResourceManager.Converter.Exceptions
+namespace ResourceManager.Exceptions
 {
     public class ProjectUnknownException : Exception
     {

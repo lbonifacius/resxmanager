@@ -6,6 +6,7 @@ using ResourceManager.Core;
 
 namespace ResourceManager.Client.Controls
 {
+    [Serializable]
     public class CultureAnalysisResultTreeNode : TreeNode
     {
         public CultureAnalysisResultTreeNode(VSCulture sourceCulture, VSCulture targetCulture) : base()

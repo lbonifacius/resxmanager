@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -7,6 +8,7 @@ using ResourceManager.Core;
 
 namespace ResourceManager.Client.Controls
 {
+    [Serializable]
     public class CultureTreeNode : TreeNode
     {
         private VSCulture culture;
@@ -21,7 +23,7 @@ namespace ResourceManager.Client.Controls
 
         private void setText()
         {
-            this.Text = String.Format(displayText, culture.Culture.DisplayName);
+            this.Text = String.Format(CultureInfo.CurrentCulture, displayText, culture.Culture.DisplayName);
         }
         public VSCulture Culture
         {

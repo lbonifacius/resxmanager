@@ -103,12 +103,15 @@ namespace ResourceManager.Core
             }
         }
 
-        public void RegisterResourceData(ResourceDataBase data)
+        public void RegisterResourceData(ResourceDataBase resourceData)
         {
-            if (!this.data.ContainsKey(data.Name))
-                this.data.Add(data.Name, CreateDataGroup(data.Name));
+            if (resourceData == null)
+                throw new ArgumentNullException("resourceData");
 
-            this.data[data.Name].Add(data);
+            if (!data.ContainsKey(resourceData.Name))
+                this.data.Add(resourceData.Name, CreateDataGroup(resourceData.Name));
+
+            data[resourceData.Name].Add(resourceData);
         }
 
         public abstract IResourceFile CreateNewFile(CultureInfo culture);
@@ -117,6 +120,9 @@ namespace ResourceManager.Core
 
         public void ChangeCulture(IResourceFile file, CultureInfo culture)
         {
+            if (file == null)
+                throw new ArgumentNullException("file");
+
             if (this.Files.ContainsKey(file.Culture))
                 this.Files.Remove(file.Culture);
 

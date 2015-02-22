@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Diagnostics;
 using ResourceManager.Exceptions;
+using ResourceManager.Core.Configuration;
 
 namespace ResourceManager.Core
 {
@@ -28,7 +29,10 @@ namespace ResourceManager.Core
         public VSSolution(string filepath)
         {
             solutionDirectory = new DirectoryInfo(filepath.Replace(Path.GetFileName(filepath), ""));
-            this.Name = Path.GetFileNameWithoutExtension(filepath);
+            Name = Path.GetFileNameWithoutExtension(filepath);
+
+            string configPath = Path.Combine(SolutionDirectory.FullName, Path.GetFileName(filepath) + ResxClientConfigurationBase.RESXCLIENTPROJECTFILE_EXTENSION);
+            Configuration = new SolutionConfiguration(configPath);
 
             VSSolutionFileParser parser = new VSSolutionFileParser(filepath, this);
         }
@@ -48,6 +52,48 @@ namespace ResourceManager.Core
         public bool HasChanged
         {
             get { return projects.Any(p => p.Value.HasChanged); }
+        }
+        public SolutionConfiguration Configuration
+        {
+            get;
+            private set;
+        }
+
+        public bool SkipProject(string name)
+        {
+            foreach (var m in Configuration.SkipProjects)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
+        }
+        public bool SkipFile(string name)
+        {
+            foreach (var m in Configuration.SkipFiles)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
+        }
+        public bool SkipDirectory(string name)
+        {
+            foreach (var m in Configuration.SkipDirectories)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
+        }
+        public bool SkipGroup(string name)
+        {
+            foreach (var m in Configuration.SkipGroups)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
         }
 
         public void AddCultureFile(ResourceFileBase file)
@@ -121,6 +167,8 @@ namespace ResourceManager.Core
 
             return checkedout == DialogResult.None || checkedout == DialogResult.OK || checkedout == DialogResult.Ignore;
         }
+
+        #region TFS integration
 
         /// <summary>
         /// Returns a list of project files that require TFS checkouts
@@ -265,5 +313,7 @@ namespace ResourceManager.Core
 
             return dialog;
         }
+
+        #endregion
     }
 }

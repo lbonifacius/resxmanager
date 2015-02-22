@@ -8,13 +8,17 @@ namespace ResourceManager.Core
 {
     public class VSSolutionFileParser
     {
-        private VSSolution solution;        	
+        public VSSolution Solution
+        {
+            get;
+            private set;
+        }
 
         public VSSolutionFileParser(string filepath, VSSolution solution)
         {
-            this.solution = solution;
+            Solution = solution;
 
-            using(StreamReader streamReader = File.OpenText(filepath))
+            using(var streamReader = File.OpenText(filepath))
             {
                 while (!streamReader.EndOfStream)
                 {
@@ -29,10 +33,11 @@ namespace ResourceManager.Core
         { 
             MatchCollection matches = Regex.Matches(line, "\"(.*?)\"");
 
-            if (matches[2] != null && File.Exists(Path.Combine(solution.SolutionDirectory.FullName, matches[2].Groups[1].Value)))
+            if (matches[2] != null && File.Exists(Path.Combine(Solution.SolutionDirectory.FullName, matches[2].Groups[1].Value))
+                && !Solution.SkipProject(matches[1].Groups[1].Value))
             {
-                VSProject project = new VSProject(solution, matches[2].Groups[1].Value, matches[1].Groups[1].Value);
-                solution.Projects.Add(matches[1].Groups[1].Value, project);
+                var project = new VSProject(Solution, matches[2].Groups[1].Value, matches[1].Groups[1].Value);
+                Solution.Projects.Add(matches[1].Groups[1].Value, project);
             }
         }
     }

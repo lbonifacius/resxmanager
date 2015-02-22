@@ -334,4 +334,7 @@
   <data name="ImportingResourcesCompleted">
     <value>{0} Einträge importiert.</value>
   </data>
+  <data name="ExcelExportTitle">
+    <value>Exportiere Ressourcen nach Excel</value>
+  </data>
 </root>

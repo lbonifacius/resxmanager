@@ -12,6 +12,10 @@ namespace ResourceManager.Client.Controls
         private VSSolution solution = null;
         public VSSolution Solution
         {
+            get 
+            {
+                return solution;
+            }
             set
             {
                 solution = value;
@@ -27,9 +31,9 @@ namespace ResourceManager.Client.Controls
             }
         }
 
-        public void LoadProjects(VSSolution s, IEnumerable<VSProject> projects)
+        public void LoadProjects(VSSolution sol, IEnumerable<VSProject> projects)
         {
-            solution = s;
+            solution = sol;
 
             int i = 0;
             foreach (var project in solution.Projects.Values)

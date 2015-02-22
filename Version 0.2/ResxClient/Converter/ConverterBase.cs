@@ -8,23 +8,26 @@ namespace ResourceManager.Converter
 {
     public abstract class ConverterBase
     { 
-        public ConverterBase(VSSolution solution)
+        protected ConverterBase(VSSolution solution)
         {
             this.Solution = solution;
         }
-        public ConverterBase(IEnumerable<VSProject> projects)
+        protected ConverterBase(IEnumerable<VSProject> projects)
         {
             this.Projects = projects;
             this.Solution = projects.First().Solution;
         }
-        public ConverterBase(VSProject project)
+        protected ConverterBase(VSProject project)
         {
+            if (project == null)
+                throw new ArgumentNullException("project");
+
             var list = new List<VSProject>(1);
             list.Add(project);
             this.Projects = list;
             this.Solution = project.Solution;
         }
-        public ConverterBase(IEnumerable<IResourceFileGroup> fileGroups, VSSolution solution)
+        protected ConverterBase(IEnumerable<IResourceFileGroup> fileGroups, VSSolution solution)
         {
             this.FileGroups = fileGroups;
             this.Solution = solution;

@@ -11,8 +11,8 @@ namespace ResourceManager.Core
 
         public VSFileContainer(VSProject project, VSFileContainer parent, string filepath)
         {
-            this.Project = project;
-            this.Parent = parent;
+            Project = project;
+            Parent = parent;
         }
         protected virtual void Init(string filepath)
         {
@@ -23,6 +23,9 @@ namespace ResourceManager.Core
             Files = new List<IResourceFile>();
             foreach (FileInfo file in files)
             {
+                if (Project.SkipFile(file.Name))
+                    continue;
+
                 resxfile = new VSResxFile(this, file);
 
                 string fileGroupId = this.ID + "_" + resxfile.Prefix;
@@ -38,6 +41,9 @@ namespace ResourceManager.Core
             files = directory.GetFiles("*.wxl", SearchOption.TopDirectoryOnly);
             foreach (FileInfo file in files)
             {
+                if (Project.SkipFile(file.Name))
+                    continue;
+
                 resxfile = new WixLocalizationFile(this, file);
 
                 string fileGroupId = this.ID + "_" + resxfile.Prefix;
@@ -53,8 +59,10 @@ namespace ResourceManager.Core
             {
                 if (dir.Name == "obj" || dir.Name == "bin")
                     continue;
+                if (Project.SkipDirectory(dir.Name))
+                    continue;
 
-                VSProjectFolder folder = new VSProjectFolder(Project, this, dir.FullName);
+                var folder = new VSProjectFolder(Project, this, dir.FullName);
 
                 if (folder.ContainsFiles())
                     Directories.Add(folder);

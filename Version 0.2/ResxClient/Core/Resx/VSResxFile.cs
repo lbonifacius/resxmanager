@@ -20,7 +20,10 @@ namespace ResourceManager.Core
                 XPathNodeIterator nodes = nav.Select("/root/data[count(@type) = 0 and count(@mimetype) = 0]");
                 while (nodes.MoveNext())
                 {
-                    VSResxData d = new VSResxData(this, nodes.Current);
+                    var d = new VSResxData(this, nodes.Current);
+
+                    if (folder.Project.SkipGroup(d.Name))
+                        continue;
 
                     if (!Data.ContainsKey(d.Name))
                         Data.Add(d.Name, d);

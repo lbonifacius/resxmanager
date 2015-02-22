@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Globalization;
+using ResourceManager.Core.Configuration;
 
 namespace ResourceManager.Core
 {
@@ -17,14 +18,14 @@ namespace ResourceManager.Core
         
         public VSProject(VSSolution solution, string filepath, string name) : base(null, null, filepath)
         {
-            this.Solution = solution;
+            Solution = solution;
 
-            string configPath = Path.Combine(Path.Combine(Solution.SolutionDirectory.FullName, CleanDirectoryPath(filepath)), Path.GetFileNameWithoutExtension(filepath) + ResxClientProjectFile.RESXCLIENTPROJECTFILE_EXTENSION);
-            this.ResxProjectFile = new ResxClientProjectFile(configPath);
+            string configPath = Path.Combine(Path.Combine(Solution.SolutionDirectory.FullName, CleanDirectoryPath(filepath)), Path.GetFileNameWithoutExtension(filepath) + ResxClientConfigurationBase.RESXCLIENTPROJECTFILE_EXTENSION);
+            ResxProjectFile = new ProjectConfiguration(configPath);
 
-            this.FilePath = filepath;
-            this.Name = name;
-            this.Type = resolveProjectType(filepath);
+            FilePath = filepath;
+            Name = name;
+            Type = resolveProjectType(filepath);
 
             base.Init(CleanDirectoryPath(filepath));
 
@@ -70,6 +71,44 @@ namespace ResourceManager.Core
             get;
             private set;
         }
+
+        public bool SkipFile(string name)
+        {
+            if (Solution.SkipFile(name))
+                return true;
+
+            foreach (var m in ResxProjectFile.SkipFiles)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
+        }
+        public bool SkipDirectory(string name)
+        {
+            if (Solution.SkipDirectory(name))
+                return true;
+
+            foreach (var m in ResxProjectFile.SkipDirectories)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
+        }
+        public bool SkipGroup(string name)
+        {
+            if (Solution.SkipGroup(name))
+                return true;
+
+            foreach (var m in ResxProjectFile.SkipGroups)
+            {
+                if (m.IsMatch(name))
+                    return true;
+            }
+            return false;
+        }
+
         public bool HasChanged
         {
             get
@@ -91,7 +130,7 @@ namespace ResourceManager.Core
             get;
             private set;
         }
-        public ResxClientProjectFile ResxProjectFile
+        public ProjectConfiguration ResxProjectFile
         {
             get;
             private set;
