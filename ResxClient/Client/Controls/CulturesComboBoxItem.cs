@@ -10,6 +10,9 @@ namespace ResourceManager.Client.Controls
     {
         public CulturesComboBoxItem(CultureInfo culture)
         {
+            if (culture == null)
+                throw new ArgumentNullException("culture");
+
             this.DisplayName = culture.DisplayName;
             this.Name = culture.Name;
         }

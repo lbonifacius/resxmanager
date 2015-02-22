@@ -116,7 +116,11 @@
     </Compile>
     <Compile Include="Converter\ConverterBase.cs" />
     <Compile Include="Converter\ConverterFactory.cs" />
-    <Compile Include="Converter\Exceptions\ProjectUnknownException.cs" />
+    <Compile Include="Core\Configuration\EntityNameMatcher.cs" />
+    <Compile Include="Core\Configuration\SolutionConfiguration.cs" />
+    <Compile Include="Core\Configuration\ProjectConfiguration.cs" />
+    <Compile Include="Exceptions\ConverterFileTypeUnknownException.cs" />
+    <Compile Include="Exceptions\ProjectUnknownException.cs" />
     <Compile Include="Converter\IConverter.cs" />
     <Compile Include="Converter\XlsxConverter.cs" />
     <Compile Include="Core\IResourceFile.cs" />
@@ -128,7 +132,7 @@
     <Compile Include="Core\VSFileContainer.cs" />
     <Compile Include="Core\IProjectFileSettings.cs" />
     <Compile Include="Converter\ExcelConverter.cs" />
-    <Compile Include="Core\ResxClientProjectFile.cs" />
+    <Compile Include="Core\Configuration\ResxClientProjectFile.cs" />
     <Compile Include="Core\VSProjectFileTypes.cs" />
     <Compile Include="Core\VSProjectFolder.cs" />
     <Compile Include="Core\Resx\VSResxDataGroup.cs" />
@@ -245,6 +249,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Storage\Sql\StoredProcedures1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Converter\Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

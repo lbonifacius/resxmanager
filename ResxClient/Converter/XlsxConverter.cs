@@ -7,13 +7,14 @@ using ClosedXML.Excel;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using ResourceManager.Converter.Exceptions;
+using ResourceManager.Exceptions;
 using ResourceManager.Core;
 
 namespace ResourceManager.Converter
 {
     public class XlsxConverter : ConverterBase, ResourceManager.Converter.IConverter
     {
+        private const string COMMENTS_KEY = "[Comments]";
         private double ColumnValueWidth = 40;
         private double ColumnCommentWidth = 40;
 
@@ -39,7 +40,6 @@ namespace ResourceManager.Converter
         {
             using (var workbook = new XLWorkbook(XLEventTracking.Disabled))
             {
-
                 IEnumerable<CultureInfo> cultures = null;
                 if (Cultures != null)
                     cultures = Cultures.Select(vc => vc.Culture);
@@ -67,9 +67,7 @@ namespace ResourceManager.Converter
             IList<ResourceDataGroupBase> uncompletedDataGroups = null;
 
             if (ExportDiff)
-            {
                 uncompletedDataGroups = project.GetUncompleteDataGroups(cultures);
-            }
             
             IEnumerable<IResourceFileGroup> resxGroups = project.ResxGroups.Values;
             if (FileGroups != null && FileGroups.Count() > 0)
@@ -85,7 +83,7 @@ namespace ResourceManager.Converter
                     groupDataValues = groupDataValues.Where(resxGroup => !resxGroup.Name.StartsWith(">>"));
                 }
 
-                data.AddRange(groupDataValues);                
+                data.AddRange(groupDataValues);
             }
 
             return data;
@@ -94,7 +92,7 @@ namespace ResourceManager.Converter
         {
             var worksheet = workbook.Worksheets.Add(project.Name);
 
-            AddHeader(project, worksheet, cultures);
+            AddHeader(worksheet, cultures);
 
             int rowIndex = 2;
             foreach (ResourceDataGroupBase dataGroup in data)
@@ -112,7 +110,7 @@ namespace ResourceManager.Converter
                 worksheet.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
             }
         }
-        private void AddHeader(VSProject project, IXLWorksheet worksheet, IEnumerable<CultureInfo> cultures)
+        private void AddHeader(IXLWorksheet worksheet, IEnumerable<CultureInfo> cultures)
         {
             worksheet.Cell(1, 1).Value = "ID";
             worksheet.Cell(1, 2).Value = "Keys";            
@@ -135,7 +133,7 @@ namespace ResourceManager.Converter
                         worksheet.Column(c).Width = ColumnCommentWidth;
                         worksheet.Column(c).Style.Alignment.SetWrapText(true);
                     }
-                    worksheet.Cell(1, c++).Value = culture.Name + " [Comments]";
+                    worksheet.Cell(1, c++).Value = culture.Name + " " + COMMENTS_KEY;
                 }
             }
         }
@@ -170,52 +168,54 @@ namespace ResourceManager.Converter
         {
             int count = 0;
 
-            var workbook = new XLWorkbook(filePath, XLEventTracking.Disabled);
-            foreach (var worksheet in workbook.Worksheets)
+            using (var workbook = new XLWorkbook(filePath, XLEventTracking.Disabled))
             {
-                string projectName = worksheet.Name;
-                if (!Solution.Projects.ContainsKey(projectName))
-                    throw new ProjectUnknownException(projectName);
-
-                var project = Solution.Projects[projectName];
-                var translations = TranslationRow.LoadRows(worksheet);
-
-                foreach (var t in translations)
+                foreach (var worksheet in workbook.Worksheets)
                 {
-                    ResourceDataGroupBase dataGroup = null;
-                    if (!project.ResxGroups[t.ID].AllData.ContainsKey(t.Key))
-                    {
-                        dataGroup = project.ResxGroups[t.ID].CreateDataGroup(t.Key);
-                        project.ResxGroups[t.ID].AllData.Add(t.Key, dataGroup);
-                    }
-                    else
-                        dataGroup = project.ResxGroups[t.ID].AllData[t.Key];
+                    string projectName = worksheet.Name;
+                    if (!Solution.Projects.ContainsKey(projectName))
+                        throw new ProjectUnknownException(projectName);
 
-                    foreach (var te in t.Translations)
+                    var project = Solution.Projects[projectName];
+                    var translations = TranslationRow.LoadRows(worksheet);
+
+                    foreach (var t in translations)
                     {
-                        if (!dataGroup.ResxData.ContainsKey(te.Key))
+                        ResourceDataGroupBase dataGroup = null;
+                        if (!project.ResxGroups[t.ID].AllData.ContainsKey(t.Key))
                         {
-                            project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, te.Key);
-                            count++;
+                            dataGroup = project.ResxGroups[t.ID].CreateDataGroup(t.Key);
+                            project.ResxGroups[t.ID].AllData.Add(t.Key, dataGroup);
                         }
-                        else if(dataGroup.ResxData[te.Key].Value != te.Value)
+                        else
+                            dataGroup = project.ResxGroups[t.ID].AllData[t.Key];
+
+                        foreach (var te in t.Translations)
                         {
-                            dataGroup.ResxData[te.Key].Value = te.Value;
-                            count++;
-                        }                        
-                    }
-                    foreach (var te in t.Comments)
-                    {
-                        if (!dataGroup.ResxData.ContainsKey(te.Key))
-                        {
-                            project.ResxGroups[t.ID].SetResourceDataComment(t.Key, te.Value, te.Key);
-                            count++;
+                            if (!dataGroup.ResxData.ContainsKey(te.Key))
+                            {
+                                project.ResxGroups[t.ID].SetResourceData(t.Key, te.Value, te.Key);
+                                count++;
+                            }
+                            else if (dataGroup.ResxData[te.Key].Value != te.Value)
+                            {
+                                dataGroup.ResxData[te.Key].Value = te.Value;
+                                count++;
+                            }
                         }
-                        else if (dataGroup.ResxData[te.Key].Comment != te.Value)
+                        foreach (var te in t.Comments)
                         {
-                            dataGroup.ResxData[te.Key].Comment = te.Value;
-                            count++;
-                        }                        
+                            if (!dataGroup.ResxData.ContainsKey(te.Key))
+                            {
+                                project.ResxGroups[t.ID].SetResourceDataComment(t.Key, te.Value, te.Key);
+                                count++;
+                            }
+                            else if (dataGroup.ResxData[te.Key].Comment != te.Value)
+                            {
+                                dataGroup.ResxData[te.Key].Comment = te.Value;
+                                count++;
+                            }
+                        }
                     }
                 }
             }
@@ -224,7 +224,7 @@ namespace ResourceManager.Converter
 
         
 
-        public class TranslationRow
+        protected class TranslationRow
         {
             public string ID { get; set; }
             public string Key { get; set; }
@@ -263,11 +263,14 @@ namespace ResourceManager.Converter
                 List<TranslationRow> result = new List<TranslationRow>();
 
                 var cultures = ReadCultures(worksheet);
-                
+                var commentColumnIndexes = cultures.Select(x => x.CommentColumnIndex);
+                var textColumnIndexes = cultures.Select(x => x.TextColumnIndex);
+                int lastColumn = commentColumnIndexes.Concat(textColumnIndexes).Max(x => x);
+
                 foreach (var row in worksheet.RowsUsed().Skip(1))
                 {
-                    var textValues = row.Cells(1, cultures.Count() + 2).Select(cell => (cell.Value != null ? cell.Value.ToString() : null)).ToList<String>();
-
+                    var textValues = row.Cells(1, lastColumn + 1).Select(cell => (cell.Value != null ? cell.Value.ToString() : null)).ToList<String>();
+                
                     if (textValues.Count() > 0)
                     {
                         var customer = new TranslationRow();
@@ -293,10 +296,10 @@ namespace ResourceManager.Converter
 
                 return result;
             }
-            public static IEnumerable<TranslationColumn> ReadCultures(IXLWorksheet worksheet)
+            public static IList<TranslationColumn> ReadCultures(IXLWorksheet worksheet)
             {
                 var textValues = worksheet.Row(1).Cells().Where(cell => cell.Value != null).Select(cell => cell.Value.ToString()).ToList<String>();
-                var cols = textValues.Skip(2).Where(s => !s.Contains("[Comments]")).ToList<String>();
+                var cols = textValues.Skip(2).Where(s => !s.Contains(COMMENTS_KEY)).ToList<String>();
 
                 var list = new List<TranslationColumn>();
                 foreach (var s in cols)
@@ -305,12 +308,14 @@ namespace ResourceManager.Converter
                     textColumn.TextColumnIndex = textValues.IndexOf(s);
 
                     string commentsKey = s;
-                    if (s != "")
-                        commentsKey += " [Comments]";
-                    else
-                        commentsKey += "[Comments]";
+                    string commentColumn = null;
+                    
+                    commentsKey += " [Comments]";
+                    commentColumn = textValues.Skip(2).Where(t => t.Equals(commentsKey)).FirstOrDefault();  
+                    
+                    if(commentColumn == null && String.IsNullOrEmpty(s))
+                        commentColumn = textValues.Skip(2).Where(t => t.Equals(COMMENTS_KEY)).FirstOrDefault();  
 
-                    var commentColumn = textValues.Skip(2).Where(t => t.Equals(commentsKey)).FirstOrDefault();
                     if (commentColumn != null)
                         textColumn.CommentColumnIndex = textValues.IndexOf(commentColumn);
 
@@ -318,14 +323,30 @@ namespace ResourceManager.Converter
                 }
 
                 return list;
-            }           
+            }
+            public static int GetColumnsCount(IEnumerable<TranslationColumn> list)
+            {
+                int count = 0;
+
+                foreach (var column in list)
+                {
+                    if (column.TextColumnIndex > -1)
+                        count++;
+                    if (column.CommentColumnIndex > -1)
+                        count++;
+                }
+
+                return count;
+            }
         }
 
-        public class TranslationColumn
+        protected class TranslationColumn
         {
             public TranslationColumn(CultureInfo culture)
             {
-                this.Culture = culture;
+                Culture = culture;
+                TextColumnIndex = -1;
+                CommentColumnIndex = -1;
             }
 
             public CultureInfo Culture

@@ -9,11 +9,10 @@ namespace ResourceManager.Client.Controls
 {
     public class CulturesListBox : ListBox
     {
-        private VSSolution solution = null;
-
-        public void LoadCultures(VSSolution s, IEnumerable<VSCulture> selectedCultures)
+        public void LoadCultures(VSSolution solution, IEnumerable<VSCulture> selectedCultures)
         {
-            solution = s;
+            if (solution == null)
+                throw new ArgumentNullException("solution");
 
             int i = 0;
             foreach (var culture in solution.Cultures.Values)
@@ -28,15 +27,19 @@ namespace ResourceManager.Client.Controls
             }
         }
 
-        public List<VSCulture> GetSelectedCultures()
+        public List<VSCulture> SelectedCultures
         {
-            var list = new List<VSCulture>();
-
-            foreach (var item in this.SelectedItems)
+            get
             {
-                list.Add(((CultureListBoxEntry)item).Culture);
+                var list = new List<VSCulture>();
+
+                foreach (var item in this.SelectedItems)
+                {
+                    list.Add(((CultureListBoxEntry)item).Culture);
+                }
+
+                return list;
             }
-            return list;
         }
     }
 
@@ -48,9 +51,9 @@ namespace ResourceManager.Client.Controls
             private set;
         }
 
-        public CultureListBoxEntry(VSCulture c)
+        public CultureListBoxEntry(VSCulture culture)
         {
-            this.Culture = c;
+            this.Culture = culture;
         }
 
         public override string ToString()

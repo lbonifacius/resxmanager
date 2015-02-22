@@ -59,7 +59,10 @@ namespace ResourceManager.Core
                 XPathNodeIterator nodes = nav.Select("/wix:WixLocalization/wix:String", manager);
                 while (nodes.MoveNext())
                 {
-                    WixLocalizationData d = new WixLocalizationData(this, nodes.Current);
+                    var d = new WixLocalizationData(this, nodes.Current);
+
+                    if (folder.Project.SkipGroup(d.Name))
+                        continue;
 
                     if (!Data.ContainsKey(d.Name))
                         Data.Add(d.Name, d);

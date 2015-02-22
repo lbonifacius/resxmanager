@@ -284,7 +284,7 @@ namespace ResourceManager.Client.Controls
             foreach (ResourceDataBase item in items)
             {
                 TreeNode itemNode = new TreeNode();
-                itemNode.Text = item.Name + ": " + (item.Value.Length <= 100 ? item.Value : item.Value.Substring(0, 100) + " (...)");
+                itemNode.Text = item.Name + ": " + ((item.Value ?? "").Length <= 100 ? item.Value : (item.Value ?? "").Substring(0, 100) + " (...)");
                 itemNode.ImageIndex = 5;
                 itemNode.SelectedImageIndex = 5;
                 parent.Nodes.Add(itemNode);

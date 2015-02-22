@@ -5,7 +5,7 @@ namespace ResourceManager.Core
     {
         System.Globalization.CultureInfo Culture { get; set; }
         bool IsCultureAutoDetected { get; }
-        System.Collections.Generic.Dictionary<string, ResourceDataBase> Data { get; set; }
+        System.Collections.Generic.Dictionary<string, ResourceDataBase> Data { get; }
         System.IO.FileInfo File { get; }
         string ID { get; }
         string Prefix { get; }

@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Globalization;
 using System.Linq;
-using ResourceManager.Converter.Exceptions;
+using ResourceManager.Exceptions;
 using ResourceManager.Core;
 
 namespace ResourceManager.Converter
@@ -83,14 +83,14 @@ namespace ResourceManager.Converter
                 }
             }
 
-            SetAttribute(table, "ss", "ExpandedColumnCount", urnschemasmicrosoftcomofficespreadsheet, expandedColumnCount.ToString());
-            SetAttribute(table, "ss", "ExpandedRowCount", urnschemasmicrosoftcomofficespreadsheet, expandedRowCount.ToString());
+            SetAttribute(table, "ss", "ExpandedColumnCount", urnschemasmicrosoftcomofficespreadsheet, expandedColumnCount.ToString(CultureInfo.InvariantCulture));
+            SetAttribute(table, "ss", "ExpandedRowCount", urnschemasmicrosoftcomofficespreadsheet, expandedRowCount.ToString(CultureInfo.InvariantCulture));
             SetAttribute(table, "x", "FullColumns", urnschemasmicrosoftcomofficeexcel, "1");
             SetAttribute(table, "x", "FullRows", urnschemasmicrosoftcomofficeexcel, "1");
             SetAttribute(table, "ss", "DefaultColumnWidth", urnschemasmicrosoftcomofficespreadsheet, "100");
         }
 
-        private void HideFirst2Columns(XmlElement table)
+        private static void HideFirst2Columns(XmlElement table)
         { 
             XmlElement row = table.OwnerDocument.CreateElement("Column", urnschemasmicrosoftcomofficespreadsheet);
             row.SetAttribute("Hidden", urnschemasmicrosoftcomofficespreadsheet, "1");

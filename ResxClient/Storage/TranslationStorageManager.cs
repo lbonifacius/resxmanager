@@ -150,22 +150,29 @@ namespace ResourceManager.Storage
                                     .FirstOrDefault();
 
                                 if (topCandidate == null)
-                                    throw new Exception("TODO: Error");
-
-                                var notExistingCultures = (from c in dataGroup.ResxData.Keys select c)
-                                    .Except(from cn in topCandidate.Translation.Translations select CultureInfo.GetCultureInfo(cn.Culture.CultureName));
-
-                                foreach (var culture in notExistingCultures)
                                 {
-                                    var text = new TranslationText();
-                                    text.Text = dataGroup.ResxData[culture].Value;
-                                    text.Culture = GetCulture(culture, store);
-                                    text.CreatedDate = DateTime.Now;
-                                    text.ModifiedDate = DateTime.Now;
+                                    var notExistingCultures = from data in dataGroup.ResxData
+                                                              where (topCandidate.Translation.Translations.Where(t => t.Text == data.Value.Value)).Count() == 0
+                                                              select data.Key;
 
-                                    topCandidate.Translation.Translations.Add(text);
+                                    //var notExistingCultures = (from c in dataGroup.ResxData.Keys select c)
+                                    //    .Except(from cn in topCandidate.Translation.Translations select CultureInfo.GetCultureInfo(cn.Culture.CultureName));
+
+                                    if (notExistingCultures.Count() > 0)
+                                    {
+                                        foreach (var culture in notExistingCultures)
+                                        {
+                                            var text = new TranslationText();
+                                            text.Text = dataGroup.ResxData[culture].Value;
+                                            text.Culture = GetCulture(culture, store);
+                                            text.CreatedDate = DateTime.Now;
+                                            text.ModifiedDate = DateTime.Now;
+
+                                            topCandidate.Translation.Translations.Add(text);
+                                        }
+                                        store.SaveChanges();
+                                    }
                                 }
-                                store.SaveChanges();
                             }
                         }
                     }

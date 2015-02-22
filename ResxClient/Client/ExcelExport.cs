@@ -61,6 +61,7 @@ namespace ResourceManager.Client
             btnExport.Text = Properties.Resources.Export;
             lbCultures.Text = Properties.Resources.Cultures;
             lbProjects.Text = Properties.Resources.Projects;
+            Text = Properties.Resources.ExcelExportTitle;
 
             saveFileDialog.Filter = Properties.Resources.ExcelFileFilter;
 
@@ -83,7 +84,7 @@ namespace ResourceManager.Client
             this.btnCancel.Enabled = false;
 
             selectedProjects = projects.GetSelectedProjects();
-            selectedCultures = cultures.GetSelectedCultures();
+            selectedCultures = cultures.SelectedCultures;
 
             if (SelectedProjects != null)
             {
@@ -128,7 +129,7 @@ namespace ResourceManager.Client
 	                excel.IncludeProjectsWithoutTranslations = cbkIncludeProjectsWithoutTranslations.Checked;
                     excel.AutoAdjustLayout = cbkAutoAdjustLayout.Checked;
                     excel.IgnoreInternalResources = cbkIgnoreInternalResources.Checked;
-                    excel.Cultures = cultures.GetSelectedCultures();
+                    excel.Cultures = cultures.SelectedCultures;
 
                     excel.Export(saveFileDialog.FileName);
                 }

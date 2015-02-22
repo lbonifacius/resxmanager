@@ -334,4 +334,7 @@
   <data name="ImportingResourcesCompleted" xml:space="preserve">
     <value>{0} resource entries imported</value>
   </data>
+  <data name="ExcelExportTitle" xml:space="preserve">
+    <value>Export Resources to Excel</value>
+  </data>
 </root>
