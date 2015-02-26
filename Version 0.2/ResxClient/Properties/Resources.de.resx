@@ -337,4 +337,7 @@
   <data name="ExcelExportTitle">
     <value>Exportiere Ressourcen nach Excel</value>
   </data>
+  <data name="SerachingTranslationsProcessAll">
+    <value>Suche nach Übersetzungen (Sprachpaar {0}/{1})</value>
+  </data>
 </root>

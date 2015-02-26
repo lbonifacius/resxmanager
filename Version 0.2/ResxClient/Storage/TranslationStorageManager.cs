@@ -66,6 +66,8 @@ namespace ResourceManager.Storage
                 connection.Open();
                 var transaction = connection.BeginTransaction();
 
+                // If DataBase exists, context.CreateDatabase() does not create tables.
+                ExecuteSQLFile(transaction, "ResourceManager.Storage.Sql.Tables1.sql");
                 ExecuteSQLFile(transaction, "ResourceManager.Storage.Sql.StoredProcedures1.sql");
 
                 transaction.Commit();
@@ -149,7 +151,7 @@ namespace ResourceManager.Storage
                                 var topCandidate = list.OrderByDescending(t => t.Count)
                                     .FirstOrDefault();
 
-                                if (topCandidate == null)
+                                if (topCandidate != null)
                                 {
                                     var notExistingCultures = from data in dataGroup.ResxData
                                                               where (topCandidate.Translation.Translations.Where(t => t.Text == data.Value.Value)).Count() == 0
