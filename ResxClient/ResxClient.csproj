@@ -248,6 +248,7 @@
     <Content Include="lib\log4net.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Storage\Sql\Tables1.sql" />
     <EmbeddedResource Include="Storage\Sql\StoredProcedures1.sql" />
   </ItemGroup>
   <ItemGroup>

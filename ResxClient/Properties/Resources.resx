@@ -337,4 +337,7 @@
   <data name="ExcelExportTitle" xml:space="preserve">
     <value>Export Resources to Excel</value>
   </data>
+  <data name="SerachingTranslationsProcessAll" xml:space="preserve">
+    <value>Searching translations in database (Culture pair {0}/{1})</value>
+  </data>
 </root>

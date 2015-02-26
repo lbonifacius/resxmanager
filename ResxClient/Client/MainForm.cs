@@ -435,7 +435,7 @@ namespace ResourceManager.Client
                     {
                         foreach (VSCulture targetCulture in CurrentSolution.Cultures.Values.Except(new VSCulture[] { sourceCulture }))
                         {
-                            setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcess, process, max));
+                            setToolbarStatusText(String.Format(Properties.Resources.SerachingTranslationsProcessAll, process, max));
 
                             List<ResourceDataBase> notexisting = sourceCulture.GetItemsNotExistingInCulture(targetCulture);
                             foreach (var data in notexisting)

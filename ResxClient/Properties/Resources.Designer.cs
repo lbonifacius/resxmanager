@@ -565,6 +565,15 @@ namespace ResourceManager.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Searching translations in database (Culture pair {0}/{1}) ähnelt.
+        /// </summary>
+        internal static string SerachingTranslationsProcessAll {
+            get {
+                return ResourceManager.GetString("SerachingTranslationsProcessAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Server ähnelt.
         /// </summary>
         internal static string Server {
