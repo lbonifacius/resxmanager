@@ -20,6 +20,8 @@ namespace ResourceManager.Core
         private DirectoryInfo solutionDirectory;
         private Dictionary<CultureInfo, VSCulture> cultures = new Dictionary<CultureInfo, VSCulture>();
 
+        private int shortProjectNameCounter = 0;
+
         public SortedDictionary<string, VSProject> Projects
         {
             get { return projects; }
@@ -124,6 +126,21 @@ namespace ResourceManager.Core
                 cultures.Remove(r);
         }
 
+        public string generateProjectShortName(string name)
+        {
+            if (name.Length <= 28)
+                return name;
+            else
+            {
+                shortProjectNameCounter++;
+                string suffix = shortProjectNameCounter.ToString("X3");
+                if (suffix.Length > 3)
+                    throw new Exception("Too many projects. Implement better suffix generator!");
+
+                return name.Substring(0, 28) + suffix;
+            }
+        }
+
         public bool Save()
         {
             // Get a list of files that require TFS checkouts
@@ -167,6 +184,7 @@ namespace ResourceManager.Core
 
             return checkedout == DialogResult.None || checkedout == DialogResult.OK || checkedout == DialogResult.Ignore;
         }
+
 
         #region TFS integration
 
