@@ -90,9 +90,9 @@ namespace ResourceManager.Converter
         }
         private void AddProject(VSProject project, XLWorkbook workbook, IEnumerable<CultureInfo> cultures, IEnumerable<ResourceDataGroupBase> data)
         {
-            var worksheet = workbook.Worksheets.Add(project.Name);
+            var worksheet = workbook.Worksheets.Add(project.ShortName);           
 
-            AddHeader(worksheet, cultures);
+            AddHeader(worksheet, project, cultures);
 
             int rowIndex = 2;
             foreach (ResourceDataGroupBase dataGroup in data)
@@ -110,9 +110,11 @@ namespace ResourceManager.Converter
                 worksheet.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
             }
         }
-        private void AddHeader(IXLWorksheet worksheet, IEnumerable<CultureInfo> cultures)
+        private void AddHeader(IXLWorksheet worksheet, VSProject project, IEnumerable<CultureInfo> cultures)
         {
-            worksheet.Cell(1, 1).Value = "ID";
+            worksheet.Style.NumberFormat.SetNumberFormatId(49); // Format: Text
+
+            worksheet.Cell(1, 1).Value = project.Name;
             worksheet.Cell(1, 2).Value = "Keys";            
 
             int c = 3;
@@ -146,10 +148,10 @@ namespace ResourceManager.Converter
             int c = 3;
             foreach (var culture in cultures)
             {
+                var cell = worksheet.Cell(rowIndex, c++);
                 if (dataGroup.ResxData.ContainsKey(culture))
                 {
-                    worksheet.Cell(rowIndex, c++).Value = dataGroup.ResxData[culture].Value;
-
+                    cell.Value = dataGroup.ResxData[culture].Value;
                     if (ExportComments)
                     {
                         worksheet.Cell(rowIndex, c++).Value = dataGroup.ResxData[culture].Comment;
@@ -157,13 +159,29 @@ namespace ResourceManager.Converter
                 }
                 else
                 {
-                    worksheet.Cell(rowIndex, c++).Value = "";
+                    cell.Value = "";
                     if (ExportComments)
                         worksheet.Cell(rowIndex, c++).Value = "";
                 }
+                cell.DataType = XLCellValues.Text; // need to set datatype after value is assigned, otherwise the datatype is parsed
             }
         }
 
+        /// <summary>
+        /// Returns VS Project name of worksheet in Excel file
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <returns></returns>
+        private string getProjectName(IXLWorksheet worksheet)
+        {
+            string firstCellVal = worksheet.FirstCell().Value.ToString();
+
+            // Project names are saved in first cell, because excel worksheet names are limited to 31 characters. Keep old behaviour for compatibility
+            if (firstCellVal == "ID")
+                return worksheet.Name;
+            else
+                return firstCellVal; 
+        }
         public int Import(string filePath)
         {
             int count = 0;
@@ -172,7 +190,7 @@ namespace ResourceManager.Converter
             {
                 foreach (var worksheet in workbook.Worksheets)
                 {
-                    string projectName = worksheet.Name;
+                    string projectName = getProjectName(worksheet);
                     if (!Solution.Projects.ContainsKey(projectName))
                         throw new ProjectUnknownException(projectName);
 

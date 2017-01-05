@@ -21,7 +21,7 @@ namespace ResourceManager.Core
         {
             this.file = file;
             this.name = name;
-            this.xmlValue = value;
+            this.xmlValue = cleanValue(value);
             this.comment = comment;
         }
         public ResourceDataBase(IResourceFile file, string name)
@@ -51,7 +51,7 @@ namespace ResourceManager.Core
                 if (xmlValue != value)
                 {
                     HasChanged = true;
-                    xmlValue = value;
+                    xmlValue = cleanValue(value);
                 }
             }
         }
@@ -71,6 +71,15 @@ namespace ResourceManager.Core
         {
             get;
             internal set;
+        }
+
+
+        private string cleanValue(string s)
+        {
+            if (String.IsNullOrEmpty(s))
+                return s;
+
+            return s.Replace(Convert.ToString((char)(0x1F)), String.Empty);
         }
     }
 }

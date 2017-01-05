@@ -25,6 +25,7 @@ namespace ResourceManager.Core
 
             FilePath = filepath;
             Name = name;
+            ShortName = solution.generateProjectShortName(name);
             Type = resolveProjectType(filepath);
 
             base.Init(CleanDirectoryPath(filepath));
@@ -62,6 +63,14 @@ namespace ResourceManager.Core
             private set;
         }
         public string Name
+        {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// Returns shortened Project name for use in Excel Worksheets name (limited to 31 characters)
+        /// </summary>
+        public string ShortName
         {
             get;
             private set;
