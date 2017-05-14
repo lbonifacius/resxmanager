@@ -11,11 +11,12 @@ namespace ResourceManager.Core
         private Dictionary<CultureInfo, ResourceDataBase> data = new Dictionary<CultureInfo, ResourceDataBase>();
         private string name;
 
-        public ResourceDataGroupBase(string name)
+        public ResourceDataGroupBase(string name, IResourceFileGroup fileGroup)
         {
             this.name = name;
-        }       
-	
+            this.FileGroup = fileGroup;
+        }
+
         public Dictionary<CultureInfo, ResourceDataBase> ResxData
         {
             get { return data; }
@@ -24,12 +25,24 @@ namespace ResourceManager.Core
         {
             get { return name; }
         }
+        public IResourceFileGroup FileGroup
+        {
+            get;
+            private set;
+        }
         public void Add(ResourceDataBase resxdata)
         {
             if(resxdata.ResxFile.Culture != null)
                 this.data.Add(resxdata.ResxFile.Culture, resxdata);
         }
 
+        public bool HasChanged
+        { 
+            get 
+            {
+                return ResxData.Any(p => p.Value.HasChanged);
+            }
+        }       
         public bool IsComplete(IEnumerable<CultureInfo> requiredCultures)
         {
             return ResxData.Keys.Intersect(requiredCultures).Count() == requiredCultures.Count();

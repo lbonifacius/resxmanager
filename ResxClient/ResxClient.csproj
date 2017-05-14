@@ -15,7 +15,13 @@
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation />
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>http://localhost/ResxClient/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -28,13 +34,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,25 +57,72 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.69.1.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\Controls\CulturesComboBoxItem.cs" />
+    <Compile Include="Client\Controls\CultureAnalysisResultTreeNode.cs" />
+    <Compile Include="Client\Controls\CulturesListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Client\Controls\ResourceFileGroupTreeNode.cs" />
+    <Compile Include="Client\Controls\CultureTreeNode.cs" />
+    <Compile Include="Client\Controls\ProjectsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Client\Controls\ProjectTreeNode.cs" />
-    <Compile Include="Client\Controls\ResxFileTreeNode.cs" />
+    <Compile Include="Client\Controls\ResourceFileTreeNode.cs" />
     <Compile Include="Client\Controls\SolutionTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Client\Controls\SolutionTree.Designer.cs">
       <DependentUpon>SolutionTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converter\Exceptions\ProjectUnknownException.cs" />
+    <Compile Include="Client\ExceptionHandling.cs" />
+    <Compile Include="Client\ExcelExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Client\ExcelExport.Designer.cs">
+      <DependentUpon>ExcelExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Client\SetupDatabase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Client\SetupDatabase.Designer.cs">
+      <DependentUpon>SetupDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\ConverterBase.cs" />
+    <Compile Include="Converter\ConverterFactory.cs" />
+    <Compile Include="Core\Configuration\EntityNameMatcher.cs" />
+    <Compile Include="Core\Configuration\SolutionConfiguration.cs" />
+    <Compile Include="Core\Configuration\ProjectConfiguration.cs" />
+    <Compile Include="Exceptions\ConverterFileTypeUnknownException.cs" />
+    <Compile Include="Exceptions\ProjectUnknownException.cs" />
+    <Compile Include="Converter\IConverter.cs" />
+    <Compile Include="Converter\XlsxConverter.cs" />
     <Compile Include="Core\IResourceFile.cs" />
     <Compile Include="Core\IResourceFileGroup.cs" />
     <Compile Include="Core\ResourceDataBase.cs" />
@@ -84,12 +132,14 @@
     <Compile Include="Core\VSFileContainer.cs" />
     <Compile Include="Core\IProjectFileSettings.cs" />
     <Compile Include="Converter\ExcelConverter.cs" />
-    <Compile Include="Core\ResxClientProjectFile.cs" />
+    <Compile Include="Core\Configuration\ResxClientProjectFile.cs" />
+    <Compile Include="Core\VSProjectFileTypes.cs" />
     <Compile Include="Core\VSProjectFolder.cs" />
     <Compile Include="Core\Resx\VSResxDataGroup.cs" />
     <Compile Include="Core\Resx\VSResxFileGroup.cs" />
     <Compile Include="Core\Resx\VSResxData.cs" />
     <Compile Include="Core\Resx\VSResxFile.cs" />
+    <Compile Include="Core\VSProjectTypes.cs" />
     <Compile Include="Core\VSSolution.cs" />
     <Compile Include="Core\VSProject.cs" />
     <Compile Include="Core\VSSolutionFileParser.cs" />
@@ -103,15 +153,28 @@
     <Compile Include="Core\WiX\WixLocalizationGroup.cs" />
     <Compile Include="Core\WiX\WixLocalizationFile.cs" />
     <Compile Include="Core\WiX\WixLocalizationFileGroup.cs" />
+    <Compile Include="Exceptions\TfsException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Storage\TranslationStorage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TranslationStorage.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Storage\TranslationStorageManager.cs" />
     <EmbeddedResource Include="Client\Controls\SolutionTree.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SolutionTree.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Client\ExcelExport.resx">
+      <DependentUpon>ExcelExport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Client\MainForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Client\SetupDatabase.resx">
+      <DependentUpon>SetupDatabase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -129,6 +192,11 @@
     <None Include="app.config" />
     <None Include="Core\ClassDiagram.cd" />
     <Compile Include="Core\VSCulture.cs" />
+    <EntityDeploy Include="Storage\TranslationStorage.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TranslationStorage.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Properties\DataSources\ResourceManager.Storage.TranslationStorage.datasource" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Templates\EmptyExcelSheet.xml" />
@@ -147,14 +215,44 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Sql.Server.Express.10.0">
+      <Visible>False</Visible>
+      <ProductName>SQL Server 2008 Express Edition</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
       <Visible>False</Visible>
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\WiX\WixLocalizationTemplate.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Client\Controls\Icons\book_reportHS.ico" />
+    <Content Include="Client\Controls\Icons\Book_StackOfReportsHS.ico" />
+    <Content Include="Client\Controls\Icons\ResxFile.ico" />
+    <Content Include="Client\Controls\Icons\ResxFileGroup.ico" />
+    <Content Include="Client\Controls\Icons\Solution.ico" />
+    <Content Include="Client\Controls\Icons\Project.ico" />
+    <Content Include="lib\ClosedXML.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\DocumentFormat.OpenXml.dll" />
+    <Content Include="lib\log4net.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Storage\Sql\Tables1.sql" />
+    <EmbeddedResource Include="Storage\Sql\StoredProcedures1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Converter\Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

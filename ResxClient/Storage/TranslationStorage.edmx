@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TranslationStorageModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="TranslationStorageModelStoreContainer">
+          <EntitySet Name="Cultures" EntityType="TranslationStorageModel.Store.Cultures" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Translations" EntityType="TranslationStorageModel.Store.Translations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TranslationTexts" EntityType="TranslationStorageModel.Store.TranslationTexts" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_TranslationTexts_Cultures" Association="TranslationStorageModel.Store.FK_TranslationTexts_Cultures">
+            <End Role="Cultures" EntitySet="Cultures" />
+            <End Role="TranslationTexts" EntitySet="TranslationTexts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TranslationTexts_Translations" Association="TranslationStorageModel.Store.FK_TranslationTexts_Translations">
+            <End Role="Translations" EntitySet="Translations" />
+            <End Role="TranslationTexts" EntitySet="TranslationTexts" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Cultures">
+          <Key>
+            <PropertyRef Name="CultureID" />
+          </Key>
+          <Property Name="CultureID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CultureName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Translations">
+          <Key>
+            <PropertyRef Name="TranslationID" />
+          </Key>
+          <Property Name="TranslationID" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="TranslationTexts">
+          <Key>
+            <PropertyRef Name="TranslationTextID" />
+          </Key>
+          <Property Name="TranslationTextID" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TranslationID" Type="bigint" Nullable="false" />
+          <Property Name="CultureID" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_TranslationTexts_Cultures">
+          <End Role="Cultures" Type="TranslationStorageModel.Store.Cultures" Multiplicity="1" />
+          <End Role="TranslationTexts" Type="TranslationStorageModel.Store.TranslationTexts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cultures">
+              <PropertyRef Name="CultureID" />
+            </Principal>
+            <Dependent Role="TranslationTexts">
+              <PropertyRef Name="CultureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TranslationTexts_Translations">
+          <End Role="Translations" Type="TranslationStorageModel.Store.Translations" Multiplicity="1" />
+          <End Role="TranslationTexts" Type="TranslationStorageModel.Store.TranslationTexts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Translations">
+              <PropertyRef Name="TranslationID" />
+            </Principal>
+            <Dependent Role="TranslationTexts">
+              <PropertyRef Name="TranslationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="FindTranslations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="text" Type="nvarchar" Mode="In" />
+          <Parameter Name="culture" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="GetCulture" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="culture" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SearchTranslation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="text" Type="nvarchar" Mode="In" />
+          <Parameter Name="srcculture" Type="nvarchar" Mode="In" />
+          <Parameter Name="tgtculture" Type="nvarchar" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TranslationStorageModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="TranslationStorage" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cultures" EntityType="TranslationStorageModel.Culture" />
+          <EntitySet Name="Translations" EntityType="TranslationStorageModel.Translation" />
+          <EntitySet Name="TranslationTexts" EntityType="TranslationStorageModel.TranslationText" />
+          <AssociationSet Name="FK_TranslationTexts_Cultures" Association="TranslationStorageModel.FK_TranslationTexts_Cultures">
+            <End Role="Cultures" EntitySet="Cultures" />
+            <End Role="TranslationTexts" EntitySet="TranslationTexts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TranslationTexts_Translations" Association="TranslationStorageModel.FK_TranslationTexts_Translations">
+            <End Role="Translations" EntitySet="Translations" />
+            <End Role="TranslationTexts" EntitySet="TranslationTexts" />
+          </AssociationSet>
+          <FunctionImport Name="FindTranslations" EntitySet="TranslationTexts" ReturnType="Collection(TranslationStorageModel.TranslationText)">
+            <Parameter Name="text" Mode="In" Type="String" />
+            <Parameter Name="culture" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetCulture" EntitySet="Cultures" ReturnType="Collection(TranslationStorageModel.Culture)">
+          <Parameter Name="culture" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchTranslation" EntitySet="TranslationTexts" ReturnType="Collection(TranslationStorageModel.TranslationText)">
+            <Parameter Name="text" Mode="In" Type="String" />
+            <Parameter Name="srcculture" Mode="In" Type="String" />
+            <Parameter Name="tgtculture" Mode="In" Type="String" />
+          </FunctionImport>         
+        </EntityContainer>
+        <EntityType Name="Culture">
+          <Key>
+            <PropertyRef Name="CultureID" />
+          </Key>
+          <Property Name="CultureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CultureName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Translation">
+          <Key>
+            <PropertyRef Name="TranslationID" />
+          </Key>
+          <Property Name="TranslationID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Translations" Relationship="TranslationStorageModel.FK_TranslationTexts_Translations" FromRole="Translations" ToRole="TranslationTexts" />
+        </EntityType>
+        <EntityType Name="TranslationText">
+          <Key>
+            <PropertyRef Name="TranslationTextID" />
+          </Key>
+          <Property Name="TranslationTextID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TranslationID" Type="Int64" Nullable="false" />
+          <Property Name="CultureID" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Culture" Relationship="TranslationStorageModel.FK_TranslationTexts_Cultures" FromRole="TranslationTexts" ToRole="Cultures" />
+          <NavigationProperty Name="Translation" Relationship="TranslationStorageModel.FK_TranslationTexts_Translations" FromRole="TranslationTexts" ToRole="Translations" />
+        </EntityType>
+        <Association Name="FK_TranslationTexts_Cultures">
+          <End Role="Cultures" Type="TranslationStorageModel.Culture" Multiplicity="1" />
+          <End Role="TranslationTexts" Type="TranslationStorageModel.TranslationText" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cultures">
+              <PropertyRef Name="CultureID" />
+            </Principal>
+            <Dependent Role="TranslationTexts">
+              <PropertyRef Name="CultureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TranslationTexts_Translations">
+          <End Role="Translations" Type="TranslationStorageModel.Translation" Multiplicity="1" />
+          <End Role="TranslationTexts" Type="TranslationStorageModel.TranslationText" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Translations">
+              <PropertyRef Name="TranslationID" />
+            </Principal>
+            <Dependent Role="TranslationTexts">
+              <PropertyRef Name="TranslationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TranslationStorageModelStoreContainer" CdmEntityContainer="TranslationStorage">
+          <EntitySetMapping Name="Cultures"><EntityTypeMapping TypeName="TranslationStorageModel.Culture"><MappingFragment StoreEntitySet="Cultures">
+            <ScalarProperty Name="CultureID" ColumnName="CultureID" />
+            <ScalarProperty Name="CultureName" ColumnName="CultureName" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Translations"><EntityTypeMapping TypeName="TranslationStorageModel.Translation"><MappingFragment StoreEntitySet="Translations">
+            <ScalarProperty Name="TranslationID" ColumnName="TranslationID" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="TranslationTexts"><EntityTypeMapping TypeName="TranslationStorageModel.TranslationText"><MappingFragment StoreEntitySet="TranslationTexts">
+            <ScalarProperty Name="TranslationTextID" ColumnName="TranslationTextID" />
+            <ScalarProperty Name="TranslationID" ColumnName="TranslationID" />
+            <ScalarProperty Name="CultureID" ColumnName="CultureID" />
+            <ScalarProperty Name="Text" ColumnName="Text" />
+            <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+            <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FindTranslations" FunctionName="TranslationStorageModel.Store.FindTranslations" />
+          <FunctionImportMapping FunctionImportName="GetCulture" FunctionName="TranslationStorageModel.Store.GetCulture" />
+          <FunctionImportMapping FunctionImportName="SearchTranslation" FunctionName="TranslationStorageModel.Store.SearchTranslation" />         
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="TranslationStorage">
+        <EntityTypeShape EntityType="TranslationStorageModel.Culture" Width="1.5" PointX="0.75" PointY="1.375" Height="1.2636116536458335" IsExpanded="true" />
+        <EntityTypeShape EntityType="TranslationStorageModel.Translation" Width="1.5" PointX="0.75" PointY="3.75" Height="1.2636116536458335" IsExpanded="true" />
+        <EntityTypeShape EntityType="TranslationStorageModel.TranslationText" Width="1.5" PointX="3.5" PointY="1" Height="2.2496956380208335" IsExpanded="true" />
+        <AssociationConnector Association="TranslationStorageModel.FK_TranslationTexts_Cultures" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="2.0068058268229167" />
+          <ConnectorPoint PointX="3.5" PointY="2.0068058268229167" />
+        </AssociationConnector>
+        <AssociationConnector Association="TranslationStorageModel.FK_TranslationTexts_Translations" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="6.0068058268229167" />
+          <ConnectorPoint PointX="4.25" PointY="6.0068058268229167" />
+          <ConnectorPoint PointX="4.25" PointY="3.2496956380208335" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

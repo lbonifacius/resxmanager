@@ -8,8 +8,8 @@ namespace ResourceManager.Core
 {
     public class WixLocalizationDataGroup : ResourceDataGroupBase
     {
-        public WixLocalizationDataGroup(string name)
-            : base(name)
+        public WixLocalizationDataGroup(string name, IResourceFileGroup fileGroup)
+            : base(name, fileGroup)
         {
         } 	
     }

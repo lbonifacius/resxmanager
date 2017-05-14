@@ -44,6 +44,32 @@ namespace ResourceManager.Core
                 }
             }
         }
+        public void SetResourceData(string key, string value, CultureInfo culture)
+        {
+            if (!Files.ContainsKey(culture))
+            {
+                IResourceFile file = CreateNewFile(culture);
+
+                file.CreateResourceData(key, value);
+            }
+            else
+            {
+                Files[culture].SetResourceData(key, value);
+            }
+        }
+        public void SetResourceDataComment(string key, string comment, CultureInfo culture)
+        {
+            if (!Files.ContainsKey(culture))
+            {
+                IResourceFile file = CreateNewFile(culture);
+
+                file.CreateResourceDataComment(key, comment);
+            }
+            else
+            {
+                Files[culture].SetResourceDataComment(key, comment);
+            }
+        }
 
         public Dictionary<CultureInfo, IResourceFile> Files
         {
@@ -69,13 +95,23 @@ namespace ResourceManager.Core
         {
             get { return container; }
         }
-        
-        public void RegisterResourceData(ResourceDataBase data)
+        public bool HasChanged
         {
-            if (!this.data.ContainsKey(data.Name))
-                this.data.Add(data.Name, CreateDataGroup(data.Name));
+            get
+            {
+                return data.Any(p => p.Value.HasChanged);
+            }
+        }
 
-            this.data[data.Name].Add(data);
+        public void RegisterResourceData(ResourceDataBase resourceData)
+        {
+            if (resourceData == null)
+                throw new ArgumentNullException("resourceData");
+
+            if (!data.ContainsKey(resourceData.Name))
+                this.data.Add(resourceData.Name, CreateDataGroup(resourceData.Name));
+
+            data[resourceData.Name].Add(resourceData);
         }
 
         public abstract IResourceFile CreateNewFile(CultureInfo culture);
@@ -84,6 +120,9 @@ namespace ResourceManager.Core
 
         public void ChangeCulture(IResourceFile file, CultureInfo culture)
         {
+            if (file == null)
+                throw new ArgumentNullException("file");
+
             if (this.Files.ContainsKey(file.Culture))
                 this.Files.Remove(file.Culture);
 

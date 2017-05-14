@@ -121,10 +121,10 @@
     <value>Languages</value>
   </data>
   <data name="ExcelFileFilter" xml:space="preserve">
-    <value>Excel-Document|*.xls</value>
+    <value>Excel-Document|*.xlsx</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Close</value>
+    <value>Exit</value>
   </data>
   <data name="ExportToExcel" xml:space="preserve">
     <value>Export to Excel</value>
@@ -139,7 +139,7 @@
     <value>Loading solution</value>
   </data>
   <data name="NotExistingInLanguage" xml:space="preserve">
-    <value>{0} entries which doesn`t exists in '{1}'</value>
+    <value>{0} entries which don`t exist in '{1}'</value>
   </data>
   <data name="OpenSolution" xml:space="preserve">
     <value>Open solution</value>
@@ -167,14 +167,177 @@
   </data>
   <data name="VSSolutionFileFilter" xml:space="preserve">
     <value>Visual-Studio Solution|*.sln</value>
+    <comment>Qu</comment>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="ResourcesMenu" xml:space="preserve">
-    <value>Resources</value>
-  </data>
   <data name="ClientTitle" xml:space="preserve">
     <value>RESX Manager</value>
+  </data>
+  <data name="StoringTranslations" xml:space="preserve">
+    <value>Storing translations</value>
+  </data>
+  <data name="StoringTranslationsCompleted" xml:space="preserve">
+    <value>Storing translations completed</value>
+  </data>
+  <data name="StoreAllTranslations" xml:space="preserve">
+    <value>Store all translations to database</value>
+  </data>
+  <data name="CloseSolution" xml:space="preserve">
+    <value>Close solution</value>
+  </data>
+  <data name="ExcelImportFileFilter" xml:space="preserve">
+    <value>Excel-Document (*.xls,*.xlsx)|*.xls;*.xlsx</value>
+  </data>
+  <data name="SearchingTranslations" xml:space="preserve">
+    <value>Searching translations in database</value>
+  </data>
+  <data name="SerachingTranslationsProcess" xml:space="preserve">
+    <value>Searching translations in database ({0}/{1})</value>
+  </data>
+  <data name="SearchingTranslationsResult" xml:space="preserve">
+    <value>{0} texts translated.</value>
+  </data>
+  <data name="SetupDatabase" xml:space="preserve">
+    <value>Configure database</value>
+  </data>
+  <data name="TestConnectionSuccess" xml:space="preserve">
+    <value>Successfully connected to database.</value>
+  </data>
+  <data name="CreatedDatabaseSuccess" xml:space="preserve">
+    <value>Database successfully created.</value>
+  </data>
+  <data name="DatabaseNotExists" xml:space="preserve">
+    <value>Database does not exist.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ExportComments" xml:space="preserve">
+    <value>Export comments</value>
+  </data>
+  <data name="ExportDiff" xml:space="preserve">
+    <value>Export missing entries only</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorTextDefault" xml:space="preserve">
+    <value>An error has been occurred. {0} Please see error.txt for details.</value>
+  </data>
+  <data name="Documentation" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Translate" xml:space="preserve">
+    <value>Translate</value>
+  </data>
+  <data name="TranslateToolTip" xml:space="preserve">
+    <value>Translates missing texts by using already translated texts in a database. For details see ? -&gt; Documentation.</value>
+  </data>
+  <data name="ChangingCulture" xml:space="preserve">
+    <value>Applying change</value>
+  </data>
+  <data name="ChangingCultureCompleted" xml:space="preserve">
+    <value>Changing culture completed</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="HelpSetupDatabase" xml:space="preserve">
+    <value>For further information click here</value>
+  </data>
+  <data name="CreateDatabase" xml:space="preserve">
+    <value>Configure database</value>
+  </data>
+  <data name="TestConnection" xml:space="preserve">
+    <value>Test connection</value>
+  </data>
+  <data name="TranslateAuto" xml:space="preserve">
+    <value>Auto translate</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Translations</value>
+  </data>
+  <data name="SaveChangesQuestion" xml:space="preserve">
+    <value>Resource files have been changed. Save changes to files?</value>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="DataBaseNotConfigured" xml:space="preserve">
+    <value>Database does not seem to be configured. Please check configuration.</value>
+  </data>
+  <data name="IncludeProjectsWithoutTranslations" xml:space="preserve">
+    <value>Include projects without translations</value>
+  </data>
+  <data name="AutoAdjustLayout" xml:space="preserve">
+    <value>Adjust layout</value>
+  </data>
+  <data name="ExportFileGroup" xml:space="preserve">
+    <value>Export file group to Excel</value>
+  </data>
+  <data name="ExportProjectToExcel" xml:space="preserve">
+    <value>Export project to Excel</value>
+  </data>
+  <data name="ExportCulturePair" xml:space="preserve">
+    <value>Export cultures to Excel</value>
+  </data>
+  <data name="ExportCulture" xml:space="preserve">
+    <value>Export culture to Excel</value>
+  </data>
+  <data name="WarningNoCultures" xml:space="preserve">
+    <value>The solution '{0}' does not contain any culture. Have you loaded the correct file?</value>
+  </data>
+  <data name="WarningNoProjects" xml:space="preserve">
+    <value>The solution '{0}' does not contain any project. Have you loaded the correct file?</value>
+  </data>
+  <data name="WarningOpenSolutionTitle" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="IgnoreInternalResources" xml:space="preserve">
+    <value>Ignore WinForms internal resources ("&gt;&gt;")</value>
+  </data>
+  <data name="SaveResources_TryCheckout_Message" xml:space="preserve">
+    <value>Some files are readonly and appear to are checked into TFS, would you like to try and checkout files?</value>
+  </data>
+  <data name="SaveResources_TryCheckout_Title" xml:space="preserve">
+    <value>Checkout readonly files?</value>
+  </data>
+  <data name="SaveResources_TryCheckin_Message" xml:space="preserve">
+    <value>The files have been saved. Would you like to check in the files you have previously checked out?</value>
+  </data>
+  <data name="SaveResources_TryCheckin_Title" xml:space="preserve">
+    <value>Check in files?</value>
+  </data>
+  <data name="TFSException" xml:space="preserve">
+    <value>Error while calling Team Foundation server. {0}</value>
+  </data>
+  <data name="ImportingResources" xml:space="preserve">
+    <value>Importing Resources</value>
+  </data>
+  <data name="ImportingResourcesCompleted" xml:space="preserve">
+    <value>{0} resource entries imported</value>
+  </data>
+  <data name="ExcelExportTitle" xml:space="preserve">
+    <value>Export Resources to Excel</value>
+  </data>
+  <data name="SerachingTranslationsProcessAll" xml:space="preserve">
+    <value>Searching translations in database (Culture pair {0}/{1})</value>
   </data>
 </root>

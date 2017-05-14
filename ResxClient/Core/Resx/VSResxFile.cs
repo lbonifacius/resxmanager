@@ -17,10 +17,13 @@ namespace ResourceManager.Core
             {
                 XPathDocument xml = new XPathDocument(reader);
                 XPathNavigator nav = xml.CreateNavigator();
-                XPathNodeIterator nodes = nav.Select("/root/data");
+                XPathNodeIterator nodes = nav.Select("/root/data[count(@type) = 0 and count(@mimetype) = 0]");
                 while (nodes.MoveNext())
                 {
-                    VSResxData d = new VSResxData(this, nodes.Current);
+                    var d = new VSResxData(this, nodes.Current);
+
+                    if (folder.Project.SkipGroup(d.Name))
+                        continue;
 
                     if (!Data.ContainsKey(d.Name))
                         Data.Add(d.Name, d);
@@ -42,7 +45,7 @@ namespace ResourceManager.Core
                 {
                     Culture = CultureInfo.GetCultureInfo(parts[posCultureInfo]);
                     IsCultureAutoDetected = true;
-                    Prefix = file.Name.Substring(0, file.Name.LastIndexOf(parts[posCultureInfo]));
+                    Prefix = buildPrefix(parts, posCultureInfo);
 
                     if (Prefix.LastIndexOf('.') == Prefix.Length - 1)
                         Prefix = Prefix.Substring(0, Prefix.Length - 1);
@@ -59,50 +62,102 @@ namespace ResourceManager.Core
             }
 
             folder.Project.ResxProjectFile.LoadFile(this);
-        }        
-
+        }
+        private string buildPrefix(string[] parts, int posCulutureInfo)
+        {
+            string s = parts[0];
+            for (int i = 1; i < posCulutureInfo; i++)
+            { 
+                s += "." + parts[i];
+            }
+            return s;
+        }
         public override void CreateResourceData(string name, string value)
         {
-            VSResxData resxData = new VSResxData(this, name, value);
+            VSResxData resxData = new VSResxData(this, name);
+            resxData.Value = value;
+            Data.Add(name, resxData);
+            this.FileGroup.AllData[name].Add(resxData);
+        }
+        public override void CreateResourceDataComment(string name, string comment)
+        {
+            VSResxData resxData = new VSResxData(this, name);
+            resxData.Comment = comment;
             Data.Add(name, resxData);
             this.FileGroup.AllData[name].Add(resxData);
         }
 
         public override void Save()
         {
-            bool isReadOnly = File.IsReadOnly;
-
-            if (isReadOnly)
-                SetReadOnlyAttribute(File, false);
-
-            XmlDocument xml = new XmlDocument();
-            xml.Load(File.FullName);
-
-            foreach (ResourceDataBase data in Data.Values)
+            if (HasChanged)
             {
-                SetResourceData(xml, data);
+                bool isReadOnly = File.IsReadOnly;
+
+                if (isReadOnly)
+                    SetReadOnlyAttribute(File, false);
+
+                XmlDocument xml = new XmlDocument();
+                xml.Load(File.FullName);
+
+                foreach (ResourceDataBase data in Data.Values)
+                {
+                    SetResourceData(xml, data);
+                }
+
+                xml.Save(File.FullName);
+
+                if (isReadOnly)
+                    SetReadOnlyAttribute(File, true);
+
+                SetSaved();
             }
-
-            xml.Save(File.FullName);
-
-            if(isReadOnly)
-                SetReadOnlyAttribute(File, true);
+        }
+        public override void IncludeInProjectFile()
+        {
+            this.FileGroup.Container.Project.AddResourceFileToProjectFile(this, VSProjectFileTypes.EmbeddedResource);
         }
 
         private void SetResourceData(XmlDocument xml, ResourceDataBase data)
         {
-            XmlElement valNode = xml.DocumentElement.SelectSingleNode("data[@name = '" + data.Name + "']/value") as XmlElement;
-            if (valNode != null)
+            XmlElement dataNode = xml.DocumentElement.SelectSingleNode("data[@name = '" + data.Name + "']") as XmlElement;
+            if (dataNode == null)
+            {
+                dataNode = xml.CreateElement("data");
+                dataNode.SetAttribute("name", data.Name);
+
+                xml.DocumentElement.AppendChild(dataNode);
+            }
+
+            XmlElement valNode = dataNode.SelectSingleNode("value") as XmlElement;
+            if(valNode == null)
+            {
+                valNode = xml.CreateElement("value");
                 valNode.InnerText = data.Value;
+                dataNode.AppendChild(valNode);
+            }
+            else
+                valNode.InnerText = data.Value;
+
+            XmlElement commentNode = dataNode.SelectSingleNode("comment") as XmlElement;
+            if (commentNode == null)
+            {
+                if (!String.IsNullOrEmpty(data.Comment))
+                {
+                    commentNode = xml.CreateElement("comment");
+                    commentNode.InnerText = data.Comment;
+                    dataNode.AppendChild(commentNode);
+                }
+            }
             else
             {
-                XmlElement element = xml.CreateElement("data");
-                element.SetAttribute("name", data.Name);
-                XmlElement dataElement = xml.CreateElement("value");
-                dataElement.InnerText = data.Value;
-                element.AppendChild(dataElement);
-
-                xml.DocumentElement.AppendChild(element);
+                if (!String.IsNullOrEmpty(data.Comment))
+                {
+                    commentNode.InnerText = data.Comment;
+                }
+                else
+                {
+                    dataNode.RemoveChild(commentNode);
+                }
             }
         }
     }

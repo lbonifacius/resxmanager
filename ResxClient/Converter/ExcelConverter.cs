@@ -6,11 +6,12 @@ using System.IO;
 using System.Reflection;
 using System.Globalization;
 using System.Linq;
-using ResourceManager.Converter.Exceptions;
+using ResourceManager.Exceptions;
+using ResourceManager.Core;
 
-namespace ResourceManager.Core
+namespace ResourceManager.Converter
 {
-    public class ExcelConverter
+    public class ExcelConverter : ConverterBase, IConverter
     {
         private const string urnschemasmicrosoftcomofficespreadsheet = "urn:schemas-microsoft-com:office:spreadsheet";
         private const string urnschemasmicrosoftcomofficeexcel = "urn:schemas-microsoft-com:office:excel";
@@ -18,65 +19,16 @@ namespace ResourceManager.Core
         private int expandedColumnCount = 0;
         private int expandedRowCount = 0;
 
-        public ExcelConverter(VSSolution solution)
+        public ExcelConverter(VSSolution solution) : base(solution)
         {
-            this.Solution = solution;
         }
-        public ExcelConverter(VSProject project)
+        public ExcelConverter(VSProject project) : base(project)
         {
-            this.Project = project;
-            this.Solution = project.Solution;
-        }
-
-        public VSProject Project
-        {
-            get;
-            private set;
-        }
-        public VSSolution Solution
-        {
-            get;
-            private set;
         }
 
         public XmlDocument Export()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ResourceManager.Templates.EmptyExcelSheet.xml");
-            XmlDocument xml = new XmlDocument();
-            xml.Load(stream);
-
-
-            //XmlDocument xml = new XmlDocument();            
-            //XmlProcessingInstruction processing = xml.CreateProcessingInstruction("mso-application", "progid=\"Excel.Sheet\"");
-            //xml.AppendChild(processing);
-
-            //xml.AppendChild(xml.CreateElement("Workbook"));
-
-            //xml.DocumentElement.SetAttribute("xmlns", urnschemasmicrosoftcomofficespreadsheet);
-            //xml.DocumentElement.SetAttribute("xmlns:o", "urn:schemas-microsoft-com:office:office");
-            //xml.DocumentElement.SetAttribute("xmlns:x", urnschemasmicrosoftcomofficeexcel);
-            //xml.DocumentElement.SetAttribute("xmlns:ss", urnschemasmicrosoftcomofficespreadsheet);
-            //xml.DocumentElement.SetAttribute("xmlns:html", "http://www.w3.org/TR/REC-html40");
-
-            //XmlNamespaceManager namespaceManager = new XmlNamespaceManager(xml.NameTable);
-            //namespaceManager.AddNamespace("", urnschemasmicrosoftcomofficespreadsheet);
-            //namespaceManager.AddNamespace("o", "urn:schemas-microsoft-com:office:office");
-            //namespaceManager.AddNamespace("x", urnschemasmicrosoftcomofficeexcel);
-            //namespaceManager.AddNamespace("ss", urnschemasmicrosoftcomofficespreadsheet);
-            //namespaceManager.AddNamespace("html", "http://www.w3.org/TR/REC-html40");
-
-            if (Project == null)
-            {
-                foreach (VSProject project in Solution.Projects.Values)
-                {
-                    if(project.ResxGroups.Count > 0)
-                        AddProject(xml.DocumentElement, project);
-                }
-            }
-            else
-                AddProject(xml.DocumentElement, Project);
-
-            return xml;
+            throw new NotImplementedException();
         }
 
         private void AddProject(XmlElement docElement, VSProject project)
@@ -85,7 +37,7 @@ namespace ResourceManager.Core
 
             if (ExportDiff)
             {
-                uncompletedDataGroups = project.GetUncompleteDataGroups();
+                uncompletedDataGroups = project.GetUncompleteDataGroups(Solution.Cultures.Keys);
 
                 if (uncompletedDataGroups.Count == 0)
                     return;
@@ -131,19 +83,20 @@ namespace ResourceManager.Core
                 }
             }
 
-            SetAttribute(table, "ss", "ExpandedColumnCount", urnschemasmicrosoftcomofficespreadsheet, expandedColumnCount.ToString());
-            SetAttribute(table, "ss", "ExpandedRowCount", urnschemasmicrosoftcomofficespreadsheet, expandedRowCount.ToString());
+            SetAttribute(table, "ss", "ExpandedColumnCount", urnschemasmicrosoftcomofficespreadsheet, expandedColumnCount.ToString(CultureInfo.InvariantCulture));
+            SetAttribute(table, "ss", "ExpandedRowCount", urnschemasmicrosoftcomofficespreadsheet, expandedRowCount.ToString(CultureInfo.InvariantCulture));
             SetAttribute(table, "x", "FullColumns", urnschemasmicrosoftcomofficeexcel, "1");
             SetAttribute(table, "x", "FullRows", urnschemasmicrosoftcomofficeexcel, "1");
             SetAttribute(table, "ss", "DefaultColumnWidth", urnschemasmicrosoftcomofficespreadsheet, "100");
         }
 
-        private void HideFirst2Columns(XmlElement table)
+        private static void HideFirst2Columns(XmlElement table)
         { 
             XmlElement row = table.OwnerDocument.CreateElement("Column", urnschemasmicrosoftcomofficespreadsheet);
             row.SetAttribute("Hidden", urnschemasmicrosoftcomofficespreadsheet, "1");
             table.AppendChild(row);
         }
+
         private XmlElement AddRow(XmlElement table)
         {
             XmlElement row = table.OwnerDocument.CreateElement("Row", urnschemasmicrosoftcomofficespreadsheet);
@@ -151,10 +104,12 @@ namespace ResourceManager.Core
 
             return row;
         }
+
         private void AddCell(XmlElement row, int index, object value)
         {
             AddCell(row, index, value, null);
         }
+
         private void AddCell(XmlElement row, int index, object value, string stylename)
         {
             XmlElement cell = row.OwnerDocument.CreateElement("Cell", urnschemasmicrosoftcomofficespreadsheet);
@@ -171,6 +126,7 @@ namespace ResourceManager.Core
             if (index >= expandedColumnCount)
                 expandedColumnCount = index;
         }
+
         private void SetAttribute(XmlElement element, string namespacePrefix, string name, string namespaceName, string value)
         {
             XmlAttribute xattrs = element.OwnerDocument.CreateAttribute(namespacePrefix, name, namespaceName);
@@ -182,8 +138,10 @@ namespace ResourceManager.Core
             expandedRowCount++;
         }
 
-        public void Import(string filename)
+        public int Import(string filename)
         {
+            int count = 0;
+
             XmlDocument xml = new XmlDocument();
             xml.Load(filename);
 
@@ -241,34 +199,21 @@ namespace ResourceManager.Core
                             {
                                 if (!dataGroup.ResxData.ContainsKey(cultures[i].Culture))
                                 {
-                                    IResourceFile file = null;
-                                    if (project.ResxGroups[id].Files.ContainsKey(cultures[i].Culture))
-                                    {
-                                        file = project.ResxGroups[id].Files[cultures[i].Culture];
-                                    }
-                                    else
-                                    {
-                                        file = project.ResxGroups[id].CreateNewFile(cultures[i].Culture);
-                                    }
-
-
-                                    file.CreateResourceData(key, valueNode.InnerText);
+                                    project.ResxGroups[id].SetResourceData(key, valueNode.InnerText, cultures[i].Culture);                                   
                                 }
                                 else
                                 {
                                     dataGroup.ResxData[cultures[i].Culture].Value = valueNode.InnerText;
                                 }
+
+                                count++;
                             }
                         }
                     }
                 }
             }
-        }
 
-        public bool ExportDiff 
-        { 
-            get; 
-            set; 
-        }
+            return count;
+        }       
     }
 }

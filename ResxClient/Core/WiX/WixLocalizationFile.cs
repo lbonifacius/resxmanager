@@ -59,7 +59,10 @@ namespace ResourceManager.Core
                 XPathNodeIterator nodes = nav.Select("/wix:WixLocalization/wix:String", manager);
                 while (nodes.MoveNext())
                 {
-                    WixLocalizationData d = new WixLocalizationData(this, nodes.Current);
+                    var d = new WixLocalizationData(this, nodes.Current);
+
+                    if (folder.Project.SkipGroup(d.Name))
+                        continue;
 
                     if (!Data.ContainsKey(d.Name))
                         Data.Add(d.Name, d);
@@ -69,33 +72,50 @@ namespace ResourceManager.Core
 
         public override void CreateResourceData(string name, string value)
         {
-            WixLocalizationData resxData = new WixLocalizationData(this, name, value);
+            WixLocalizationData resxData = new WixLocalizationData(this, name);
+            resxData.Value = value;
             Data.Add(name, resxData);
             this.FileGroup.AllData[name].Add(resxData);
-        }       
+        }
+        public override void CreateResourceDataComment(string name, string comment)
+        {
+            WixLocalizationData resxData = new WixLocalizationData(this, name);
+            resxData.Comment = comment;
+            Data.Add(name, resxData);
+            this.FileGroup.AllData[name].Add(resxData);
+        }   
 
         public override void Save()
         {
-            bool isReadOnly = File.IsReadOnly;
-
-            if (isReadOnly)
-                SetReadOnlyAttribute(File, false);
-
-            XmlDocument xml = new XmlDocument();
-            xml.Load(File.FullName);
-
-            XmlNamespaceManager manager = new XmlNamespaceManager(xml.NameTable);
-            manager.AddNamespace("wix", NS_WIX_2006);
-
-            foreach (ResourceDataBase data in Data.Values)
+            if (HasChanged)
             {
-                SetResourceData(xml, manager, data);
+                bool isReadOnly = File.IsReadOnly;
+
+                if (isReadOnly)
+                    SetReadOnlyAttribute(File, false);
+
+                XmlDocument xml = new XmlDocument();
+                xml.Load(File.FullName);
+
+                XmlNamespaceManager manager = new XmlNamespaceManager(xml.NameTable);
+                manager.AddNamespace("wix", NS_WIX_2006);
+
+                foreach (ResourceDataBase data in Data.Values)
+                {
+                    SetResourceData(xml, manager, data);
+                }
+
+                xml.Save(File.FullName);
+
+                if (isReadOnly)
+                    SetReadOnlyAttribute(File, true);
+
+                SetSaved();
             }
-
-            xml.Save(File.FullName);
-
-            if(isReadOnly)
-                SetReadOnlyAttribute(File, true);
+        }
+        public override void IncludeInProjectFile()
+        {
+            this.FileGroup.Container.Project.AddResourceFileToProjectFile(this, VSProjectFileTypes.EmbeddedResource);
         }
         private void SetResourceData(XmlDocument xml, XmlNamespaceManager manager, ResourceDataBase data)
         {

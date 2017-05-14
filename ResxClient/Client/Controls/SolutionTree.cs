@@ -8,75 +8,107 @@ using System.Windows.Forms;
 using ResourceManager.Core;
 using System.Globalization;
 using System.Linq;
+using ResourceManager.Storage;
+using ResourceManager.Converter;
 
 namespace ResourceManager.Client.Controls
 {
     public partial class SolutionTree : UserControl
     {
-        private Core.VSSolution solution;
         private IList<CultureInfo> allCultures;
 
-        public Core.VSSolution Solution
+        public MainForm Main
         {
-            get { return solution; }
-            set 
-            { 
-                solution = value;
-                loadTree();            
-            }
+            get;
+            set;
         }
-	
+
         public SolutionTree()
         {
             InitializeComponent();
 
-            allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList<CultureInfo>();
+            allCultures = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList<CultureInfo>();            
 
             this.contextMenuResxFile.Opening += new CancelEventHandler(contextMenuResxFile_Opening);
             this.contextMenuResxFile.Closed += new ToolStripDropDownClosedEventHandler(contextMenuResxFile_Closed);
             this.itemSetCulture.Text = Properties.Resources.SetCulture;
 
-            this.itemExportToExcel.Text = Properties.Resources.ExportToExcel;
+            this.exportProject.Text = Properties.Resources.ExportProjectToExcel;
+            this.exportCulture.Text = Properties.Resources.ExportCulture;
+            this.exportCulturePair.Text = Properties.Resources.ExportCulturePair;
             this.itemImportFromExcel.Text = Properties.Resources.ImportFromExcel;
+            this.exportFileGroup.Text = Properties.Resources.ExportFileGroup;
 
             this.itemRefreshAnalysis.Text = Properties.Resources.Refresh;
             this.itemRefreshAnalysis.Click += new EventHandler(itemRefreshAnalysis_Click);
 
-            this.openFileDialog.Filter = Properties.Resources.ExcelFileFilter;
-            this.saveFileDialog.Filter = Properties.Resources.ExcelFileFilter;
+            this.openFileDialog.Filter = Properties.Resources.ExcelImportFileFilter;
+
+            this.itemFill100PercMatches.Text = Properties.Resources.TranslateAuto;
+
+            this.treeView.ImageList = this.iconImageList;
         }       
 
         void itemRefreshAnalysis_Click(object sender, EventArgs e)
         {
+            refreshAnalysis();
+        }
+        private void refreshAnalysis()
+        {
+            for (int i = 0; i < treeView.Nodes[0].Nodes.Count - 1; i++)
+            {
+                foreach (ResourceFileGroupTreeNode fgnode in treeView.Nodes[0].Nodes[i].Nodes)
+                {
+                    refreshFiles(fgnode);
+                }
+            }
+
             this.treeView.Nodes[0].LastNode.Remove();
             loadCultures(this.treeView.Nodes[0]);
+        }
+        public void RefreshAnalysis()
+        {
+            Invoke((MethodInvoker)(() => refreshAnalysis()));
+        }
+        public void RefreshAnalysis(CultureAnalysisResultTreeNode node)
+        {
+            Invoke((MethodInvoker)(() => loadNotExistings(node)));
         }
 
         void cbCultureInfos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            IResourceFile file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
+            Main.setToolbarStatusText(Properties.Resources.ChangingCulture);
+
+            var node = (ResourceFileTreeNode)this.treeView.SelectedNode;
+            IResourceFile file = (node).File;
             file.Culture = CultureInfo.GetCultureInfo(((CulturesComboBoxItem)this.cbCultureInfos.SelectedItem).Name);
 
             file.FileGroup.Container.Project.ResxProjectFile.SaveFile(file);
             file.FileGroup.Container.Project.ResxProjectFile.Save();
+
+            node.Refresh();
+            Main.CurrentSolution.RemoveUnusedCultures();
+            refreshAnalysis();
+
+            Main.setToolbarStatusText(Properties.Resources.ChangingCultureCompleted, 4000);
         }
 
         void contextMenuResxFile_Opening(object sender, CancelEventArgs e)
         {
             this.cbCultureInfos.Items.Clear();
 
-            var file = ((ResxFileTreeNode)this.treeView.SelectedNode).ResxFile;
+            var file = ((ResourceFileTreeNode)this.treeView.SelectedNode).File;
             var otherUsedCultures = file.FileGroup.Files.Keys
-                .Except(new CultureInfo[] { file.Culture });
+                .Except(new CultureInfo[] {file.Culture});
 
             var list = allCultures.Except(otherUsedCultures);
 
             foreach (CultureInfo culture in list.OrderBy(c => c.DisplayName))
-            {
+            {                
                 var item = new CulturesComboBoxItem(culture);
                 this.cbCultureInfos.Items.Add(item);
 
-                if (culture.Name == file.Culture.Name)
+                if(culture.Name == file.Culture.Name)
                     this.cbCultureInfos.SelectedItem = item;
             }
 
@@ -87,14 +119,16 @@ namespace ResourceManager.Client.Controls
             this.cbCultureInfos.SelectedIndexChanged -= new EventHandler(cbCultureInfos_SelectedIndexChanged);   
         }
 
-        private void loadTree()
+        public void LoadTree()
         {
-            if (solution != null)
+            if (Main.CurrentSolution != null)
             {
                 this.treeView.Invoke((MethodInvoker)(() => this.treeView.Nodes.Clear()));
 
                 TreeNode slnNode = new TreeNode();
-                slnNode.Text = solution.Name;
+                slnNode.Text = Main.CurrentSolution.Name;
+                slnNode.ImageIndex = 0;
+                slnNode.SelectedImageIndex = 0;
                 this.treeView.Invoke((MethodInvoker)(() => treeView.Nodes.Add(slnNode)));
 
                 loadProjects(slnNode);
@@ -102,43 +136,94 @@ namespace ResourceManager.Client.Controls
 
                 this.treeView.Invoke((MethodInvoker)(() => slnNode.Expand()));
             }
+            else
+            {
+                if (this.treeView.Nodes.Count > 0)
+                    this.treeView.Nodes.Clear();
+            }
         }
         private void loadProjects(TreeNode parent)
         {
-            TreeNode projectsNode = new TreeNode();
-            projectsNode.Text = Properties.Resources.Projects;            
+            //TreeNode projectsNode = new TreeNode();
+            //projectsNode.Text = Properties.Resources.Projects;            
 
-            foreach (VSProject project in solution.Projects.Values)
+            foreach (VSProject project in Main.CurrentSolution.Projects.Values)
             {
                 ProjectTreeNode projectNode = new ProjectTreeNode();
                 projectNode.Project = project;
-                projectNode.ContextMenuStrip = contextMenuProject;
-                projectsNode.Nodes.Add(projectNode);
+                
+                projectNode.ImageIndex = getProjectImageIndex(project.Type);
+                projectNode.SelectedImageIndex = projectNode.ImageIndex;
+                projectNode.ContextMenuStrip = contextMenuProject;               
 
-                loadFiles(projectNode, project);
+                loadFileGroups(projectNode, project);
+
+                treeView.Invoke((MethodInvoker)(() => parent.Nodes.Add(projectNode)));
             }            
             
-            treeView.Invoke((MethodInvoker)(() => parent.Nodes.Add(projectsNode)));
-            treeView.Invoke((MethodInvoker)(() => projectsNode.Expand()));
+            //treeView.Invoke((MethodInvoker)(() => parent.Nodes.Add(projectsNode)));
+            //treeView.Invoke((MethodInvoker)(() => projectsNode.Expand()));
         }
-        private void loadFiles(TreeNode parent, VSProject project)
+        private int getProjectImageIndex(VSProjectTypes type)
+        { 
+            switch (type)
+            { 
+                case VSProjectTypes.CSharp:
+                    return 6;
+                case VSProjectTypes.FSharp:
+                    return 7;
+                case VSProjectTypes.VB:
+                    return 8;
+            }
+            return 9;
+        }
+        private void loadFileGroups(TreeNode parent, VSProject project)
         {
             foreach (IResourceFileGroup group in project.ResxGroups.Values)
             {
-                foreach (IResourceFile file in group.Files.Values)
-                {
-                    ResxFileTreeNode fileNode = new ResxFileTreeNode();
-                    fileNode.ContextMenuStrip = this.contextMenuResxFile;
-                    fileNode.ResxFile = file;
-                    parent.Nodes.Add(fileNode);
-                }
+                var fileGroupNode = new ResourceFileGroupTreeNode(group);
+                fileGroupNode.ImageIndex = 1;
+                fileGroupNode.SelectedImageIndex = 1;
+                fileGroupNode.ContextMenuStrip = this.contextFileGroup;
+                parent.Nodes.Add(fileGroupNode);
+
+                loadFiles(fileGroupNode, group);
             }
 
             foreach (IResourceFile file in project.UnassignedFiles)
             {
-                ResxFileTreeNode fileNode = new ResxFileTreeNode();
+                var fileNode = new ResourceFileTreeNode(file);
                 fileNode.ContextMenuStrip = this.contextMenuResxFile;
-                fileNode.ResxFile = file;
+                
+                parent.Nodes.Add(fileNode);
+            }
+        }
+        private void loadFiles(TreeNode parent, IResourceFileGroup group)
+        {
+            foreach (IResourceFile file in group.Files.Values)
+            {
+                var fileNode = new ResourceFileTreeNode(file);
+                fileNode.ContextMenuStrip = this.contextMenuResxFile;
+                fileNode.ImageIndex = 2;
+                fileNode.SelectedImageIndex = 2;
+                parent.Nodes.Add(fileNode);
+            }
+        }
+        private void refreshFiles(ResourceFileGroupTreeNode parent)
+        {
+            var list = new List<IResourceFile>();
+
+            foreach (ResourceFileTreeNode file in parent.Nodes)
+            {
+                list.Add(file.File);
+            }
+
+            foreach (IResourceFile file in parent.FileGroup.Files.Values.Except(list))
+            {
+                var fileNode = new ResourceFileTreeNode(file);
+                fileNode.ContextMenuStrip = this.contextMenuResxFile;
+                fileNode.ImageIndex = 2;
+                fileNode.SelectedImageIndex = 2;
                 parent.Nodes.Add(fileNode);
             }
         }
@@ -147,12 +232,16 @@ namespace ResourceManager.Client.Controls
             TreeNode culturesNode = new TreeNode();
             culturesNode.Text = Properties.Resources.Cultures;
             culturesNode.ContextMenuStrip = contextMenuAnalysis;
+            culturesNode.ImageIndex = 3;
+            culturesNode.SelectedImageIndex = 3;
 
-            foreach (VSCulture culture in solution.Cultures.Values)
+            foreach (VSCulture culture in Main.CurrentSolution.Cultures.Values)
             {
-                TreeNode cultureNode = new TreeNode();
-                cultureNode.Text = culture.Culture.DisplayName;
+                var cultureNode = new CultureTreeNode(culture);
                 culturesNode.Nodes.Add(cultureNode);
+                cultureNode.ImageIndex = 4;
+                cultureNode.ContextMenuStrip = contextCulture;
+                cultureNode.SelectedImageIndex = 4;
 
                 loadNotExistings(cultureNode, culture);
             }
@@ -162,27 +251,42 @@ namespace ResourceManager.Client.Controls
         }
         private void loadNotExistings(TreeNode parent, VSCulture culture)
         {
-            List<ResourceDataBase> notexisting = null;
-            foreach (VSCulture targetCulture in solution.Cultures.Values)
+            foreach (VSCulture targetCulture in Main.CurrentSolution.Cultures.Values)
             {
                 if (targetCulture != culture)
                 {
-                    notexisting = culture.GetItemsNotExistingInCulture(targetCulture);
-
-                    TreeNode notexistingNode = new TreeNode();
-                    notexistingNode.Text = String.Format(Properties.Resources.NotExistingInLanguage, new object[] { notexisting.Count, targetCulture.Culture.DisplayName });
+                    var notexistingNode = new CultureAnalysisResultTreeNode(culture, targetCulture);
                     parent.Nodes.Add(notexistingNode);
 
-                    loadDataItems(notexistingNode, notexisting);
+                    loadNotExistings(notexistingNode);
                 }
             }
         }
+        private void loadNotExistings(CultureAnalysisResultTreeNode node)
+        {
+            List<ResourceDataBase> notexisting = node.SourceCulture.GetItemsNotExistingInCulture(node.TargetCulture);
+                        
+            node.ContextMenuStrip = contextMenuAnalysisLang;
+            node.Text = String.Format(Properties.Resources.NotExistingInLanguage, new object[] { notexisting.Count, node.TargetCulture.Culture.DisplayName });
+
+            if (notexisting.Count > 0)
+            {
+                node.ForeColor = Color.Red;
+                node.Parent.ForeColor = Color.Red;
+            }
+
+            loadDataItems(node, notexisting);
+        }
         private void loadDataItems(TreeNode parent, List<ResourceDataBase> items)
         {
+            parent.Nodes.Clear();
+
             foreach (ResourceDataBase item in items)
             {
                 TreeNode itemNode = new TreeNode();
-                itemNode.Text = item.Name + ": " + item.Value;
+                itemNode.Text = item.Name + ": " + ((item.Value ?? "").Length <= 100 ? item.Value : (item.Value ?? "").Substring(0, 100) + " (...)");
+                itemNode.ImageIndex = 5;
+                itemNode.SelectedImageIndex = 5;
                 parent.Nodes.Add(itemNode);
             }
         }
@@ -199,14 +303,9 @@ namespace ResourceManager.Client.Controls
 
         private void itemExportToExcel_Click(object sender, EventArgs e)
         {
-            saveFileDialog.FileName = ((ProjectTreeNode)treeView.SelectedNode).Project.Name + ".xls";
-            DialogResult result = saveFileDialog.ShowDialog();           
-
-            if (result == DialogResult.OK)
-            {
-                ExcelConverter excel = new ExcelConverter(((ProjectTreeNode)treeView.SelectedNode).Project);
-                excel.Export().Save(saveFileDialog.FileName);
-            }
+            var excel = new ExcelExport();
+            excel.SelectedProjects.Add(((ProjectTreeNode)treeView.SelectedNode).Project);
+            excel.ShowDialog();
         }
 
         private void itemImportFromExcel_Click(object sender, EventArgs e)
@@ -216,8 +315,47 @@ namespace ResourceManager.Client.Controls
 
         private void openFileDialog_FileOk(object sender, CancelEventArgs e)
         {
-            ExcelConverter excel = new ExcelConverter(((ProjectTreeNode)treeView.SelectedNode).Project);
+            IConverter excel = ConverterFactory.OpenConverter(openFileDialog, ((ProjectTreeNode)treeView.SelectedNode).Project);
             excel.Import(openFileDialog.FileName);
         }
+
+        private void itemFill100PercMatches_Click(object sender, EventArgs e)
+        {
+            var node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
+
+            var task = Main.startNewTask(() => Main.fillTranslations(node));
+        }
+
+        private void exportFileGroup_Click(object sender, EventArgs e)
+        {
+            var node = (ResourceFileGroupTreeNode)treeView.SelectedNode;
+
+            var excel = new ExcelExport();
+            excel.SelectedFileGroups.Add(node.FileGroup);
+            excel.Solution = Main.CurrentSolution;
+            excel.ShowDialog();
+        }
+
+        private void exportCulturePair_Click(object sender, EventArgs e)
+        {
+            var node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
+
+            var excel = new ExcelExport();
+            excel.SelectedCultures.Add(node.SourceCulture);
+            excel.SelectedCultures.Add(node.TargetCulture);
+            excel.Solution = Main.CurrentSolution;
+            excel.ShowDialog();
+        }
+
+        private void exportCulture_Click(object sender, EventArgs e)
+        {
+            var node = (CultureTreeNode)treeView.SelectedNode;
+
+            var excel = new ExcelExport();
+            excel.SelectedCultures.Add(node.Culture);
+            excel.Solution = Main.CurrentSolution;
+            excel.ShowDialog();
+        }
+
     }
 }
