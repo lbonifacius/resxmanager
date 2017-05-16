@@ -8,7 +8,7 @@ By writing simple configuration files you can exclude specific projects, folders
 
 To exclude for instance all files called "StringsNoTranslate.resxm" in the entire solution (including all projects), just create a configuration file called "SolutionName.sln.resxm" in the solution directory file with the following content. 
 
-```
+```xml
  <solution>
     <files>
       <exclude Pattern="StringsNoTranslate.resx"/>
@@ -27,7 +27,7 @@ Regex | Uses Regular Expressions to select matching strings.
 Several exclude-nodes will be connected as logical OR. Project configurations are called "ProjectName.resxm". Please see the following examples containing all available options.
 
 **Sample Configuration for solutions (SolutionName.sln.resxm)**
-```
+```xml
  <solution>
     <projects>
       <exclude Operator="Equals" Pattern="InvariantProject"/>
@@ -46,7 +46,7 @@ Several exclude-nodes will be connected as logical OR. Project configurations ar
 ```
 
 **Sample Configuration for projects (ProjectName.resxm)**
-```
+```xml
  <solution>
     <directories>
       <exclude Operator="Like" Pattern="hidden_dir"/>
