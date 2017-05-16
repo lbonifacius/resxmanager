@@ -12,7 +12,7 @@ In case you are using the translation storage in order to reuse translations, do
 
 
 **Further topics**
-* [How to add new languages](How-to-add-new-languages)
-* [Automatic translation of resource files](Automatic-translation-of-resource-files)
-* [Best practices](Best-practices)
-* [Exclude Projects, Directories, Files or Entries](Exclude-Projects,-Directories,-Files-or-Entries)
+* [How to add new languages](HowToAddNewLanguages.md)
+* [Automatic translation of resource files](AutomaticTranslation.md)
+* [Best practices](BestPractices.md)
+* [Exclude Projects, Directories, Files or Entries](ExcludeProjectsDirectoriesFilesEntries.md)
