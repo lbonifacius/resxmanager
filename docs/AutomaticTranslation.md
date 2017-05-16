@@ -18,5 +18,5 @@ Open the solution which contains the translations you like to store. Then click 
 You might as well translate only selected languages by expanding the language node which is the source language of the translation. Then open the context menu by clicking right on the target language. **Auto translate** will do the job. 
 
 ## Further topics
-* [Best practices](Best-practices)
-* [Exclude Projects, Directories, Files or Entries](Exclude-Projects,-Directories,-Files-or-Entries)
+* [Best practices](BestPractices.md)
+* [Exclude Projects, Directories, Files or Entries](ExcludeProjectsDirectoriesFilesEntries.md)
