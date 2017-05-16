@@ -2,9 +2,9 @@
 RESX Manager is easy to use, but some details might appear to be difficult, which I would like to address here.
 
 ## How to get started
-# Download RESX Manager and unzip the archive.
-# Start RESX Manager by double-clicking **ResxManager.exe**
-# Click **Open**, to open a Visual Studio solution.
+1. Download RESX Manager and unzip the archive.
+1. Start RESX Manager by double-clicking **ResxManager.exe**
+1. Click **Open** to open a Visual Studio solution.
 
 ## Further topics
 * [Export and Import of resource files to Excel](Export-and-Import-of-resource-files-to-Excel)
