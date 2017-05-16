@@ -7,12 +7,11 @@ RESX Manager is easy to use, but some details might appear to be difficult, whic
 1. Click **Open** to open a Visual Studio solution.
 
 ## Further topics
-* [Export and Import of resource files to Excel](Export-and-Import-of-resource-files-to-Excel.md)
-* [Automatic translation of resource files](Automatic-translation-of-resource-files.md)
-* [Best practices](Best-practices.md)
+* [Export and Import of resource files to Excel](ExportImportResourcesToExcel.md)
+* [Automatic translation of resource files](AutomaticTranslation.md)
+* [Best practices](BestPractices.md)
 
-* [Exclude Projects, Directories, Files or Entries](Exclude-Projects,-Directories,-Files-or-Entries.md)
-* [How to add new languages](How-to-add-new-languages.md)
-* [How to use with Team Foundation Server](How-to-use-with-Team-Foundation-Server.md)
-* [Where is my translation storage](Where-is-my-translation-storage.md)
-
+* [Exclude Projects, Directories, Files or Entries](ExcludeProjectsDirectoriesFilesEntries.md)
+* [How to add new languages](HowToAddNewLanguages.md)
+* [How to use with Team Foundation Server](HowToUseWithTeamFoundationServer.md)
+* [Where is my translation storage](WhereIsMyTranslationStorage.md)
