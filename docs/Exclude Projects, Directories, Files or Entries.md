@@ -8,25 +8,26 @@ By writing simple configuration files you can exclude specific projects, folders
 
 To exclude for instance all files called "StringsNoTranslate.resxm" in the entire solution (including all projects), just create a configuration file called "SolutionName.sln.resxm" in the solution directory file with the following content. 
 
-{code:xml}
+```
  <solution>
     <files>
       <exclude Pattern="StringsNoTranslate.resx"/>
     </files>
  </solution>
-{code:xml}
+```
 
 Objects are matched using a search pattern and an operator that are applied to the names. There are different operators: 
 
-|| Operator || Describtion ||
-| Like | Matches everything that contains the pattern (case insensitive). (Default) |
-| Equals | Matches exact strings (case insensitive). |
-| Regex | Uses Regular Expressions to select matching strings. |
+Operator | Describtion
+---------| -----------
+Like | Matches everything that contains the pattern (case insensitive). (Default)
+Equals | Matches exact strings (case insensitive).
+Regex | Uses Regular Expressions to select matching strings.
 
 Several exclude-nodes will be connected as logical OR. Project configurations are called "ProjectName.resxm". Please see the following examples containing all available options.
 
 **Sample Configuration for solutions (SolutionName.sln.resxm)**
-{code:xml}
+```
  <solution>
     <projects>
       <exclude Operator="Equals" Pattern="InvariantProject"/>
@@ -42,10 +43,10 @@ Several exclude-nodes will be connected as logical OR. Project configurations ar
       <exclude Operator="Regex" Pattern="Test[0-9](0-9)"/>
     </groups>
  </solution>
-{code:xml}
+```
 
 **Sample Configuration for projects (ProjectName.resxm)**
-{code:xml}
+```
  <solution>
     <directories>
       <exclude Operator="Like" Pattern="hidden_dir"/>
@@ -57,7 +58,7 @@ Several exclude-nodes will be connected as logical OR. Project configurations ar
       <exclude Operator="Regex" Pattern="Test[0-9](0-9)"/>
     </groups>
  </solution>
-{code:xml}
+```
 
 ## Further topics
 * [Automatic translation of resource files](Automatic-translation-of-resource-files)
