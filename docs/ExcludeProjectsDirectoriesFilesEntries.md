@@ -61,6 +61,6 @@ Several exclude-nodes will be connected as logical OR. Project configurations ar
 ```
 
 ## Further topics
-* [Automatic translation of resource files](Automatic-translation-of-resource-files)
-* [How to use with Team Foundation Server](How-to-use-with-Team-Foundation-Server)
-* [Best practices](Best-practices)
+* [Automatic translation of resource files](AutomaticTranslation.md)
+* [How to use with Team Foundation Server](HowToUseWithTeamFoundationServer.md)
+* [Best practices](BestPractices.md)
