@@ -36,8 +36,12 @@ namespace ResourceManager.Core
             if (matches[2] != null && File.Exists(Path.Combine(Solution.SolutionDirectory.FullName, matches[2].Groups[1].Value))
                 && !Solution.SkipProject(matches[1].Groups[1].Value))
             {
-                var project = new VSProject(Solution, matches[2].Groups[1].Value, matches[1].Groups[1].Value);
-                Solution.Projects.Add(matches[1].Groups[1].Value, project);
+				var projectName = matches[1].Groups[1].Value;
+				var project = new VSProject(Solution, matches[2].Groups[1].Value, projectName);
+				if (!Solution.Projects.ContainsKey(projectName))
+				{
+					Solution.Projects.Add(projectName, project);
+				}
             }
         }
     }
