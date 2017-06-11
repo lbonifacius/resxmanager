@@ -43,12 +43,19 @@ namespace ResourceManager.Core
 
                 try
                 {
-                    Culture = CultureInfo.GetCultureInfo(parts[posCultureInfo]);
-                    IsCultureAutoDetected = true;
-                    Prefix = buildPrefix(parts, posCultureInfo);
+					if (posCultureInfo == 0)
+					{
+						Culture = CultureInfo.InvariantCulture;
+					}
+					else
+					{
+						Culture = CultureInfo.GetCultureInfo(parts[posCultureInfo]);
+						IsCultureAutoDetected = true;
+						Prefix = buildPrefix(parts, posCultureInfo);
 
-                    if (Prefix.LastIndexOf('.') == Prefix.Length - 1)
-                        Prefix = Prefix.Substring(0, Prefix.Length - 1);
+						if (Prefix.LastIndexOf('.') == Prefix.Length - 1)
+							Prefix = Prefix.Substring(0, Prefix.Length - 1);
+					}
                 }
                 catch 
                 {
