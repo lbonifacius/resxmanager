@@ -323,7 +323,7 @@ namespace ResourceManager.Client.Controls
         {
             var node = (CultureAnalysisResultTreeNode)treeView.SelectedNode;
 
-            var task = Main.startNewTask(() => Main.fillTranslations(node));
+            Main.startNewTask(() => Main.fillTranslations(node));
         }
 
         private void exportFileGroup_Click(object sender, EventArgs e)

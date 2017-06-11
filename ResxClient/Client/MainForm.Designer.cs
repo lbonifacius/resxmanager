@@ -96,8 +96,8 @@ namespace ResourceManager.Client
             // 
             this.itemOpenSolution.Name = "itemOpenSolution";
             this.itemOpenSolution.Size = new System.Drawing.Size(156, 22);
-            this.itemOpenSolution.Text = "Solution öffnen";
-            this.itemOpenSolution.Click += new System.EventHandler(this.solutionÖffnenToolStripMenuItem_Click);
+            this.itemOpenSolution.Text = "Open solution";
+            this.itemOpenSolution.Click += new System.EventHandler(this.solutionOpenToolStripMenuItem_Click);
             // 
             // itemCloseSolution
             // 

@@ -265,7 +265,7 @@ namespace ResourceManager.Client
         {
             this.Close();
         }
-        private void solution÷ffnenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void solutionOpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openSolution();
         }
@@ -323,7 +323,7 @@ namespace ResourceManager.Client
         }
         private void toolStripMenuItemDocu_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://resxmanager.codeplex.com/documentation");
+			System.Diagnostics.Process.Start("https://github.com/lbonifacius/resxmanager/blob/master/docs/Documentation.md");
         }
         private void toolStripMenuItemTranslateAll_Click(object sender, EventArgs e)
         {

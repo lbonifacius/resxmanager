@@ -278,7 +278,7 @@ namespace ResourceManager.Converter
 
             public static List<TranslationRow> LoadRows(IXLWorksheet worksheet)
             {
-                List<TranslationRow> result = new List<TranslationRow>();
+                var result = new List<TranslationRow>();
 
                 var cultures = ReadCultures(worksheet);
                 var commentColumnIndexes = cultures.Select(x => x.CommentColumnIndex);
@@ -289,7 +289,7 @@ namespace ResourceManager.Converter
                 {
                     var textValues = row.Cells(1, lastColumn + 1).Select(cell => (cell.Value != null ? cell.Value.ToString() : null)).ToList<String>();
                 
-                    if (textValues.Count() > 0)
+					if (textValues.Any())
                     {
                         var customer = new TranslationRow();
                         customer.ID = textValues[0];

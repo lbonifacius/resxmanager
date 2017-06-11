@@ -36,7 +36,7 @@ namespace ResourceManager.Core
             string configPath = Path.Combine(SolutionDirectory.FullName, Path.GetFileName(filepath) + ResxClientConfigurationBase.RESXCLIENTPROJECTFILE_EXTENSION);
             Configuration = new SolutionConfiguration(configPath);
 
-            VSSolutionFileParser parser = new VSSolutionFileParser(filepath, this);
+            new VSSolutionFileParser(filepath, this);
         }
         public string Name
         {
