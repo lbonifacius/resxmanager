@@ -15,7 +15,6 @@ Consolidates, synchronizes and translates .NET resources (.resx, .wxl). Supports
 ## Requirements
 * Microsoft .NET Framework 4
 * SQL Server 2012 (for translation storage only)
-Your feedback on functionality, performance and everything else is very welcome.
 
 ## Documentation
 * [How to get started](docs/Documentation.md) 
